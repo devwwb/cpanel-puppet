@@ -4,7 +4,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
 # How to run
 
     export FACTERLIB="./facts"
-    FACTER_module1=enabled puppet apply --modulepath ./modules manifests/site.pp
+    FACTER_module1=true puppet apply --modulepath ./modules manifests/site.pp
 
 # Modules included
 
