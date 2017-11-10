@@ -10,7 +10,8 @@ Facter.add("maildomains") do
   # TODO, add fqdn domain
 
   # THEN read mail domains defined in cpanel from ldap and add to maildomains fact
-  maildomains_result = Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "o=hosting,dc=example,dc=tld" "(objectClass=VirtualDomain)" | grep vd: | sed "s|.*: \(.*\)|\1|"')
+  # ONLY maildomains WITH opendkim enabled
+  maildomains_result = Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "ou=opendkim,ou=cpanel,dc=example,dc=tld" "(objectClass=organizationalUnit)" | grep ou: | sed "s|.*: \(.*\)|\1|"')
   if not maildomains_result.nil?
       maildomains_result.each_line do |line|
           if !maildomains[0].include?(line.strip)
