@@ -12,6 +12,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
 # Modules included
 
     opendkim
+    reboot
 
 # Modules TODO
 
