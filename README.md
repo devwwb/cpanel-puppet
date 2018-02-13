@@ -1,6 +1,9 @@
 # cpanel-puppet
 Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
 
+# Latest Version
+    release_20170301
+
 # How to run
 
     export FACTERLIB="./facts"
