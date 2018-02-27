@@ -3,8 +3,11 @@ node default {
   ## opendkim
   include opendkim
 
-  ## opendkim
+  ## reboot
   include reboot
+
+  ## customfqdn
+  include customfqdn
 
   #certs and conf for each domain
   opendkim::domain{$::maildomains:}

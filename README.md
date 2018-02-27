@@ -13,6 +13,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
 
     opendkim
     reboot
+    customfqdn
 
 # Modules TODO
 
