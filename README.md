@@ -2,7 +2,7 @@
 Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
 
 # Latest Version
-    release_201802
+    release_201803
 
 # How to run
 
@@ -14,6 +14,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     opendkim
     reboot
     customfqdn
+    stretch
 
 # Modules TODO
 
