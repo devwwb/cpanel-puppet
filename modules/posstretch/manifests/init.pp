@@ -7,7 +7,7 @@ class posstretch (
   if $enabled {
 
     #define scripts
-    $scripts = ['delete_jessie_kernels.sh','update_docker.sh','update_facts_classifier.sh','activate_groups.sh']
+    $scripts = ['delete_jessie_kernels.sh','update_docker.sh','update_facts_classifier.sh','activate_groups.sh','restore_cpanel_cron.sh']
     $scripts.each |String $script| {
       file {"/etc/maadix/stretch/${script}":
         owner   => 'root',
@@ -71,6 +71,11 @@ class posstretch (
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
+    }
+
+    exec { 'restore cpanel cron':
+      command   => "/bin/bash -c '/etc/maadix/stretch/restore_cpanel_cron.sh'",
+      logoutput => true,
     }
 
 

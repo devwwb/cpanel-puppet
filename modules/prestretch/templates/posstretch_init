@@ -1,0 +1,30 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          posstretch
+# Required-Start:    $all
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Posstretch script
+# Description:       Posstretch script
+### END INIT INFO
+
+# Using the lsb functions to perform the operations.
+. /lib/lsb/init-functions
+
+case "$1" in
+start)
+     sleep 30
+     #launch puppet local module to finish stretch upgrade
+     cd /usr/share/cpanel-puppet
+     export FACTERLIB='./facts'
+     FACTER_posstretch=true puppet apply --modulepath ./modules manifests/site.pp
+     #disable and remove script
+     update-rc.d posstretch remove
+     rm /etc/init.d/posstretch
+     ;;
+stop)
+     ;;
+esac
+
+exit 0

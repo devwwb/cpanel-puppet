@@ -9,4 +9,11 @@ if [ -f /usr/bin/fail2ban-server ]; then
   apt-get remove --purge fail2ban -y
 fi
 
+if [ -f /usr/bin/monit ]; then
+  #monit stop
+  service monit stop
+  #remove fail2ban
+  apt-get remove --purge monit -y
+fi
+
 
