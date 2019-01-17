@@ -23,8 +23,6 @@ class prestretch (
       }
     }
 
-/*
-
     exec { 'deactivate groups':
       command   => "/bin/bash -c '/etc/maadix/stretch/deactivate_groups.sh'",
       logoutput => true,
@@ -163,7 +161,6 @@ class prestretch (
       command   => "/bin/bash -c '/etc/maadix/stretch/update_extlinux.sh'",
       logoutput => true,
     }
-*/
 
     exec { 'posstretch init':
       command   => "/bin/bash -c '/etc/maadix/stretch/posstretch_init.sh'",

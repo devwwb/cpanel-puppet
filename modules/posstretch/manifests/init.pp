@@ -17,8 +17,6 @@ class posstretch (
       }
     }
 
-/*
-
     exec { 'delete_jessie_kernels.sh':
       command   => "/bin/bash -c '/etc/maadix/stretch/delete_jessie_kernels.sh'",
       logoutput => true,
@@ -55,7 +53,6 @@ class posstretch (
       returns   => 2,
     }
 
-*/
     if ($::discourse_group){
       exec { 'rebuild discourse':
         command   => "/bin/bash -c 'sudo /var/discourse/launcher rebuild app'",
