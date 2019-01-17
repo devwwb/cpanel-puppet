@@ -14,7 +14,8 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     opendkim
     reboot
     customfqdn
-    stretch
+    prestretch
+    posstretch
 
 # Modules TODO
 
