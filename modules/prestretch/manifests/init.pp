@@ -13,7 +13,7 @@ class prestretch (
     }
 
     #define scripts
-    $scripts = ['deactivate_groups.sh', 'delete_cpanel_cron.sh', 'update_mongodb_34.sh', 'update_postgresql_96.sh', 'delete_mailman_venv_34.sh', 'delete_global_nodejs.sh', 'delete_onlyoffice_image.sh', 'upgrade_jessie.sh', 'update_source_debian.sh', 'update_source_docker.sh', 'update_source_lool.sh', 'update_source_mongodb.sh', 'delete_jessie_sources.sh', 'delete_jessie_packages.sh', 'delete_phpmyadmin.sh', 'upgrade_stretch.sh', 'update_mongodb_36.sh', 'delete_obsolete_packages.sh', 'update_onecontext.sh', 'update_puppet.sh', 'update_extlinux.sh']
+    $scripts = ['deactivate_groups.sh', 'delete_cpanel_cron.sh', 'update_mongodb_34.sh', 'update_postgresql_96.sh', 'delete_mailman_venv_34.sh', 'delete_global_nodejs.sh', 'delete_onlyoffice_image.sh', 'upgrade_jessie.sh', 'update_source_debian.sh', 'update_source_docker.sh', 'update_source_lool.sh', 'update_source_mongodb.sh', 'delete_jessie_sources.sh', 'delete_jessie_packages.sh', 'delete_phpmyadmin.sh', 'upgrade_stretch.sh', 'update_mongodb_36.sh', 'delete_obsolete_packages.sh', 'update_onecontext.sh', 'update_puppet.sh', 'update_bootloader.sh']
     $scripts.each |String $script| {
       file {"/etc/maadix/stretch/${script}":
         owner   => 'root',
@@ -157,8 +157,8 @@ class prestretch (
       logoutput => true,
     }
 
-    exec { 'update extlinux':
-      command   => "/bin/bash -c '/etc/maadix/stretch/update_extlinux.sh'",
+    exec { 'update bootloader':
+      command   => "/bin/bash -c '/etc/maadix/stretch/update_bootloader.sh'",
       logoutput => true,
     }
 
