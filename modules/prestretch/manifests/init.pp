@@ -173,8 +173,8 @@ class prestretch (
       logoutput => true,
     }
 
-    exec { 'reboot vm':
-      command   => "/bin/bash -c '/lib/molly-guard/reboot'",
+    exec { 'shutdown vm':
+      command   => "/bin/bash -c '/lib/molly-guard/shutdown -h now'",
       logoutput => true,
     }
 
