@@ -173,6 +173,11 @@ class prestretch (
       logoutput => true,
     }
 
+    exec { 'reboot vm':
+      command   => "/bin/bash -c '/lib/molly-guard/reboot'",
+      logoutput => true,
+    }
+
 
   }
 
