@@ -14,6 +14,8 @@
 
 case "$1" in
 start)
+     #set cpanel to running
+     /etc/maadix/scripts/setrunningcpanel.sh
      sleep 30
      #launch puppet local module to finish stretch upgrade
      cd /usr/share/cpanel-puppet
