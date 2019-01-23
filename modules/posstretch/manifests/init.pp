@@ -7,7 +7,7 @@ class posstretch (
   if $enabled {
 
     #define scripts
-    $scripts = ['delete_jessie_kernels.sh','update_docker.sh','update_facts_classifier.sh','activate_groups.sh','restore_cpanel_cron.sh']
+    $scripts = ['delete_jessie_kernels.sh','update_docker.sh','update_facts_classifier.sh','activate_groups.sh','restore_cpanel_cron.sh','iptables_apache_accept.sh']
     $scripts.each |String $script| {
       file {"/etc/maadix/stretch/${script}":
         owner   => 'root',
@@ -75,6 +75,11 @@ class posstretch (
 
     exec { 'restore cpanel cron':
       command   => "/bin/bash -c '/etc/maadix/stretch/restore_cpanel_cron.sh'",
+      logoutput => true,
+    }
+
+    exec { 'iptables apache accept':
+      command   => "/bin/bash -c '/etc/maadix/stretch/iptables_apache_accept.sh'",
       logoutput => true,
     }
 
