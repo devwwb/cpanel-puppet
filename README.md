@@ -16,6 +16,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     customfqdn
     prestretch
     posstretch
+    report
 
 # Modules TODO
 

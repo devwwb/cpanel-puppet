@@ -14,6 +14,9 @@ node default {
   #certs and conf for fqdn
   opendkim::domain{$::fqdn:}
 
+  ## report
+  include report
+
   ## stretch
   include prestretch
   include posstretch
