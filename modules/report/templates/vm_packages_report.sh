@@ -1,12 +1,20 @@
 #!/bin/bash
 
+##List repositories
+echo "## Repositories ############################################################"
+find /etc/apt/sources.list* -type f | xargs cat
+
 ##Install apt-show-versions
-echo "## Install apt-show-versions ###############################################"
-apt-get install apt-show-versions -y
+echo "## Install aptitude and debsums ############################################"
+apt-get install aptitude debsums -y
 
 ##List Installed packages
 echo "## List Installed packages #################################################"
-apt-show-versions
+aptitude search '~i' --disable-columns -F '%p'
+
+#Check all debian binaries against the checksum of the original
+echo "## Debsums #################################################################"
+debsums -a | grep -v OK
 
 ##Check that no packages are on hold by querying the package database
 echo "## Dpkg audit ##############################################################"
