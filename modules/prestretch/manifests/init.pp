@@ -14,7 +14,7 @@ class prestretch (
     }
 
     #define scripts
-    $scripts = ['iptables_apache_drop.sh','deactivate_groups.sh', 'delete_cpanel_cron.sh', 'update_mongodb_34.sh', 'update_postgresql_96.sh', 'delete_mailman_venv_34.sh', 'delete_global_nodejs.sh', 'delete_onlyoffice_image.sh', 'upgrade_jessie.sh', 'update_source_debian.sh', 'update_source_docker.sh', 'update_source_lool.sh', 'update_source_mongodb.sh', 'delete_jessie_sources.sh', 'delete_jessie_packages.sh', 'delete_phpmyadmin.sh', 'upgrade_stretch.sh', 'update_mongodb_36.sh', 'delete_obsolete_packages.sh', 'update_onecontext.sh', 'update_puppet.sh', 'update_bootloader.sh']
+    $scripts = ['iptables_apache_drop.sh','deactivate_groups.sh', 'delete_cpanel_cron.sh', 'update_mongodb_34.sh', 'update_postgresql_96.sh', 'delete_mailman_venv_34.sh', 'delete_global_nodejs.sh', 'delete_onlyoffice_image.sh', 'upgrade_jessie.sh', 'update_source_debian.sh', 'update_source_docker.sh', 'update_source_lool.sh', 'update_source_mongodb.sh', 'delete_jessie_sources.sh', 'delete_jessie_packages.sh', 'delete_phpmyadmin.sh', 'upgrade_stretch.sh', 'update_mongodb_36.sh', 'delete_obsolete_packages.sh', 'update_onecontext.sh', 'update_puppet.sh', 'update_bootloader.sh', 'iptables_save.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
@@ -176,6 +176,11 @@ class prestretch (
     } ->
     exec { 'activate posstretch init':
       command   => "/bin/bash -c 'update-rc.d posstretch defaults 99'",
+      logoutput => true,
+    }
+
+    exec { 'iptables save':
+      command   => "/bin/bash -c '$directory/iptables_save.sh'",
       logoutput => true,
     }
 

@@ -1,11 +1,12 @@
 #!/bin/bash
 
-#block http and https access while upgrading
-iptables -A INPUT -p tcp --dport 443 -j DROP
-iptables -A INPUT -p tcp --dport 80 -j DROP
-
-#save iptables for next reboot
-iptables-save > /etc/iptables/rules.v4
+#block http and https access while upgrading if rules are not present
+if ! iptables -C INPUT -p tcp --dport 443 -j DROP; then
+  iptables -A INPUT -p tcp --dport 443 -j DROP
+fi
+if ! iptables -C INPUT -p tcp --dport 80 -j DROP; then
+  iptables -A INPUT -p tcp --dport 80 -j DROP
+fi
 
 #list iptables
 iptables -L
