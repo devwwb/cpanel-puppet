@@ -17,6 +17,11 @@ class posstretch (
       }
     }
 
+    exec { 'iptables apache drop':
+      command   => "/bin/bash -c '/etc/maadix/stretch/iptables_apache_drop.sh'",
+      logoutput => true,
+    }
+
     exec { 'delete_jessie_kernels.sh':
       command   => "/bin/bash -c '/etc/maadix/stretch/delete_jessie_kernels.sh'",
       logoutput => true,
