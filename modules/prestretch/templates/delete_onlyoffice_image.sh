@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "## Delete onlyoffice image #################################################"
 #if onlyoffice image exists
 if docker images | grep onlyoffice/documentserver; then
 

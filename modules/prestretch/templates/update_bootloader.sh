@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "## Update bootloader #######################################################"
+
 #set grub-pc options
 echo "grub-pc grub-pc/install_devices multiselect /dev/vda" | debconf-set-selections
 

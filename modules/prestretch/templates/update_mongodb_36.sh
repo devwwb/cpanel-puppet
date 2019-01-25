@@ -1,12 +1,12 @@
 #!/bin/bash
 
+echo "## Update mongo to 3.6 #####################################################"
+
 #restart mongod service
 service mongod restart
 
 #if mongo version is 3.4
 if mongod --version | grep v3.4; then
-
-  echo "## Update mongo to 3.6 ##################################"
 
   #setFeatureCompatibilityVersion to 3.6
   sleep 10

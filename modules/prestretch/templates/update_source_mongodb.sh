@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "## Update source mongo #####################################################"
+
 #update mongo repo for stretch
 sed -i 's/3.4/3.6/g' /etc/apt/sources.list.d/mongodb.list
 sed -i 's/jessie/stretch/g' /etc/apt/sources.list.d/mongodb.list
@@ -8,3 +10,4 @@ sed -i 's/jessie/stretch/g' /etc/apt/sources.list.d/mongodb.list
 cd /tmp
 /usr/bin/curl -sLO https://www.mongodb.org/static/pgp/server-3.6.asc && sudo /usr/bin/apt-key add server-3.6.asc
 
+cat /etc/apt/sources.list.d/mongodb.list

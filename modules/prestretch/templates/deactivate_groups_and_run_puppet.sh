@@ -3,6 +3,7 @@
 #get enabled groups, excluding mail, mongo, nodejs, docker
 egroups=($(ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "ou=groups,dc=example,dc=tld" "(&(objectClass=*)(status=enabled)(!(ou:dn:=mail)))" | grep -v nodejs | grep -v mongodb | grep -v docker | grep ou: | sed "s|.*: \(.*\)|\1|"))
 
+echo "## Deactivate groups #########################################################"
 #deactivate groups
 for i in "${egroups[@]}"
 do
@@ -20,11 +21,11 @@ done
 
 #run puppet only if there were active groups
 if [ ${#egroups[@]} -eq 0 ]; then
-    echo "## All groups are disabled, puppet doesn't run ######################"
+    echo "## All groups are disabled, puppet doesn't run #############################"
     #exit script with 0
     exitscript=0
 else
-    echo "## Some groups enabled, run puppet ##################################"
+    echo "## Some groups enabled, run puppet #########################################"
     /usr/local/bin/puppet agent --test
     # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
     #get puppet exit code

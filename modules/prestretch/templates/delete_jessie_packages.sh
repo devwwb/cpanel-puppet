@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "## Delete jessie packages ##################################################"
 #delete packages from jessie with conflicts in the upgrade
 
 if [ -f /usr/bin/fail2ban-server ]; then

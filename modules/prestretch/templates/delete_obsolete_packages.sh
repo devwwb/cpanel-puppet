@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "## Delete obsolete packages ################################################"
 #install aptitude
 apt-get install aptitude -y
 

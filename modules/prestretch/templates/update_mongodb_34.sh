@@ -1,9 +1,9 @@
 #!/bin/bash
 
+echo "## Update mongo to 3.4 #####################################################"
 #if mongo version is 3.2
 if mongod --version | grep v3.2; then
 
-  echo "## Update mongo to 3.4 ##################################"
   #update mongo repo for mongodb 3.4
   sed -i 's/3.2/3.4/g' /etc/apt/sources.list.d/mongodb.list
 

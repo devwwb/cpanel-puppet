@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "## Delete mailman venv #####################################################"
 #delete mailman venv 3.4
 if [ -d /opt/mailman/venv3 ]; then
   rm -r /opt/mailman/venv3

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "## Upgrade stretch #########################################################"
+
 #upgrade stretch
 apt-get update
 apt list --upgradable

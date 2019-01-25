@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "## Disable cpanel cron #####################################################"
 #disable cpanel cron
 echo " " > /usr/share/cpanel/cron/puppetcron.sh
 echo " " > /usr/share/cpanel/cron/ldapsearch.sh

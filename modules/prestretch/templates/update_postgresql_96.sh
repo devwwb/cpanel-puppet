@@ -1,9 +1,10 @@
 #!/bin/bash
 
+echo "## Update postgresql to 9.6 ################################################"
+
 #if postgresql version is 9.4
 if pg_config --version | grep 9.4; then
 
-  echo "## Update postgresql to 9.6 ##################################"
 
   #update postgresql to 9.6
   apt-get -t jessie-backports install postgresql-9.6 postgresql-client-9.6 postgresql-server-dev-9.6 -y
