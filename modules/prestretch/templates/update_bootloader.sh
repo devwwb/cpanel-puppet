@@ -8,3 +8,8 @@ apt-get install grub-pc -y
 
 #uninstall extlilnux
 apt-get remove --purge extlinux -y
+
+#remove extlinux conf
+if [ -d /boot/extlinux ]; then
+  rm -r /boot/extlinux
+fi
