@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "## Activate groups #########################################################"
+
 #get deactivated groups, excluding mail, mongo, nodejs, docker
 egroups=($(ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "ou=groups,dc=example,dc=tld" "(&(objectClass=*)(status=disabled)(type=installed))" | grep ou: | sed "s|.*: \(.*\)|\1|"))
 
