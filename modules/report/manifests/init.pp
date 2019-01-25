@@ -20,7 +20,7 @@ class report (
     }
 
     #define scripts
-    $scripts = ['dist_upgrade_packages.sh','vm_packages_report.sh','vm_docker_report.sh','send_report.sh']
+    $scripts = ['dist_upgrade_packages.sh','vm_packages_report.sh','vm_docker_report.sh','iptables_report.sh','send_report.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
@@ -47,6 +47,11 @@ class report (
         command   => "/bin/bash -c '$directory/vm_docker_report.sh > $directory/logs/vm_docker_report.sh.log 2>&1'",
         logoutput => true,
       }
+    }
+
+    exec { 'iptables report':
+      command   => "/bin/bash -c '$directory/iptables_report.sh > $directory/logs/iptables_report.sh.log 2>&1'",
+      logoutput => true,
     }
 
     exec { 'send report':
