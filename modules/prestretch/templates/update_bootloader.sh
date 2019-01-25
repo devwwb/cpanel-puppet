@@ -10,6 +10,6 @@ apt-get install grub-pc -y
 apt-get remove --purge extlinux -y
 
 #remove extlinux conf
-if [ -d /boot/extlinux ]; then
-  rm -r /boot/extlinux
+if [ -f /boot/extlinux/extlinux.conf ]; then
+  rm /boot/extlinux/extlinux.conf
 fi
