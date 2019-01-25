@@ -57,6 +57,9 @@ class posstretch (
       exec { 'rebuild discourse':
         command   => "/bin/bash -c 'sudo /var/discourse/launcher rebuild app'",
         logoutput => true,
+        require   =>[
+                    Exec['run puppet to apply stretch catalog'],
+                    ],
       }
 
     }
@@ -64,6 +67,9 @@ class posstretch (
     exec { 'activate groups':
       command   => "/bin/bash -c '/etc/maadix/stretch/activate_groups.sh'",
       logoutput => true,
+      require   =>[
+                  Exec['run puppet to apply stretch catalog'],
+                  ],
     }
 
     exec { 'run puppet after groups reactivating':
@@ -71,16 +77,25 @@ class posstretch (
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
+      require   =>[
+                  Exec['run puppet to apply stretch catalog'],
+                  ],
     }
 
     exec { 'restore cpanel cron':
       command   => "/bin/bash -c '/etc/maadix/stretch/restore_cpanel_cron.sh'",
       logoutput => true,
+      require   =>[
+                  Exec['run puppet after groups reactivating'],
+                  ],
     }
 
     exec { 'iptables apache accept':
       command   => "/bin/bash -c '/etc/maadix/stretch/iptables_apache_accept.sh'",
       logoutput => true,
+      require   =>[
+                  Exec['run puppet after groups reactivating'],
+                  ],
     }
 
 
