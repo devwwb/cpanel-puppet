@@ -260,7 +260,7 @@ class prestretch (
     #if extlinux is the bootloader, it's a kvm guest. shutdown the vm to replace network init scripts
     if ($extlinux) {
       exec { 'shutdown vm':
-        command   => "/bin/bash -c '/lib/molly-guard/shutdown -h +2 &'",
+        command   => "/bin/bash -c '/lib/molly-guard/shutdown -h now' &",
         logoutput => true,
         require   =>[
                   Exec['upgrade stretch'],
@@ -269,7 +269,7 @@ class prestretch (
     #if grub is the bootloader, it's a dedicated. reboot the server
     } else {
       exec { 'reboot server':
-        command   => "/bin/bash -c '/lib/molly-guard/shutdown -r +2 &'",
+        command   => "/bin/bash -c '/lib/molly-guard/shutdown -r now' &",
         logoutput => true,
         require   =>[
                   Exec['upgrade stretch'],
