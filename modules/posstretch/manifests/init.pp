@@ -53,7 +53,7 @@ class posstretch (
     }
 
     exec { 'run puppet to apply stretch catalog':
-      command   => '/usr/local/bin/puppet agent --test > $directory/logs/06_run_puppet 2>&1',
+      command   => "/usr/local/bin/puppet agent --test > $directory/logs/06_run_puppet 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -79,7 +79,7 @@ class posstretch (
     }
 
     exec { 'run puppet after groups reactivating':
-      command   => '/usr/local/bin/puppet agent --test > $directory/logs/09_run_puppet_after_group_activation 2>&1',
+      command   => "/usr/local/bin/puppet agent --test > $directory/logs/09_run_puppet_after_group_activation 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
