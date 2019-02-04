@@ -1,5 +1,6 @@
 class prestretch (
   $enabled = str2bool("$::prestretch"),
+  $extlinux = str2bool("$::extlinux"),
   $directory = '/etc/maadix/stretch',
 ) {
 
@@ -220,12 +221,15 @@ class prestretch (
                   ],
     }
 
-    exec { 'update bootloader':
-      command   => "/bin/bash -c '$directory/update_bootloader.sh > $directory/logs/21_update_bootloader 2>&1'",
-      logoutput => true,
-      require   =>[
-                  Exec['upgrade stretch'],
-                  ],
+    #if extlinux is the bootloader, replace by grub
+    if ($extlinux) {
+      exec { 'update bootloader':
+        command   => "/bin/bash -c '$directory/update_bootloader.sh > $directory/logs/21_update_bootloader 2>&1'",
+        logoutput => true,
+        require   =>[
+                    Exec['upgrade stretch'],
+                    ],
+      }
     }
 
     file {"/etc/init.d/posstretch":
@@ -250,21 +254,29 @@ class prestretch (
       command   => "/bin/bash -c '$directory/send_prestretch_notify.sh'",
       require   =>[
                   Exec['upgrade stretch'],
-                  Exec['update bootloader'],
                   ],
     }
 
-/*
-    exec { 'shutdown vm':
-      command   => "/bin/bash -c '/lib/molly-guard/shutdown -h now'",
-      logoutput => true,
-      require   =>[
+    #if extlinux is the bootloader, it's a kvm guest. shutdown the vm to replace network init scripts
+    if ($extlinux) {
+      exec { 'shutdown vm':
+        command   => "/bin/bash -c '/lib/molly-guard/shutdown -h +2 &'",
+        logoutput => true,
+        require   =>[
                   Exec['upgrade stretch'],
-                  Exec['update bootloader'],
                   ],
+      }
+    #if grub is the bootloader, it's a dedicated. reboot the server
+    } else {
+      exec { 'reboot server':
+        command   => "/bin/bash -c '/lib/molly-guard/shutdown -r +2 &'",
+        logoutput => true,
+        require   =>[
+                  Exec['upgrade stretch'],
+                  ],
+      }
     }
-*/
-
+ 
   }
 
 }
