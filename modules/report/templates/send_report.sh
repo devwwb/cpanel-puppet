@@ -7,4 +7,4 @@ adminmail="admin@maadix.org"
 cat -v /etc/maadix/report/logs/* | mail -s "Report | Infome de ${hostname}" $adminmail
 
 #del logs
-rm /etc/maadix/stretch/logs/*
+rm /etc/maadix/report/logs/*
