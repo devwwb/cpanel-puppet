@@ -7,3 +7,6 @@ fi
 if [ -f /etc/apt/sources.list.d/nodesource.list ]; then
   rm /etc/apt/sources.list.d/nodesource.list
 fi
+if [ -f /etc/apt/sources.list.d/owncloud.list ]; then
+  rm /etc/apt/sources.list.d/owncloud.list
+fi
