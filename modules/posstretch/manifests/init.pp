@@ -50,8 +50,7 @@ class posstretch (
     exec { 'update facts classifier':
       command   => "/bin/bash -c '$directory/update_facts_classifier.sh > $directory/logs/05_update_facts_classifier 2>&1'",
       logoutput => true,
-    }
-
+    } ->
     exec { 'run puppet to apply stretch catalog':
       command   => "/usr/local/bin/puppet agent --test > $directory/logs/06_run_puppet 2>&1",
       logoutput => true,
@@ -76,8 +75,7 @@ class posstretch (
       require   =>[
                   Exec['run puppet to apply stretch catalog'],
                   ],
-    }
-
+    } ->
     exec { 'run puppet after groups reactivating':
       command   => "/usr/local/bin/puppet agent --test > $directory/logs/09_run_puppet_after_group_activation 2>&1",
       logoutput => true,

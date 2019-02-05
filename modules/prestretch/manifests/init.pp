@@ -264,6 +264,7 @@ class prestretch (
         logoutput => true,
         require   =>[
                   Exec['upgrade stretch'],
+                  Exec['update bootloader'],
                   ],
       }
     #if grub is the bootloader, it's a dedicated. reboot the server
