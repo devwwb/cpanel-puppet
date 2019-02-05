@@ -205,12 +205,15 @@ class prestretch (
                   ],
     }
 
-    exec { 'update onecontext':
-      command   => "/bin/bash -c '$directory/update_onecontext.sh > $directory/logs/19_update_onecontext 2>&1'",
-      logoutput => true,
-      require   =>[
-                  Exec['upgrade stretch'],
-                  ],
+    #if extlinux is the bootloader, it's a kvm guest. update one-context
+    if ($extlinux) {
+      exec { 'update onecontext':
+        command   => "/bin/bash -c '$directory/update_onecontext.sh > $directory/logs/19_update_onecontext 2>&1'",
+        logoutput => true,
+        require   =>[
+                    Exec['upgrade stretch'],
+                    ],
+      }
     }
 
     exec { 'update puppet':
