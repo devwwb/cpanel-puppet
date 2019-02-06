@@ -34,6 +34,7 @@ class report (
     exec { "dist upgrade packages":
       command   => "/bin/bash -c '$directory/dist_upgrade_packages.sh > $directory/logs/dist_upgrade_packages.sh.log 2>&1'",
       logoutput => true,
+      timeout   => 3600,
     }
 
     file {'/tmp/jessie_reference':

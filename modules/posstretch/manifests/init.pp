@@ -56,6 +56,7 @@ class posstretch (
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
+      timeout   => 3600,
     }
 
     if ($::discourse_group){
@@ -65,6 +66,7 @@ class posstretch (
         require   =>[
                     Exec['run puppet to apply stretch catalog'],
                     ],
+        timeout   => 3600,
       }
 
     }
@@ -84,6 +86,7 @@ class posstretch (
       require   =>[
                   Exec['run puppet to apply stretch catalog'],
                   ],
+      timeout   => 3600,
     }
 
     exec { 'restore cpanel cron':

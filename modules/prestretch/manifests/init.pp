@@ -32,6 +32,7 @@ class prestretch (
     exec { 'deactivate groups and run puppet':
       command   => "/bin/bash -c '$directory/deactivate_groups_and_run_puppet.sh > $directory/logs/00_deactivate_groups_and_run_puppet 2>&1'",
       logoutput => true,
+      timeout   => 1800,
     }
 
     exec { 'iptables apache drop':
@@ -67,6 +68,7 @@ class prestretch (
         require   =>[
                     Exec['deactivate groups and run puppet'],
                     ],
+        timeout   => 1800,
       }
     }
 
@@ -106,6 +108,7 @@ class prestretch (
       require   =>[
                   Exec['deactivate groups and run puppet'],
                   ],
+      timeout   => 1800,
     }
 
     
@@ -176,7 +179,7 @@ class prestretch (
     exec { 'upgrade stretch':
       command   => "/bin/bash -c '$directory/upgrade_stretch.sh > $directory/logs/16_upgrade_stretch 2>&1'",
       logoutput => true,
-      timeout   => 1800,
+      timeout   => 3600,
       require   =>[
                   Exec['upgrade jessie'],
                   ],
