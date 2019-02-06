@@ -17,4 +17,11 @@ if [ -f /usr/bin/monit ]; then
   apt-get remove --purge monit -y
 fi
 
+if [ -f /usr/bin/loolwsd ]; then
+  #libreoffice-online stop
+  service libreoffice-online stop
+  #remove libpoco*
+  apt-get remove --purge libpoco* -y
+fi
+
 
