@@ -51,6 +51,12 @@ class prestretch (
                   ],
     }
 
+    exec { 'delete old vhosts':
+      command   => "/bin/bash -c 'rm -r /etc/apache2/ldap-enabled > $directory/logs/021_delete_old_vhosts 2>&1'",
+      onlyif    => '/usr/bin/test -e /etc/apache2/ldap-enabled',
+      logoutput => true,
+    }
+
     if ($::mongodb_group){
       exec { 'update mongodb 3.4':
         command   => "/bin/bash -c '$directory/update_mongodb_34.sh > $directory/logs/03_update_mongodb_34 2>&1'",

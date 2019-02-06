@@ -41,12 +41,6 @@ class posstretch (
 
     }
 
-    exec { 'delete old vhosts':
-      command   => "/bin/bash -c 'rm -r /etc/apache2/ldap-enabled > $directory/logs/04_delete_old_vhosts 2>&1'",
-      onlyif    => '/usr/bin/test -e /etc/apache2/ldap-enabled',
-      logoutput => true,
-    }
-
     exec { 'update facts classifier':
       command   => "/bin/bash -c '$directory/update_facts_classifier.sh > $directory/logs/05_update_facts_classifier 2>&1'",
       logoutput => true,
