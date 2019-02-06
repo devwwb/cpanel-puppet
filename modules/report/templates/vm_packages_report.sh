@@ -8,6 +8,15 @@ find /etc/apt/sources.list* -type f | xargs cat
 echo "## Install aptitude and debsums ############################################"
 apt-get install aptitude debsums -y
 
+##List Packages in this server absent in the reference
+echo "## List NON CANONICAL packages #############################################"
+aptitude search '~i' --disable-columns -F '%p' > /tmp/jessie_installed
+diff /tmp/jessie_reference /tmp/jessie_installed installed | grep '>'
+
+##List Packages in the reference absent in this server
+echo "## List ABSENT packages #############################################"
+diff /tmp/jessie_reference /tmp/jessie_installed installed | grep '<'
+
 ##List Installed packages
 echo "## List Installed packages #################################################"
 aptitude search '~i' --disable-columns -F '%p'

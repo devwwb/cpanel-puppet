@@ -36,6 +36,9 @@ class report (
       logoutput => true,
     }
 
+    file {'/tmp/jessie_reference':
+      content => template('report/jessie_reference'),
+    } ->
     exec { 'vm packages report':
       command   => "/bin/bash -c '$directory/vm_packages_report.sh > $directory/logs/vm_packages_report.sh.log 2>&1'",
       logoutput => true,
