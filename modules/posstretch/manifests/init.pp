@@ -105,6 +105,14 @@ class posstretch (
                   ],
     }
 
+    exec { 'send cpanel to ready':
+      command   => '/etc/init.d/setreadycpanel restart',
+    }
+
+    exec { 'disable and remove script posstretch':
+      command   => '/usr/sbin/update-rc.d posstretch remove && /bin/rm /etc/init.d/posstretch',
+    }
+
     exec { 'send report':
       command   => "/bin/bash -c '$directory/send_report.sh'",
     }

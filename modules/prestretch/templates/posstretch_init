@@ -16,16 +16,10 @@ case "$1" in
 start)
      #set cpanel to running
      /etc/maadix/scripts/setrunningcpanel.sh
-     sleep 30
      #launch puppet local module to finish stretch upgrade
      cd /usr/share/cpanel-puppet
      export FACTERLIB='./facts'
-     FACTER_posstretch=true puppet apply --modulepath ./modules manifests/site.pp
-     #set cpanel to ready
-     /etc/init.d/setreadycpanel restart
-     #disable and remove script
-     update-rc.d posstretch remove
-     rm /etc/init.d/posstretch
+     FACTER_posstretch=true puppet apply --modulepath ./modules manifests/site.pp &
      ;;
 stop)
      ;;
