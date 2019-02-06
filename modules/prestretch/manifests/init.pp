@@ -72,7 +72,7 @@ class prestretch (
 
     if ($::mailman_venv3_group){
       exec { 'delete mailman venv 3.4':
-        command   => "/bin/bash -c '$directory/delete_mailman_venv_34 > $directory/logs/05_delete_mailman_venv_34 2>&1'",
+        command   => "/bin/bash -c '$directory/delete_mailman_venv_34.sh > $directory/logs/05_delete_mailman_venv_34 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['deactivate groups and run puppet'],
