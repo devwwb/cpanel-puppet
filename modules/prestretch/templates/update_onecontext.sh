@@ -2,6 +2,9 @@
 
 echo "## Update onecontext #######################################################"
 
+#remove old package
+apt-get remove --purge one-context -y
+
 #download new package
 wget https://github.com/OpenNebula/addon-context-linux/releases/download/v5.6.0/one-context_5.6.0-1.deb -O /tmp/one-context_5.6.0-1.deb
 
