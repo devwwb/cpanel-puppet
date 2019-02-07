@@ -5,4 +5,4 @@ echo "## Delete obsolete packages ##############################################
 apt-get install aptitude -y
 
 #remove obsolete packages
-aptitude search '~o' -F '%p' | grep -v one-context | grep -v puppet-agent | grep -v linux-image | grep -v owncloud | xargs apt-get -y remove --purge
+aptitude search '~o' -F '%p' | grep -v one-context | grep -v puppet-agent | xargs apt-get -y remove --purge

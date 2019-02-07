@@ -8,7 +8,7 @@ class posstretch (
   if $enabled {
 
     #define scripts
-    $scripts = ['delete_jessie_kernels.sh','update_docker.sh','update_facts_classifier.sh','activate_groups.sh','restore_cpanel_cron.sh','iptables_apache_accept.sh','send_posstretch_notify.sh']
+    $scripts = ['delete_obsolete_packages.sh','update_docker.sh','update_facts_classifier.sh','activate_groups.sh','restore_cpanel_cron.sh','iptables_apache_accept.sh','send_posstretch_notify.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
@@ -23,13 +23,6 @@ class posstretch (
       logoutput => true,
     }
 
-    /*
-    #this may delete accidentally packages in use, leave here disabled
-    exec { 'delete_jessie_kernels.sh':
-      command   => "/bin/bash -c '$directory/delete_jessie_kernels.sh > $directory/logs/01_delete_jessie_kernels 2>&1'",
-      logoutput => true,
-    }
-    */
 
     if ($::docker_group){
       exec { 'update docker':
@@ -84,6 +77,14 @@ class posstretch (
                   Exec['run puppet to apply stretch catalog'],
                   ],
       timeout   => 3600,
+    }
+
+    exec { 'delete_obsolete_packages.sh':
+      command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/091_delete_obsolete_packages 2>&1'",
+      logoutput => true,
+      require   =>[
+                  Exec['run puppet after groups reactivating'],
+                  ],
     }
 
     exec { 'restore cpanel cron':
