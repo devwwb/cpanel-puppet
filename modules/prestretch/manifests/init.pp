@@ -115,6 +115,7 @@ class prestretch (
                   Exec['deactivate groups and run puppet'],
                   Exec['update postgresql 9.6'],
                   ],
+      notify    => Exec['iptables apache drop'],
       timeout   => 1800,
     }
 
@@ -190,6 +191,7 @@ class prestretch (
       require   =>[
                   Exec['upgrade jessie'],
                   ],
+      notify    => Exec['iptables apache drop'],
     }
 
     exec { 'restart postfix':
