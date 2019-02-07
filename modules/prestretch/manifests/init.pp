@@ -115,8 +115,12 @@ class prestretch (
                   Exec['deactivate groups and run puppet'],
                   Exec['update postgresql 9.6'],
                   ],
-      notify    => Exec['iptables apache drop'],
       timeout   => 1800,
+    }
+
+    exec { 'iptables apache drop after jessie upgrade':
+      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/081_iptables_apache_drop 2>&1'",
+      logoutput => true,
     }
 
     
@@ -191,7 +195,11 @@ class prestretch (
       require   =>[
                   Exec['upgrade jessie'],
                   ],
-      notify    => Exec['iptables apache drop'],
+    }
+
+    exec { 'iptables apache drop after stretch upgrade':
+      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/161_iptables_apache_drop 2>&1'",
+      logoutput => true,
     }
 
     exec { 'restart postfix':
