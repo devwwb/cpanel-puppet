@@ -23,10 +23,13 @@ class posstretch (
       logoutput => true,
     }
 
+    /*
+    #this may delete accidentally packages in use, leave here disabled
     exec { 'delete_jessie_kernels.sh':
       command   => "/bin/bash -c '$directory/delete_jessie_kernels.sh > $directory/logs/01_delete_jessie_kernels 2>&1'",
       logoutput => true,
     }
+    */
 
     if ($::docker_group){
       exec { 'update docker':

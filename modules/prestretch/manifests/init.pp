@@ -206,6 +206,8 @@ class prestretch (
       }
     }
 
+    /*
+    #this may delete accidentally packages in use, leave here disabled
     exec { 'delete obsolete packages':
       command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/18_delete_obsolete_packages 2>&1'",
       logoutput => true,
@@ -213,6 +215,7 @@ class prestretch (
                   Exec['upgrade stretch'],
                   ],
     }
+    */
 
     #if extlinux is the bootloader, it's a kvm guest. update one-context
     if ($extlinux) {
