@@ -7,7 +7,9 @@ if pg_config --version | grep -q 9.4; then
 
   #backup postgresql
   DATE=`date +%Y-%m-%d`
-  mkdir /etc/maadix/backups
+  if [ ! -d /etc/maadix/backups ]; then
+    mkdir /etc/maadix/backups
+  fi
   cd /tmp
   sudo -u postgres pg_dumpall > /etc/maadix/backups/postgresql-$DATE.sql
   #to restore backup

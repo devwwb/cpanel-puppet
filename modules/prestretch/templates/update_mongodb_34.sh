@@ -1,5 +1,23 @@
 #!/bin/bash
 
+echo "## Backup all mongodb databases ############################################"
+apt-get install mongodb-org-tools -y
+DATE=`date +%Y-%m-%d`
+if [ ! -d /etc/maadix/backups ]; then
+  mkdir /etc/maadix/backups
+fi
+if [ ! -d /etc/maadix/backups/mongodb-$DATE ]; then
+  echo "All databases"
+  mkdir /etc/maadix/backups/mongodb-$DATE
+  cd /etc/maadix/backups/mongodb-$DATE
+  echo -n "mongodump -u admin -p " > backup.sh
+  cat /etc/maadix/mongodbadmin | tr -d '\n' | sed "s@\\\\@@g" | tr -d \'\" >> backup.sh
+  chmod +x backup.sh
+  ./backup.sh
+  rm backup.sh
+  ls -l dump/
+fi
+
 echo "## Update mongo to 3.4 #####################################################"
 #if mongo version is 3.2
 if mongod --version | grep v3.2; then
