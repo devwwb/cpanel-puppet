@@ -67,15 +67,13 @@ class prestretch (
       }
     }
 
-    if ($::postgresql_group){
-      exec { 'update postgresql 9.6':
-        command   => "/bin/bash -c '$directory/update_postgresql_96.sh > $directory/logs/04_update_postgresql_96 2>&1'",
-        logoutput => true,
-        require   =>[
-                    Exec['deactivate groups and run puppet'],
-                    ],
-        timeout   => 1800,
-      }
+    exec { 'update postgresql 9.6':
+      command   => "/bin/bash -c '$directory/update_postgresql_96.sh > $directory/logs/04_update_postgresql_96 2>&1'",
+      logoutput => true,
+      require   =>[
+                  Exec['deactivate groups and run puppet'],
+                  ],
+      timeout   => 1800,
     }
 
     if ($::mailman_venv3_group){
@@ -113,6 +111,7 @@ class prestretch (
       logoutput => true,
       require   =>[
                   Exec['deactivate groups and run puppet'],
+                  Exec['update postgresql 9.6'],
                   ],
       timeout   => 1800,
     }
