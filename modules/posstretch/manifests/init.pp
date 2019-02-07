@@ -111,6 +111,10 @@ class posstretch (
       command   => '/usr/sbin/update-rc.d posstretch remove && /bin/rm /etc/init.d/posstretch',
     }
 
+    exec { 'delete persistent iptables rules':
+      command   => '/bin/rm /etc/iptables/*',
+    }
+
     exec { 'send report':
       command   => "/bin/bash -c '$directory/send_report.sh'",
     }
