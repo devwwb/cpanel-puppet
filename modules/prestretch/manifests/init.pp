@@ -280,6 +280,8 @@ class prestretch (
         require   =>[
                   Exec['upgrade stretch'],
                   Exec['update bootloader'],
+                  Exec['update onecontext'],
+                  Exec['update puppet'],
                   ],
       }
     #if grub is the bootloader, it's a dedicated. reboot the server
@@ -289,6 +291,7 @@ class prestretch (
         logoutput => true,
         require   =>[
                   Exec['upgrade stretch'],
+                  Exec['update puppet'],
                   ],
       }
     }
