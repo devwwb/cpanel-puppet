@@ -19,7 +19,7 @@ class prestretch (
     }
 
     #define scripts
-    $scripts = ['deactivate_groups_and_run_puppet.sh','iptables_apache_drop.sh','delete_cpanel_cron.sh', 'update_mongodb_34.sh', 'update_postgresql_96.sh', 'delete_mailman_venv_34.sh', 'delete_global_nodejs.sh', 'delete_onlyoffice_image.sh', 'upgrade_jessie.sh', 'update_source_debian.sh', 'update_source_docker.sh', 'update_source_lool.sh', 'update_source_mongodb.sh', 'delete_jessie_sources.sh', 'delete_jessie_packages.sh', 'delete_phpmyadmin.sh', 'upgrade_stretch.sh', 'update_mongodb_36.sh', 'update_onecontext.sh', 'update_puppet.sh', 'update_bootloader.sh','send_report.sh','send_prestretch_notify.sh']
+    $scripts = ['deactivate_groups_and_run_puppet.sh','iptables_apache_drop.sh','delete_cpanel_cron.sh', 'delete_old_vhosts.sh', 'update_mongodb_34.sh', 'update_postgresql_96.sh', 'delete_mailman_venv_34.sh', 'delete_global_nodejs.sh', 'delete_onlyoffice_image.sh', 'upgrade_jessie.sh', 'update_source_debian.sh', 'update_source_docker.sh', 'update_source_lool.sh', 'update_source_mongodb.sh', 'delete_jessie_sources.sh', 'delete_jessie_packages.sh', 'delete_phpmyadmin.sh', 'upgrade_stretch.sh', 'update_mongodb_36.sh', 'update_onecontext.sh', 'update_puppet.sh', 'update_bootloader.sh','send_report.sh','send_prestretch_notify.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
@@ -52,9 +52,11 @@ class prestretch (
     }
 
     exec { 'delete old vhosts':
-      command   => "/bin/bash -c 'rm -r /etc/apache2/ldap-enabled > $directory/logs/021_delete_old_vhosts 2>&1'",
-      onlyif    => '/usr/bin/test -e /etc/apache2/ldap-enabled',
+      command   => "/bin/bash -c '$directory/delete_old_vhosts.sh > $directory/logs/021_delete_old_vhosts 2>&1'",
       logoutput => true,
+      require   =>[
+                  Exec['deactivate groups and run puppet'],
+                  ],
     }
 
     if ($::mongodb_group){
