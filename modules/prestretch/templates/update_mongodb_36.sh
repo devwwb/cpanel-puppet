@@ -9,7 +9,7 @@ service mongod restart
 if mongod --version | grep v3.4; then
 
   #setFeatureCompatibilityVersion to 3.6
-  sleep 10
+  sleep 30
   mongo admin --port 27017 --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '3.6' } )"
 
 fi
