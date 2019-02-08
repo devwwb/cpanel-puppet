@@ -49,6 +49,7 @@ class report (
     exec { 'vm packages report':
       command   => "/bin/bash -c '$directory/vm_packages_report.sh > $directory/logs/03_vm_packages_report.sh.log 2>&1'",
       logoutput => true,
+      timeout   => 3600,
     }
 
 
