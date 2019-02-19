@@ -241,6 +241,14 @@ class prestretch (
       require   =>[
                   Exec['upgrade stretch'],
                   ],
+    } ->
+    #puppet conf
+    file { 'puppet conf':
+        path    => '/etc/default/puppet',
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        content => template('prestretch/puppet_default'),
     }
 
     #if extlinux is the bootloader, replace by grub

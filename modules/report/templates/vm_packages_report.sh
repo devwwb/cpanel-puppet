@@ -7,6 +7,7 @@ find /etc/apt/sources.list* -type f | xargs cat
 ##Install apt-show-versions
 echo "## Install aptitude and debsums ############################################"
 apt-get install aptitude debsums -y
+aptitude update
 
 ##List Packages in this server absent in the reference
 echo "## List NON CANONICAL packages #############################################"
