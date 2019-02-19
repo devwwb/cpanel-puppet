@@ -20,8 +20,8 @@ fi
 if [ -f /usr/bin/loolwsd ]; then
   #libreoffice-online stop
   service libreoffice-online stop
-  #remove libpoco*
-  apt-get remove --purge libpoco* -y
+  #remove libpoco* and libreoffice*
+  apt-get remove --purge libpoco* libreoffice* -y
 fi
 
 
