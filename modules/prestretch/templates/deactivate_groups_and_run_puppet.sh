@@ -1,23 +1,24 @@
 #!/bin/bash
 
 #get enabled groups, excluding mail, mongo, nodejs, docker
-egroups=($(ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "ou=groups,dc=example,dc=tld" "(&(objectClass=*)(status=enabled)(!(ou:dn:=mail)))" | grep -v nodejs | grep -v mongodb | grep -v docker | grep ou: | sed "s|.*: \(.*\)|\1|"))
+egroups=($(ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "ou=groups,dc=example,dc=tld" "(&(objectClass=*)(type=available)(status=enabled)(!(ou:dn:=mail)))" | grep -v nodejs | grep -v mongodb | grep -v docker | grep ou: | sed "s|.*: \(.*\)|\1|"))
 
-echo "## Deactivate groups #########################################################"
+#set cpanel to running
+/etc/maadix/scripts/setrunningcpanel.sh
+
+echo "## Deactivate enabled groups #################################################"
 #deactivate groups
 for i in "${egroups[@]}"
 do
 echo "dn: ou=$i,ou=groups,dc=example,dc=tld
 changetype:modify
 replace:type
-type: installed
+type: upgrade
 -
 replace:status
 status: disabled" | ldapmodify -H ldapi:// -Y EXTERNAL
 done
 
-#set cpanel to running
-/etc/maadix/scripts/setrunningcpanel.sh
 
 #run puppet only if there were active groups
 if [ ${#egroups[@]} -eq 0 ]; then

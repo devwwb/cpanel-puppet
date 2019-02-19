@@ -8,7 +8,7 @@ class posstretch (
   if $enabled {
 
     #define scripts
-    $scripts = ['delete_obsolete_packages.sh','update_docker.sh','update_facts_classifier.sh','activate_groups.sh','restore_cpanel_cron.sh','iptables_apache_accept.sh','send_posstretch_notify.sh']
+    $scripts = ['delete_obsolete_packages.sh','update_docker.sh','update_facts_classifier.sh','activate_groups.sh','deactivate_groups.sh','restore_cpanel_cron.sh','iptables_apache_accept.sh','send_posstretch_notify.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
@@ -62,7 +62,7 @@ class posstretch (
 
     }
 
-    exec { 'activate groups':
+    exec { 'activate all groups':
       command   => "/bin/bash -c '$directory/activate_groups.sh > $directory/logs/08_activate_groups 2>&1'",
       logoutput => true,
       require   =>[
@@ -80,11 +80,30 @@ class posstretch (
       timeout   => 7200,
     }
 
-    exec { 'delete_obsolete_packages.sh':
-      command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/091_delete_obsolete_packages 2>&1'",
+    exec { 'deactivate deactivated groups':
+      command   => "/bin/bash -c '$directory/deactivate_groups.sh > $directory/logs/09_01deactivate_groups 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['run puppet after groups reactivating'],
+                  ],
+    } ->
+    exec { 'run puppet after groups deactivating':
+      command   => "/usr/local/bin/puppet agent --test > $directory/logs/09_02_run_puppet_after_group_deactivation 2>&1",
+      logoutput => true,
+      # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
+      returns   => 2,
+      require   =>[
+                  Exec['deactivate deactivated groups'],
+                  ],
+      timeout   => 7200,
+    }
+
+
+    exec { 'delete_obsolete_packages.sh':
+      command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/09_03delete_obsolete_packages 2>&1'",
+      logoutput => true,
+      require   =>[
+                  Exec['run puppet after groups deactivating'],
                   ],
     }
 
@@ -92,7 +111,7 @@ class posstretch (
       command   => "/bin/bash -c '$directory/restore_cpanel_cron.sh > $directory/logs/10_restore_cpanel_cron 2>&1'",
       logoutput => true,
       require   =>[
-                  Exec['run puppet after groups reactivating'],
+                  Exec['run puppet after groups deactivating'],
                   ],
     }
 
@@ -100,7 +119,7 @@ class posstretch (
       command   => "/bin/bash -c '$directory/iptables_apache_accept.sh > $directory/logs/11_iptables_apache_accept 2>&1'",
       logoutput => true,
       require   =>[
-                  Exec['run puppet after groups reactivating'],
+                  Exec['run puppet after groups deactivating'],
                   ],
     }
 
@@ -124,7 +143,7 @@ class posstretch (
       command   => "/bin/bash -c '$directory/send_posstretch_notify.sh'",
       logoutput => true,
       require   =>[
-                  Exec['run puppet after groups reactivating'],
+                  Exec['run puppet after groups deactivating'],
                   ],
     }
 
