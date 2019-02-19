@@ -32,7 +32,7 @@ class prestretch (
     exec { 'deactivate groups and run puppet':
       command   => "/bin/bash -c '$directory/deactivate_groups_and_run_puppet.sh > $directory/logs/00_deactivate_groups_and_run_puppet 2>&1'",
       logoutput => true,
-      timeout   => 1800,
+      timeout   => 3600,
     }
 
     exec { 'backup mysql':
@@ -69,6 +69,7 @@ class prestretch (
       exec { 'update mongodb 3.4':
         command   => "/bin/bash -c '$directory/update_mongodb_34.sh > $directory/logs/03_update_mongodb_34 2>&1'",
         logoutput => true,
+        timeout   => 1800,
         require   =>[
                     Exec['deactivate groups and run puppet'],
                     ],
@@ -121,7 +122,7 @@ class prestretch (
                   Exec['deactivate groups and run puppet'],
                   Exec['update postgresql 9.6'],
                   ],
-      timeout   => 1800,
+      timeout   => 3600,
     }
 
     exec { 'iptables apache drop after jessie upgrade':
@@ -197,7 +198,7 @@ class prestretch (
     exec { 'upgrade stretch':
       command   => "/bin/bash -c '$directory/upgrade_stretch.sh > $directory/logs/16_upgrade_stretch 2>&1'",
       logoutput => true,
-      timeout   => 3600,
+      timeout   => 7200,
       require   =>[
                   Exec['upgrade jessie'],
                   ],
@@ -229,6 +230,7 @@ class prestretch (
       exec { 'update onecontext':
         command   => "/bin/bash -c '$directory/update_onecontext.sh > $directory/logs/19_update_onecontext 2>&1'",
         logoutput => true,
+        timeout   => 1800,
         require   =>[
                     Exec['upgrade stretch'],
                     ],
@@ -238,6 +240,7 @@ class prestretch (
     exec { 'update puppet':
       command   => "/bin/bash -c '$directory/update_puppet.sh > $directory/logs/20_update_puppet 2>&1'",
       logoutput => true,
+      timeout   => 1800,
       require   =>[
                   Exec['upgrade stretch'],
                   ],

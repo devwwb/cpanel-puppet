@@ -28,6 +28,7 @@ class posstretch (
       exec { 'update docker':
         command   => "/bin/bash -c '$directory/update_docker.sh > $directory/logs/02_update_docker 2>&1'",
         logoutput => true,
+        timeout   => 1800,
       }
 
       exec { 'delete old aufs docker images':
@@ -46,7 +47,7 @@ class posstretch (
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
-      timeout   => 3600,
+      timeout   => 7200,
     }
 
     if ($::discourse_group){
@@ -56,7 +57,7 @@ class posstretch (
         require   =>[
                     Exec['run puppet to apply stretch catalog'],
                     ],
-        timeout   => 3600,
+        timeout   => 7200,
       }
 
     }
@@ -76,7 +77,7 @@ class posstretch (
       require   =>[
                   Exec['run puppet to apply stretch catalog'],
                   ],
-      timeout   => 3600,
+      timeout   => 7200,
     }
 
     exec { 'delete_obsolete_packages.sh':
