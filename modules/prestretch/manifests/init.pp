@@ -29,16 +29,15 @@ class prestretch (
       }
     }
 
-    exec { 'deactivate groups and run puppet':
-      command   => "/bin/bash -c '$directory/deactivate_groups_and_run_puppet.sh > $directory/logs/00_deactivate_groups_and_run_puppet 2>&1'",
-      logoutput => true,
-      timeout   => 3600,
-    }
-
     exec { 'backup mysql':
       command   => "/bin/bash -c '$directory/backup_mysql.sh > $directory/logs/00_1_backup_mysql 2>&1'",
       logoutput => true,
       timeout   => 1800,
+    } ->
+    exec { 'deactivate groups and run puppet':
+      command   => "/bin/bash -c '$directory/deactivate_groups_and_run_puppet.sh > $directory/logs/00_2_deactivate_groups_and_run_puppet 2>&1'",
+      logoutput => true,
+      timeout   => 3600,
     }
 
     exec { 'iptables apache drop':
