@@ -21,14 +21,14 @@ Facter.add("maildomains") do
   end
 
   # THEN read mailman domains from psql and add to maildomains fact
-  maildomains_result = Facter::Util::Resolution.exec('sudo -u mailman psql -d mailman -A --tuples-only --field-separator="" -c "select mail_host from domain"')
-  if not maildomains_result.nil?
-      maildomains_result.each_line do |line|
-          if !maildomains[0].include?(line.strip)
-            maildomains[0].push(line.strip)
-          end
-      end
-  end
+  #maildomains_result = Facter::Util::Resolution.exec('sudo -u mailman psql -d mailman -A --tuples-only --field-separator="" -c "select mail_host from domain"')
+  #if not maildomains_result.nil?
+  #    maildomains_result.each_line do |line|
+  #        if !maildomains[0].include?(line.strip)
+  #          maildomains[0].push(line.strip)
+  #        end
+  #    end
+  #end
 
   setcode do
     if Facter.version < '2.0.0'
