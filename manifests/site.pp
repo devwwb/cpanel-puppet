@@ -17,6 +17,9 @@ node default {
   ## report
   include report
 
+  ## report
+  include clean
+
   ## stretch
   include prestretch
   include posstretch
