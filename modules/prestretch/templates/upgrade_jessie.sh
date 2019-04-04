@@ -3,7 +3,7 @@
 echo "## Upgrade jessie ##########################################################"
 
 #upgrade jessie
-apt-get update
+apt-get -o Acquire::Check-Valid-Until=false update
 apt-get upgrade -y
 apt-get dist-upgrade -y
 
