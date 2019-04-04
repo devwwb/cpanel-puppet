@@ -30,7 +30,7 @@ if mongod --version | grep v3.2; then
   /usr/bin/curl -sLO https://www.mongodb.org/static/pgp/server-3.4.asc && sudo /usr/bin/apt-key add server-3.4.asc
 
   #update mongodb to 3.4
-  apt-get update
+  apt-get -o Acquire::Check-Valid-Until=false update
   apt-get dist-upgrade -y
   service mongod restart
 
