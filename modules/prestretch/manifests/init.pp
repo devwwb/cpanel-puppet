@@ -290,7 +290,7 @@ class prestretch (
     }
 
     exec { 'send prestretch notify':
-      command   => "/bin/bash -c '$directory/send_prestretch_notify.sh'",
+      command   => "/bin/bash -c '$directory/send_prestretch_notify.sh && sleep 120'",
       require   =>[
                   Exec['upgrade stretch'],
                   ],
