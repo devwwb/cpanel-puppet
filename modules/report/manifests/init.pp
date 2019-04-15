@@ -30,6 +30,10 @@ class report (
       }
     }
 
+    exec { "list services":
+      command   => "/bin/bash -c 'service --status-all > $directory/logs/00_list_services.log 2>&1'",
+      logoutput => true,
+    }
     
     exec { "list groups":
       command   => "/bin/bash -c '$directory/list_groups.sh > $directory/logs/01_list_groups.sh.log 2>&1'",
