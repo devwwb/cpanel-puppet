@@ -20,7 +20,7 @@ class report (
     }
 
     #define scripts
-    $scripts = ['list_groups.sh','dist_upgrade_packages.sh','vm_packages_report.sh','vm_docker_report.sh','iptables_report.sh','disk_report.sh','send_report.sh']
+    $scripts = ['list_groups.sh','vm_packages_report.sh','vm_docker_report.sh','iptables_report.sh','disk_report.sh','send_report.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
@@ -41,15 +41,6 @@ class report (
       timeout   => 3600,
     }
 
-    exec { "dist upgrade packages":
-      command   => "/bin/bash -c '$directory/dist_upgrade_packages.sh > $directory/logs/02_dist_upgrade_packages.sh.log 2>&1'",
-      logoutput => true,
-      timeout   => 3600,
-    }
-
-    file {'/tmp/jessie_reference':
-      content => template('report/jessie_reference'),
-    } ->
     exec { 'vm packages report':
       command   => "/bin/bash -c '$directory/vm_packages_report.sh > $directory/logs/03_vm_packages_report.sh.log 2>&1'",
       logoutput => true,
