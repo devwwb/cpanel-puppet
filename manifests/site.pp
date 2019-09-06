@@ -23,6 +23,9 @@ node default {
   ## samhainreset
   include samhainreset
 
+  ## samhaincheck
+  include samhaincheck
+
   ## stretch
   include prestretch
   include posstretch

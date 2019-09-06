@@ -19,6 +19,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     report
     clean
     samhainreset
+    samhaincheck
 
 # Modules TODO
 

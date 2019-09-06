@@ -32,7 +32,3 @@ dpkg -C
 echo "## Showhold ################################################################"
 apt-mark showhold
 
-##Check files integrity with samhain
-echo "## Samhain ################################################################"
-samhain -t check
-
