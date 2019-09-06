@@ -18,6 +18,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     posstretch
     report
     clean
+    samhainreset
 
 # Modules TODO
 

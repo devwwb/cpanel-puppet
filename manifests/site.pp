@@ -17,8 +17,11 @@ node default {
   ## report
   include report
 
-  ## report
+  ## clean
   include clean
+
+  ## samhainreset
+  include samhainreset
 
   ## stretch
   include prestretch
