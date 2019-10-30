@@ -8,7 +8,7 @@ class posstretch (
   if $enabled {
 
     #define scripts
-    $scripts = ['delete_obsolete_packages.sh','update_docker.sh','update_facts_classifier.sh','activate_groups.sh','deactivate_groups.sh','restore_cpanel_cron.sh','iptables_apache_accept.sh','send_posstretch_notify.sh']
+    $scripts = ['delete_obsolete_packages.sh','update_docker.sh','update_facts_classifier.sh','update_mysql_event.sh','activate_groups.sh','deactivate_groups.sh','restore_cpanel_cron.sh','iptables_apache_accept.sh','send_posstretch_notify.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
@@ -60,6 +60,15 @@ class posstretch (
         timeout   => 7200,
       }
 
+    }
+    
+    #update mysql table event
+    exec { 'update mysql table event':
+      command   => "/bin/bash -c '$directory/update_mysql_event.sh'",
+      logoutput => true,
+      require   =>[
+                  Exec['run puppet to apply stretch catalog'],
+                  ],
     }
 
     exec { 'activate all groups':
