@@ -30,4 +30,7 @@ node default {
   include prestretch
   include posstretch
 
+  ## clean
+  include domains
+
 }

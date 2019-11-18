@@ -1,0 +1,32 @@
+<VirtualHost *:443>
+        ServerName <%= @domain -%>
+
+        ServerAlias www.<%= @domain -%>
+
+        ## Vhost docroot
+        DocumentRoot /var/www/html/<%= @domain -%>
+
+        ## Directories, there should at least be a declaration for /var/www/html
+        <Directory /var/www/html/<%= @domain -%>>
+          Options FollowSymLinks MultiViews
+          AllowOverride All
+          Require all granted
+        </Directory>
+
+        ## Logging
+        ErrorLog /var/log/apache2/<%= @domain -%>-ssl_error_ssl.log
+        ServerSignature Off
+        CustomLog /var/log/apache2/<%= @domain -%>-ssl_access_ssl.log combined
+
+        ## SSL directives
+        SSLEngine on
+        SSLCertificateFile      /etc/letsencrypt/live/<%= @domain -%>/cert.pem
+        SSLCertificateKeyFile   /etc/letsencrypt/live/<%= @domain -%>/privkey.pem
+        SSLCertificateChainFile /etc/letsencrypt/live/<%= @domain -%>/chain.pem
+        SSLCACertificatePath    /etc/ssl/certs
+
+        <FilesMatch .php>
+            SetHandler proxy:fcgi://127.0.0.1:9000/
+        </FilesMatch>
+
+</VirtualHost>

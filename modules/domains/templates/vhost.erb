@@ -1,0 +1,25 @@
+<VirtualHost *:80>
+        ServerName <%= @domain -%>
+
+        ServerAlias www.<%= @domain -%>
+
+        ## Vhost docroot
+        DocumentRoot /var/www/html/<%= @domain -%>
+
+        ## Directories, there should at least be a declaration for /var/www/html
+        <Directory /var/www/html/<%= @domain -%>>
+
+          Options FollowSymLinks MultiViews
+          AllowOverride All
+          Require all granted
+        </Directory>
+        ## Logging
+        ErrorLog /var/log/apache2/<%= @domain -%>-nonssl_error.log
+        ServerSignature Off
+        CustomLog /var/log/apache2/<%= @domain -%>-nonssl_access.log combined
+        ## Rewrite rules
+        RewriteEngine On
+        #redirect non-SSL traffic to SSL site but certbot .well-known folder
+        RewriteCond %{REQUEST_URI} !^/\.well\-known/acme\-challenge/
+        RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</VirtualHost>
