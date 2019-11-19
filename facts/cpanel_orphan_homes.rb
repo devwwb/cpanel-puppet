@@ -12,6 +12,8 @@ Facter.add(:cpanel_orphan_homes) do
     #get all users deleted from ldap (sftp and ssh users)
     users=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "ou=users,ou=trash,dc=example,dc=tld" "(&(objectClass=person)(status=totrash))" | grep uid: | sed "s|.*: \(.*\)|\1|"')
     if not users.nil?
+      #to prevent id command (below) to retrive cached data (user ids of nonexistent users) flush here passwd cache table of nscd
+      cleannscdcache = Facter::Core::Execution.execute('nscd -i passwd')
       users.each_line do |user|
         #confirm user doesn't exist in the system, then add to orphanhomes
         #doc: https://tickets.puppetlabs.com/browse/FACT-1284
