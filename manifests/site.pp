@@ -33,4 +33,7 @@ node default {
   ## domains
   include domains
 
+  ## trash
+  include trash
+
 }
