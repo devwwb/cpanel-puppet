@@ -70,36 +70,6 @@ fi
 #  exit 1
 #fi
 
-########## Auto lock modules Loop START ###########################################################################
-
-# Check if new mailman domain is added to trigger puppet local opendkim
-function lock_opendkim ()
-{
-ldapmodify -Q -Y EXTERNAL -H ldapi:///  << EOF
-dn: ou=opendkim,ou=cpanel,dc=example,dc=tld
-changetype: modify
-replace: status
-status: locked
-EOF
-}
-
-# if mailman is enabled, check if domains has opendkim certs
-mailmanenabled=`ldapsearch -Q -Y EXTERNAL -H ldapi:/// -b ou=mailman,ou=groups,dc=example,dc=tld -s base "(status=enabled)" | grep ^dn: | wc -l`
-if [ "$mailmanenabled" -gt 0 ]; then
-  for domain in `su - postgres -c "psql -d mailman -A -t -c \"select mail_host FROM domain;\""`; do
-    printf "$domain\n"
-    if [ ! -d "/etc/opendkim/keys/$domain" ]; then
-      echo "opendkim cert not available"
-      #set opendkim object status to locked
-      lock_opendkim
-    else
-      echo "opendkim cert available"
-    fi
-  done
-fi
-
-########## Auto lock modules Loop END ###########################################################################
-
 # Search if any of the modules is locked
 locked=`ldapsearch -Q -Y EXTERNAL -H "$url" -b "$cpanelobject" -s one "(status=locked)" | grep ^dn: | wc -l`
 echo "Modules locked: $locked"
