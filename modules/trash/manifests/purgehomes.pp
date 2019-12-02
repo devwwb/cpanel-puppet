@@ -12,7 +12,7 @@ define trash::purgehomes(
 
   #delete ldap entry for this user in ldap
   exec {"purge $uid from ldap/trash/users":
-    command	=> "/usr/bin/ldapdelete -H ldapi:// -Y EXTERNAL 'uid=$uid,ou=users,ou=trash,dc=example,dc=tld'",
+    command	=> "/usr/bin/ldapdelete -H ldapi:// -Y EXTERNAL 'cn=$uid,ou=users,ou=trash,dc=example,dc=tld'",
   }
 
 }

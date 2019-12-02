@@ -22,7 +22,7 @@ define domains::orphanhomes(
 
   #set deleted user home as moved to trash: status=intrash
   ldapdn{"set $uid status=intrash":
-    dn			=> "uid=$uid,ou=users,ou=trash,dc=example,dc=tld",
+    dn			=> "cn=$uid,ou=users,ou=trash,dc=example,dc=tld",
     attributes		=> ["status: intrash"],
     unique_attributes	=> ["status"],
     ensure		=> present
