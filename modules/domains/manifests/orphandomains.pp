@@ -1,13 +1,33 @@
 define domains::orphandomains(
   $domain	= undef,
+  $cn           = undef,
+  $trashname    = undef,
+  $webroot      = undef,
 ) {
 
-  #assign nobody permissions to deleted domain
-  file {"/var/www/html/$domain":
-    ensure	=> directory,
-    owner	=> 'nobody',
-    group	=> 'nogroup',
-    recurse	=> true,
+
+  #move deleted domain webroot to trash
+  exec {"mv $cn home to trash":
+    command     => "/bin/mv $webroot /home/.trash/domains/$trashname",
+    require     => File['/home/.trash/domains/'],
+    onlyif      => "/usr/bin/test -e $webroot",
+  } ->
+
+  #assign nobody permissions to deleted domain webroot
+  file {"/home/.trash/domains/$trashname":
+    ensure      => directory,
+    owner       => 'nobody',
+    group       => 'nogroup',
+    recurse     => true,
+  } ->
+
+  #set deleted domain as moved to trash: status=intrash
+  ldapdn{"set $cn status=intrash":
+    dn                  => "cn=$cn,ou=domains,ou=trash,dc=example,dc=tld",
+    attributes          => ["status: intrash"],
+    unique_attributes   => ["status"],
+    ensure              => present
+
   }
 
   #remove certs
@@ -26,4 +46,3 @@ define domains::orphandomains(
   }
 
 }
-

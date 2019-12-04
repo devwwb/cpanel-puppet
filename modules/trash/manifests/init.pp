@@ -11,6 +11,9 @@ class trash (
     #purge users home from trash
     create_resources(trash::purgehomes, $::trash_purge_homes)
 
+    #purge domains webroot from trash
+    create_resources(trash::purgewebroots, $::trash_purge_webroots)
+
 
   }
 

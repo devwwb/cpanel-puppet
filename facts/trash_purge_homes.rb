@@ -13,7 +13,7 @@ Facter.add(:trash_purge_homes) do
     users=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "ou=users,ou=trash,dc=example,dc=tld" "(&(objectClass=applicationProcess)(status=purge))" | grep cn: | sed "s|.*: \(.*\)|\1|"')
     if not users.nil?
       users.each_line do |user|
-       trashname = Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "cn=' + user.strip + ',ou=users,ou=trash,dc=example,dc=tld" "(&(objectClass=applicationProcess)(status=purge))" | grep type: | sed "s|.*: \(.*\)|\1|"')
+       trashname = Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "cn=' + user.strip + ',ou=users,ou=trash,dc=example,dc=tld" "(&(objectClass=applicationProcess)(status=purge))" | grep cn: | sed "s|.*: \(.*\)|\1|"')
        homestopurge[user.strip] = {:uid => user.strip ,:trashname => trashname.strip}
       end
     end

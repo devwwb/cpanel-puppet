@@ -15,6 +15,9 @@ class domains (
     }->
     file {'/home/.trash/users':
       ensure  => directory,
+    }->
+    file {'/home/.trash/domains':
+      ensure  => directory,
     }
 
     #purge ldap-enabled vhost dir

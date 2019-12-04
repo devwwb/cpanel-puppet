@@ -4,7 +4,7 @@ define trash::purgehomes(
 ) {
 
 
-  #move deleted user home to trash
+  #purge deleted user home from trash
   exec {"purge $uid home with name $trashname from trash":
     command	=> "/bin/rm -r /home/.trash/users/$trashname",
     onlyif	=> "/usr/bin/test -e /home/.trash/users/$trashname",
