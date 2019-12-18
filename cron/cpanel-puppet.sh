@@ -132,6 +132,15 @@ if [ "$locked" -gt 0 ]; then
       # Send mail to admin with log, removing color codes from log file
       cat "${logdir}/${date}_stdout.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Error in ${hostname}" $logmail
 
+      # If error comes from domains module, set its status to error
+      if [[ " ${modules[@]} " =~ 'domains' ]]; then
+        setlockstatus domains error
+      fi
+      # If error comes from trash module, set its status to error
+      if [[ " ${modules[@]} " =~ 'trash' ]]; then
+        setlockstatus trash error
+      fi
+
   fi
 
   # Change module status to 'ready' (obsolete)
