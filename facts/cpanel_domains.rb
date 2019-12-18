@@ -14,8 +14,10 @@ Facter.add(:cpanel_domains) do
         #if cert doesn't include domain with www, check if it's available to add it and regenerate the cert
         if Facter.value(:cpanel_domains_certs)[domain.strip][:www] == false
           begin
-            IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
-            domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => true}
+            IPSocket::getaddress('www.' + domain.strip)
+            if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
+              domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => true}
+            end
           rescue SocketError
             domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false}            
           end
@@ -23,12 +25,22 @@ Facter.add(:cpanel_domains) do
           domains[domain.strip] = {:domain => domain.strip, :www => Facter.value(:cpanel_domains_certs)[domain.strip][:www], :regenerate => false}
         end
       else
-        if IPSocket::getaddress(domain.strip) == Facter.value(:ipaddress)
-          if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
-            domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => false}
-          else
-            domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false}
+        begin
+          #check if domain has DNS
+          IPSocket::getaddress(domain.strip)
+          #if domain point to this ip
+          if IPSocket::getaddress(domain.strip) == Facter.value(:ipaddress)
+            begin
+              IPSocket::getaddress('www.' + domain.strip)
+              if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
+                domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => false}
+              end
+            rescue SocketError
+              domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false}
+            end
           end
+        rescue SocketError
+          #the domain has not DNS, do nothing
         end
       end
     end
