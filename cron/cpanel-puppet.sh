@@ -16,7 +16,7 @@ timestamp=$(date +%s)
 date=$(date -u +"%Y-%m-%d-%T")
 hostname=$(hostname)
 logdir="/etc/maadix/logs"
-logmail="maadix@wwb.cc"
+logmail="admin@maadix.org"
 
 ##### Functions ###############################
 
@@ -113,7 +113,7 @@ if [ "$locked" -gt 0 ]; then
   echo "$facter"
 
   # Build puppet commando
-  puppet="cd /usr/share/cpanel-puppet && export FACTERLIB='./facts' && $facter /usr/local/bin/puppet apply --detailed-exitcode --modulepath ./modules manifests/site.pp > '${logdir}/${date}_stdout.txt' 2> '${logdir}/${date}_stderr.txt'"
+  puppet="cd /usr/share/cpanel-puppet && export FACTERLIB='./facts' && $facter /usr/local/bin/puppet apply --detailed-exitcode --modulepath ./modules manifests/site.pp &> ${logdir}/${date}_stdout.txt"
   echo "$puppet"
   eval $puppet
 
@@ -123,11 +123,14 @@ if [ "$locked" -gt 0 ]; then
     then
       echo "Puppet successful - Exit code ${exitcode}"
 
+      # Send mail to admin with log, removing color codes from log file
+      cat "${logdir}/${date}_stdout.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Local log in ${hostname}" $logmail
+
     else
       echo "Local Puppet error - Exit code ${exitcode}"
 
-      # Send mail to admin with error log, removing color codes from log file
-      cat "${logdir}/${date}_stderr.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Error in ${hostname}" $logmail
+      # Send mail to admin with log, removing color codes from log file
+      cat "${logdir}/${date}_stdout.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Error in ${hostname}" $logmail
 
   fi
 
