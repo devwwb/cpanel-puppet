@@ -80,6 +80,7 @@ if [ "$locked" -gt 0 ]; then
 
   ## If repo is out of date, pull and exit
   cd /usr/share/cpanel-puppet
+  git fetch
   UPSTREAM=${1:-'@{u}'}
   LOCAL=$(git rev-parse @)
   REMOTE=$(git rev-parse "$UPSTREAM")
