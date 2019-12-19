@@ -1,4 +1,5 @@
 require 'yaml'
+require 'etc'
 
 ##facter with vhost params for each domain
 
@@ -35,6 +36,23 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
 
     vhosts
   end
+
+  #oldwebmaster: the current owner of the webroot folder
+  chunk(:oldwebmaster) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      webroot = '/var/www/html/' + domain.strip
+      if File.directory?(webroot)
+        uid = File.stat(webroot).uid
+        username = Etc.getpwuid(uid).name
+        vhosts[domain.strip] = {:oldwebmaster => username}
+      else
+        vhosts[domain.strip] = {:oldwebmaster => ''}
+      end
+    end
+    vhosts
+  end
+
 
   #todo, add extra vhosts options to parse in the template file
 

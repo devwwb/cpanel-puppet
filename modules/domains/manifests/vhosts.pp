@@ -5,6 +5,7 @@ define domains::vhosts(
   $www			= undef,
   $regenerate           = undef,
   $dns			= undef,
+  $oldwebmaster		= undef,
 ) {
 
   #create vhost and cert only if domain has DNS resolution
@@ -14,20 +15,27 @@ define domains::vhosts(
     file {"/etc/apache2/ldap-enabled/$domain.conf":
       content	=> template('domains/vhost.erb'),
       notify	=> Exec['reload apache'],
-    } ->
-    #webroot folder + owner/group and permissions
-    file {"/var/www/html/$domain":
-      ensure	=> directory,
-      owner	=> $webmaster,
-      group	=> 'www-data',
-      mode	=> '2775',
-      notify	=> Exec['reload apache'],
-    } ~>
-    #when domain is assigned to another webmaster, change owner recursive
-    exec {"owner/group recursive of $domain":
-      command	   => "chown -R $webmaster:www-data /var/www/html/$domain",
-      refreshonly  => true,
-      path	   => ['/usr/bin', '/usr/sbin', '/bin'],
+    }
+    #change perms/owner of domain webroot only if webmaster changes
+    if $webmaster != $oldwebmaster {
+      #webroot folder + owner/group and permissions
+      file {"/var/www/html/$domain":
+        ensure	=> directory,
+        owner	=> $webmaster,
+        group	=> 'www-data',
+        mode	=> '2775',
+        notify	=> Exec['reload apache'],
+      } ~>
+      #when domain is assigned to another webmaster, change owner recursive
+      exec {"owner/group recursive of $domain":
+        command	   => "chown -R $webmaster:www-data /var/www/html/$domain",
+        refreshonly  => true,
+        path	   => ['/usr/bin', '/usr/sbin', '/bin'],
+      }
+    } else {
+      file {"/var/www/html/$domain":
+        ensure	=> directory,
+      }
     }
 
     #letsencrypt certs
