@@ -27,8 +27,9 @@ define domains::vhosts(
         notify	=> Exec['reload apache'],
       } ~>
       #when domain is assigned to another webmaster, change owner recursive
+      #change only files and folders owned by oldwebmaster. If user has change the owner of a file or dir manually, leave it as is
       exec {"owner/group recursive of $domain":
-        command	   => "chown -R $webmaster:www-data /var/www/html/$domain",
+        command	   => "find /var/www/html/$domain -user $oldwebmaster -exec chown $webmaster:www-data {} +",
         refreshonly  => true,
         path	   => ['/usr/bin', '/usr/sbin', '/bin'],
       }
