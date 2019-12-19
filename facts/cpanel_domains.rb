@@ -1,7 +1,7 @@
 require 'yaml'
 require 'socket'
 
-##list of domains in cpanel with dns resolution
+##list of domains in cpanel with and without dns resolution
 
 #to debug, use STDERR and run 'puppet facts --debug | grep -A 20 cpanel_domains' in the agent
 
@@ -16,13 +16,13 @@ Facter.add(:cpanel_domains) do
           begin
             IPSocket::getaddress('www.' + domain.strip)
             if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
-              domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => true}
+              domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => true, :dns => true}
             end
           rescue SocketError
-            domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false}            
+            domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
           end
         else
-          domains[domain.strip] = {:domain => domain.strip, :www => Facter.value(:cpanel_domains_certs)[domain.strip][:www], :regenerate => false}
+          domains[domain.strip] = {:domain => domain.strip, :www => Facter.value(:cpanel_domains_certs)[domain.strip][:www], :regenerate => false, :dns => true}
         end
       else
         begin
@@ -31,16 +31,21 @@ Facter.add(:cpanel_domains) do
           #if domain point to this ip
           if IPSocket::getaddress(domain.strip) == Facter.value(:ipaddress)
             begin
+              #check if domain as www. DNS resolution
               IPSocket::getaddress('www.' + domain.strip)
               if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
-                domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => false}
+                domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => false, :dns => true}
               end
             rescue SocketError
-              domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false}
+              domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
             end
+          else
+            #the domain has DNS but not pointing to this IP
+            domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => false}
           end
         rescue SocketError
-          #the domain has not DNS, do nothing
+          #the domain has not DNS
+          domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => false}
         end
       end
     end

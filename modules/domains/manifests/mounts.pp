@@ -4,6 +4,7 @@ define domains::mounts(
   $webmaster_type	= undef,
   $www                  = undef,
   $regenerate		= undef,
+  $dns			= undef,
 ) {
 
   #only mount domains assigned to webmaster of type sftp
