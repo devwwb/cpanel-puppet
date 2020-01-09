@@ -16,8 +16,9 @@ define domains::vhosts(
       content	=> template('domains/vhost.erb'),
       notify	=> Exec['reload apache'],
     }
-    #change perms/owner of domain webroot only if webmaster changes
-    if $webmaster != $oldwebmaster {
+
+    #change perms/owner of domain webroot only if webmaster changes for existent domains
+    if ($webmaster != $oldwebmaster) and ($oldwebmaster != '') {
       #webroot folder + owner/group and permissions
       file {"/var/www/html/$domain":
         ensure	=> directory,
@@ -32,6 +33,16 @@ define domains::vhosts(
         command	   => "find /var/www/html/$domain -user $oldwebmaster -exec chown $webmaster:www-data {} +",
         refreshonly  => true,
         path	   => ['/usr/bin', '/usr/sbin', '/bin'],
+      }
+    #perms/owner of domain webroot for new domains
+    } elsif $oldwebmaster == '' {
+      #webroot folder + owner/group and permissions
+      file {"/var/www/html/$domain":
+        ensure	=> directory,
+        owner	=> $webmaster,
+        group	=> 'www-data',
+        mode	=> '2775',
+        notify	=> Exec['reload apache'],
       }
     } else {
       file {"/var/www/html/$domain":
