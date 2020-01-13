@@ -110,6 +110,7 @@ class posstretch (
 
     exec { 'delete_obsolete_packages.sh':
       command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/09_03delete_obsolete_packages 2>&1'",
+      timeout   => 3600,
       logoutput => true,
       require   =>[
                   Exec['run puppet after groups deactivating'],
