@@ -1,10 +1,7 @@
 #!/bin/bash
 
 echo "## Backup all mongodb databases ############################################"
-echo "Acquire::Check-Valid-Until 'false';" > /etc/apt/apt.conf.d/90ignore-release-date &&
-apt-get update &&
-apt-get install mongodb-org-tools -y &&
-rm /etc/apt/apt.conf.d/90ignore-release-date
+apt-get install mongodb-org-tools -y --force-yes
 DATE=`date +%Y-%m-%d`
 if [ ! -d /etc/maadix/backups ]; then
   mkdir /etc/maadix/backups
