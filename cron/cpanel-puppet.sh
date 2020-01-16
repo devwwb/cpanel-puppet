@@ -62,13 +62,13 @@ fi
 #echo "$branch"
 
 
-# Search if any of the modules is running (obsolete)
-#running=`ldapsearch -Q -Y EXTERNAL -H "$url" -b "$cpanelobject" -s one "(status=running)" | grep ^dn: | wc -l`
-#if [ "$running" -gt 0 ]; then
+# Search if any of the modules is running
+running=`ldapsearch -Q -Y EXTERNAL -H "$url" -b "$cpanelobject" -s one "(status=running)" | grep ^dn: | wc -l`
+if [ "$running" -gt 0 ]; then
   #atencion, si uno de los modulos al menos está en running, hay que esperar al siguiente cron!
-#  echo "Modules running: $locked, exiting"
-#  exit 1
-#fi
+  echo "Modules running: $running, exiting"
+  exit 1
+fi
 
 # Search if any of the modules is locked
 locked=`ldapsearch -Q -Y EXTERNAL -H "$url" -b "$cpanelobject" -s one "(status=locked)" | grep ^dn: | wc -l`
@@ -96,59 +96,53 @@ if [ "$locked" -gt 0 ]; then
   echo "cpanel-puppet is locked, triggering puppet!"
 
 
-  # Search puppet modules to enabled
+  # Search puppet modules to enabled and set status to running
   modules=()
   while IFS= read -r line; do
     modules+=( "$line" )
     echo "$line"
-    # Change module status to 'ready'
-    setlockstatus "$line" ready
+    # Change module status to 'running'
+    setlockstatus "$line" running
   done < <( ldapsearch -Q -Y EXTERNAL -H "$url" -b "$cpanelobject" -s one "(&(objectclass=*)(status=locked))" | awk -F ": " '$1 == "ou" {print $2}' )
 
-  # Build FACTER params string
-  # FACTER_module1=enabled FACTER_module2=enabled
+  # Build FACTER params string and run puppet for each module
+  # FACTER_module1=enabled
   for i in "${modules[@]}"
   do
-    facter="$facter FACTER_${i}=true"
-  done
-  echo "$facter"
+    facter="FACTER_${i}=true"
 
-  # Build puppet commando
-  puppet="cd /usr/share/cpanel-puppet && export FACTERLIB='./facts' && $facter /usr/local/bin/puppet apply --detailed-exitcode --modulepath ./modules manifests/site.pp &> ${logdir}/${date}_stdout.txt"
-  echo "$puppet"
-  eval $puppet
+    # Build puppet commando
+    puppet="cd /usr/share/cpanel-puppet && export FACTERLIB='./facts' && $facter /usr/local/bin/puppet apply --detailed-exitcode --modulepath ./modules manifests/site.pp &> ${logdir}/${date}_${i}_stdout.txt"
+    echo "$puppet"
+    eval $puppet
 
-  # Tasks if puppet success or fail
-  exitcode=$?
-  if [ ${exitcode} -eq 0 ] || [ ${exitcode} -eq 2 ]
-    then
-      echo "Puppet successful - Exit code ${exitcode}"
+    # Tasks if puppet success or fail
+    exitcode=$?
+    if [ ${exitcode} -eq 0 ] || [ ${exitcode} -eq 2 ]; then
+      echo "Puppet module ${1} successful - Exit code ${exitcode}"
 
       # Send mail to admin with log, removing color codes from log file
-      cat "${logdir}/${date}_stdout.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Local log in ${hostname}" $logmail
+      cat "${logdir}/${date}_${i}_stdout.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Local ${i} log in ${hostname}" $logmail
+
+      # Set module status to ready
+      setlockstatus "${i}" ready
 
     else
-      echo "Local Puppet error - Exit code ${exitcode}"
+      echo "Local Puppet ${i} error - Exit code ${exitcode}"
 
       # Send mail to admin with log, removing color codes from log file
-      cat "${logdir}/${date}_stdout.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Error in ${hostname}" $logmail
+      cat "${logdir}/${date}_${i}_stdout.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Error ${i} in ${hostname}" $logmail
 
-      # If error comes from domains module, set its status to error
-      if [[ " ${modules[@]} " =~ 'domains' ]]; then
-        setlockstatus domains error
-      fi
-      # If error comes from trash module, set its status to error
-      if [[ " ${modules[@]} " =~ 'trash' ]]; then
-        setlockstatus trash error
+      # If error comes from domains or trash module, set its status to error
+      if [[ " ${i} " == 'domains' ]] || [[ " ${i} " == 'trash' ]]; then
+        setlockstatus "${i}" error
+      else
+        setlockstatus "${i}" ready
       fi
 
-  fi
+    fi
 
-  # Change module status to 'ready' (obsolete)
-  #for i in "${modules[@]}"
-  #  do
-  #    setlockstatus "${i}" ready
-  #  done
+  done
 
 else
 
