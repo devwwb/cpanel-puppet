@@ -53,7 +53,7 @@ define domains::vhosts(
     #letsencrypt certs
     if $www {
       exec {"SSL for $domain":
-        command	  => "certbot -d $domain -d www.$domain --staging --agree-tos --email $::adminmail --webroot --webroot-path /var/www/html/$domain --non-interactive --text --rsa-key-size 4096  certonly",
+        command	  => "certbot -d $domain -d www.$domain --agree-tos --email $::adminmail --webroot --webroot-path /var/www/html/$domain --non-interactive --text --rsa-key-size 4096  certonly",
         path      => ['/usr/bin', '/usr/sbin', '/bin'],
         creates	  => "/etc/letsencrypt/live/$domain/cert.pem",
         require   => [
@@ -63,7 +63,7 @@ define domains::vhosts(
       }
     } else {
       exec {"SSL for $domain":
-        command	  => "certbot -d $domain --agree-tos --staging --email $::adminmail --webroot --webroot-path /var/www/html/$domain --non-interactive --text --rsa-key-size 4096  certonly",
+        command	  => "certbot -d $domain --agree-tos --email $::adminmail --webroot --webroot-path /var/www/html/$domain --non-interactive --text --rsa-key-size 4096  certonly",
         path      => ['/usr/bin', '/usr/sbin', '/bin'],
         creates	  => "/etc/letsencrypt/live/$domain/cert.pem",
         require   => [
@@ -75,7 +75,7 @@ define domains::vhosts(
 
     if $regenerate {
       exec {"SSL expand for $domain":
-        command	=> "certbot -d $domain -d www.$domain --staging --agree-tos --expand --email $::adminmail --webroot --webroot-path /var/www/html/$domain --non-interactive --text --rsa-key-size 4096  certonly",
+        command	=> "certbot -d $domain -d www.$domain --agree-tos --expand --email $::adminmail --webroot --webroot-path /var/www/html/$domain --non-interactive --text --rsa-key-size 4096  certonly",
         path      => ['/usr/bin', '/usr/sbin', '/bin'],
         require   => [
                      File["/var/www/html/$domain"],
