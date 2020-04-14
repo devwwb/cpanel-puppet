@@ -17,6 +17,10 @@ date=$(date -u +"%Y-%m-%d-%T")
 hostname=$(hostname)
 logdir="/etc/maadix/logs"
 logmail="admin@maadix.org"
+#debug
+if test -f "/etc/maadix/conf/debug"; then
+  debug=true
+fi
 
 ##### Functions ###############################
 
@@ -121,8 +125,10 @@ if [ "$locked" -gt 0 ]; then
     if [ ${exitcode} -eq 0 ] || [ ${exitcode} -eq 2 ]; then
       echo "Puppet module ${1} successful - Exit code ${exitcode}"
 
-      # Send mail to admin with log, removing color codes from log file
-      cat "${logdir}/${date}_${i}_stdout.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Local ${i} log in ${hostname}" $logmail
+      if [ "$debug" = true ]; then
+        # Send mail to admin with log, removing color codes from log file
+        cat "${logdir}/${date}_${i}_stdout.txt" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" | mail -s "Puppet Local ${i} log in ${hostname}" $logmail
+      fi
 
       # Set module status to ready
       setlockstatus "${i}" ready
