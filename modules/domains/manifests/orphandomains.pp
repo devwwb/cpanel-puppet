@@ -3,6 +3,7 @@ define domains::orphandomains(
   $cn           = undef,
   $trashname    = undef,
   $webroot      = undef,
+  $purgecerts   = undef,
 ) {
 
 
@@ -30,19 +31,21 @@ define domains::orphandomains(
 
   }
 
-  #remove certs
-  file {"/etc/letsencrypt/live/$domain":
-    ensure	=> absent,
-    recurse	=> true,
-    force	=> true,
-  }
-  file {"/etc/letsencrypt/archive/$domain":
-    ensure	=> absent,
-    recurse	=> true,
-    force	=> true,
-  }
-  file {"/etc/letsencrypt/renewal/$domain.conf":
-    ensure	=> absent,
+  if $purgecerts{
+    #remove certs
+    file {"/etc/letsencrypt/live/$domain":
+      ensure	=> absent,
+      recurse	=> true,
+      force	=> true,
+    }
+    file {"/etc/letsencrypt/archive/$domain":
+      ensure	=> absent,
+      recurse	=> true,
+      force	=> true,
+    }
+    file {"/etc/letsencrypt/renewal/$domain.conf":
+      ensure	=> absent,
+    }
   }
 
 }
