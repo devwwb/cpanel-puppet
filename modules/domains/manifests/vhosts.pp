@@ -24,7 +24,7 @@ define domains::vhosts(
         ensure	=> directory,
         owner	=> $webmaster,
         group	=> 'www-data',
-        mode	=> '2775',
+        mode	=> '2770',
         notify	=> Exec['reload apache'],
       } ~>
       #when domain is assigned to another webmaster, change owner recursive
@@ -41,7 +41,7 @@ define domains::vhosts(
         ensure	=> directory,
         owner	=> $webmaster,
         group	=> 'www-data',
-        mode	=> '2775',
+        mode	=> '2770',
         notify	=> Exec['reload apache'],
       }
     } else {
@@ -98,7 +98,7 @@ define domains::vhosts(
       ensure	=> directory,
       owner	=> $webmaster,
       group	=> 'www-data',
-      mode	=> '2775',
+      mode	=> '2770',
     }
   
   }
