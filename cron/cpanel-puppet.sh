@@ -16,7 +16,7 @@ timestamp=$(date +%s)
 date=$(date -u +"%Y-%m-%d-%T")
 hostname=$(hostname)
 logdir="/etc/maadix/logs"
-logmail="admin@maadix.org"
+logmail="logs@maadix.org"
 #debug
 if test -f "/etc/maadix/conf/debug"; then
   debug=true
