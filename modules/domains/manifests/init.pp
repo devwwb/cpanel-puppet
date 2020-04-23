@@ -37,6 +37,9 @@ class domains (
     #create vhosts (vhost, webroot, letsencrypt cert)
     create_resources(domains::vhosts, $::cpanel_vhosts)
 
+    #delete vhosts non-ssl for those domains without certs
+    create_resources(domains::cleanfailedvhosts, $::cpanel_vhosts)
+
     #mount domains
     create_resources(domains::mounts, $::cpanel_vhosts)
 
