@@ -17,6 +17,8 @@ Facter.add(:cpanel_domains) do
             IPSocket::getaddress('www.' + domain.strip)
             if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
               domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => true, :dns => true}
+            else
+              domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
             end
           rescue SocketError
             domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
@@ -35,6 +37,8 @@ Facter.add(:cpanel_domains) do
               IPSocket::getaddress('www.' + domain.strip)
               if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
                 domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => false, :dns => true}
+              else
+                domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
               end
             rescue SocketError
               domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
