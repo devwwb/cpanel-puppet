@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "## Backup all mongodb databases ############################################"
-apt-get install mongodb-org-tools -y
+apt-get install mongodb-org-tools -y --force-yes
 DATE=`date +%Y-%m-%d`
 if [ ! -d /etc/maadix/backups ]; then
   mkdir /etc/maadix/backups
