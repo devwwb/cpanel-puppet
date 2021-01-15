@@ -26,6 +26,8 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     samhaincheck
     domains
     trash
+    prebuster
+    posbuster
 
 # Modules TODO
 
