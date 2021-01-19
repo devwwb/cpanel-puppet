@@ -99,11 +99,19 @@ class prebuster (
       }
     }
 
+    exec { 'delete stretch packages':
+      command   => "/bin/bash -c '$directory/delete_stretch_packages.sh > $directory/logs/14_delete_stretch_packages 2>&1'",
+      logoutput => true,
+      require   =>[
+                  Exec['deactivate groups and run puppet'],
+                  ],
+    }
+
     exec { 'downgrade sury packages to stock packages':
       command   => "/bin/bash -c '$directory/fix_sury_packages.sh > $directory/logs/07_fix_sury_packages 2>&1'",
       logoutput => true,
       require   =>[
-                  Exec['deactivate groups and run puppet'],
+                  Exec['delete stretch packages'],
                   ],
       timeout   => 3600,
     }
@@ -169,13 +177,6 @@ class prebuster (
                   ],
     }
 
-    exec { 'delete stretch packages':
-      command   => "/bin/bash -c '$directory/delete_stretch_packages.sh > $directory/logs/14_delete_stretch_packages 2>&1'",
-      logoutput => true,
-      require   =>[
-                  Exec['upgrade stretch'],
-                  ],
-    }
 
     exec { 'delete mxcp':
       command   => "/bin/bash -c '$directory/delete_mxcp.sh > $directory/logs/141_delete_mxcp 2>&1'",
