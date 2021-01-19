@@ -3,6 +3,9 @@
 #get enabled groups, excluding mail, mongo, nodejs, docker
 egroups=($(ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "ou=groups,dc=example,dc=tld" "(&(objectClass=*)(type=available)(status=enabled)(!(ou:dn:=mail)))" | grep -v nodejs | grep -v mongodb | grep -v docker | grep ou: | sed "s|.*: \(.*\)|\1|"))
 
+#get hostname
+hostname=`hostname`
+
 #set cpanel to running
 /etc/maadix/scripts/setrunningcpanel.sh
 
@@ -27,7 +30,7 @@ if [ ${#egroups[@]} -eq 0 ]; then
     exitscript=0
 else
     echo "## Some groups enabled, run puppet #########################################"
-    /usr/local/bin/puppet agent --test
+    /usr/local/bin/puppet agent --certname ${hostname}.maadix.org --test
     # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
     #get puppet exit code
     puppetexit=$?
