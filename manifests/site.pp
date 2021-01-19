@@ -36,4 +36,8 @@ node default {
   ## trash
   include trash
 
+  ## buster
+  include prebuster
+  include posbuster
+
 }
