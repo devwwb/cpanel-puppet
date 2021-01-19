@@ -116,6 +116,14 @@ class prebuster (
       timeout   => 3600,
     }
 
+    exec { 'delete stretch sources':
+      command   => "/bin/bash -c '$directory/delete_stretch_sources.sh > $directory/logs/071_delete_stretch_sources 2>&1'",
+      logoutput => true,
+      require   =>[
+                  Exec['downgrade sury packages to stock packages'],
+                  ],
+    }
+
     exec { 'upgrade stretch':
       command   => "/bin/bash -c '$directory/upgrade_stretch.sh > $directory/logs/08_upgrade_stretch 2>&1'",
       logoutput => true,
@@ -167,14 +175,6 @@ class prebuster (
                     Exec['upgrade stretch'],
                     ],
       }
-    }
-
-    exec { 'delete stretch sources':
-      command   => "/bin/bash -c '$directory/delete_stretch_sources.sh > $directory/logs/13_delete_stretch_sources 2>&1'",
-      logoutput => true,
-      require   =>[
-                  Exec['upgrade stretch'],
-                  ],
     }
 
 
