@@ -100,7 +100,7 @@ class prebuster (
     }
 
     exec { 'delete stretch packages':
-      command   => "/bin/bash -c '$directory/delete_stretch_packages.sh > $directory/logs/14_delete_stretch_packages 2>&1'",
+      command   => "/bin/bash -c '$directory/delete_stretch_packages.sh > $directory/logs/061_delete_stretch_packages 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['deactivate groups and run puppet'],
