@@ -13,8 +13,8 @@ Pin: release o=deb.sury.org
 Pin-Priority: -1
 EOT
 
-apt install libxml2 -y
-apt dist-upgrade -y
+apt install libxml2 -y --allow-downgrades
+apt dist-upgrade -y --allow-downgrades
 
 #restore repo priorities
 rm /etc/apt/preferences.d/uninstall-deb.sury.org.pref
