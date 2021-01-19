@@ -36,7 +36,7 @@ if mongod --version | grep v3.6; then
 
   #update mongodb to 4.0
   apt update
-  apt upgrade mongodb-org-{server,shell,tools}
+  apt upgrade mongodb-org-{server,shell,tools} -y
   service mongod restart
 
   #setFeatureCompatibilityVersion to 4.0
@@ -48,17 +48,17 @@ fi
 
 echo "## Update mongo to 4.2 #####################################################"
 #if mongo version is 4.0
-if mongod --version | grep v4.0; then
+if mongo --version | grep v4.0; then
 
   #update mongo repo for mongodb 4.2
   apt-key list | grep -C 5 mongo
   apt-key del '9DA3 1620 334B D75D 9DCB  49F3 6881 8C72 E525 29D4'
   curl 'https://www.mongodb.org/static/pgp/server-4.2.asc' | apt-key add -
-  sed -i -E 's/4[.]0/4.2/g' sources.list.d/mongodb.list
+  sed -i -E 's/4[.]0/4.2/g' /etc/apt/sources.list.d/mongodb.list
 
   #update mongodb to 4.2
   apt update
-  apt upgrade mongodb-org-{server,shell,tools}
+  apt upgrade mongodb-org-{server,shell,tools} -y
   service mongod restart
 
   #setFeatureCompatibilityVersion to 4.2
