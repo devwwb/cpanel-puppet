@@ -186,7 +186,7 @@ class prebuster (
     }
 
     exec { 'fix innodb mariadb':
-      command => "sed -i -e 's/^innodb_file_format_max/#innodb_file_format_max/' /etc/mysql/my.cnf",
+      command => "/bin/sed -i -e 's/^innodb_file_format_max/#innodb_file_format_max/' /etc/mysql/my.cnf",
       require   =>[
                   Exec['upgrade stretch'],
                   ],
