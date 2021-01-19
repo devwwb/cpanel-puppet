@@ -36,6 +36,7 @@ class prebuster (
                 'delete_mxcp.sh',
                 'delete_phpmyadmin.sh', 
                 'upgrade_buster.sh', 
+                'update_postgresql_11.sh',
                 'update_onecontext.sh', 
                 'send_report.sh',
                 'send_prebuster_notify.sh']
@@ -222,6 +223,14 @@ class prebuster (
       logoutput => true,
     }
 
+    exec { 'update postgresql 11':
+      command   => "/bin/bash -c '$directory/update_postgresql_11.sh > $directory/logs/18_update_postgresql_11 2>&1'",
+      logoutput => true,
+      require   =>[
+                  Exec['upgrade buster'],
+                  ],
+      timeout   => 1800,
+    } 
 
     #update one-context
     if ($::one_context) {
