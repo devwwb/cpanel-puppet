@@ -25,6 +25,7 @@ class prebuster (
                 'update_mongodb_42.sh', 
                 'delete_mailman_venv_35.sh', 
                 'delete_onlyoffice_image.sh', 
+                'fix_sury_packages.sh',
                 'upgrade_stretch.sh', 
                 'update_source_debian.sh', 
                 'update_source_docker.sh', 
@@ -90,12 +91,21 @@ class prebuster (
 
     if ($::onlyoffice_group){
       exec { 'delete onlyoffice image':
-        command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh > $directory/logs/07_delete_onlyoffice_image 2>&1'",
+        command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh > $directory/logs/06_delete_onlyoffice_image 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['deactivate groups and run puppet'],
                     ],
       }
+    }
+
+    exec { 'downgrade sury packages to stock packages':
+      command   => "/bin/bash -c '$directory/fix_sury_packages.sh > $directory/logs/07_fix_sury_packages 2>&1'",
+      logoutput => true,
+      require   =>[
+                  Exec['deactivate groups and run puppet'],
+                  ],
+      timeout   => 3600,
     }
 
     exec { 'upgrade stretch':
