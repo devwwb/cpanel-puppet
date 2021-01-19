@@ -70,7 +70,7 @@ class prebuster (
 
     if ($::mongodb_group){
       exec { 'update mongodb 4.2':
-        command   => "/bin/bash -c '$directory/update_mongodb_42.sh > $directory/logs/03_update_mongodb_42 2>&1'",
+        command   => "/bin/bash -c '$directory/update_mongodb_42.sh > $directory/logs/02_update_mongodb_42 2>&1'",
         logoutput => true,
         timeout   => 1800,
         require   =>[
@@ -81,7 +81,7 @@ class prebuster (
 
     if ($::mailman_venv3_group){
       exec { 'delete mailman venv 3.5':
-        command   => "/bin/bash -c '$directory/delete_mailman_venv_35.sh > $directory/logs/05_delete_mailman_venv_35 2>&1'",
+        command   => "/bin/bash -c '$directory/delete_mailman_venv_35.sh > $directory/logs/03_delete_mailman_venv_35 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['deactivate groups and run puppet'],
@@ -92,7 +92,7 @@ class prebuster (
 
     if ($::onlyoffice_group){
       exec { 'delete onlyoffice image':
-        command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh > $directory/logs/06_delete_onlyoffice_image 2>&1'",
+        command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh > $directory/logs/04_delete_onlyoffice_image 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['deactivate groups and run puppet'],
@@ -101,7 +101,7 @@ class prebuster (
     }
 
     exec { 'delete stretch packages':
-      command   => "/bin/bash -c '$directory/delete_stretch_packages.sh > $directory/logs/061_delete_stretch_packages 2>&1'",
+      command   => "/bin/bash -c '$directory/delete_stretch_packages.sh > $directory/logs/05_delete_stretch_packages 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['deactivate groups and run puppet'],
@@ -109,7 +109,7 @@ class prebuster (
     }
 
     exec { 'downgrade sury packages to stock packages':
-      command   => "/bin/bash -c '$directory/fix_sury_packages.sh > $directory/logs/07_fix_sury_packages 2>&1'",
+      command   => "/bin/bash -c '$directory/fix_sury_packages.sh > $directory/logs/06_fix_sury_packages 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['delete stretch packages'],
@@ -118,7 +118,7 @@ class prebuster (
     }
 
     exec { 'delete stretch sources':
-      command   => "/bin/bash -c '$directory/delete_stretch_sources.sh > $directory/logs/071_delete_stretch_sources 2>&1'",
+      command   => "/bin/bash -c '$directory/delete_stretch_sources.sh > $directory/logs/07_delete_stretch_sources 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['downgrade sury packages to stock packages'],
@@ -135,7 +135,7 @@ class prebuster (
     }
 
     exec { 'iptables apache drop after stretch upgrade':
-      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/081_iptables_apache_drop 2>&1'",
+      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/08_1_iptables_apache_drop 2>&1'",
       logoutput => true,
     }
 
@@ -180,7 +180,7 @@ class prebuster (
 
 
     exec { 'delete mxcp':
-      command   => "/bin/bash -c '$directory/delete_mxcp.sh > $directory/logs/141_delete_mxcp 2>&1'",
+      command   => "/bin/bash -c '$directory/delete_mxcp.sh > $directory/logs/13_delete_mxcp 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['upgrade stretch'],
@@ -214,7 +214,7 @@ class prebuster (
     }
 
     exec { 'iptables apache drop after buster upgrade':
-      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/161_iptables_apache_drop 2>&1'",
+      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/17_iptables_apache_drop 2>&1'",
       logoutput => true,
     }
 

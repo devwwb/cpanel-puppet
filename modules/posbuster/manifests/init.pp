@@ -77,14 +77,14 @@ class posbuster (
     }
 
     exec { 'deactivate deactivated groups':
-      command   => "/bin/bash -c '$directory/deactivate_groups.sh > $directory/logs/09_01deactivate_groups 2>&1'",
+      command   => "/bin/bash -c '$directory/deactivate_groups.sh > $directory/logs/09_1_deactivate_groups 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['run puppet after groups reactivating'],
                   ],
     } ->
     exec { 'run puppet after groups deactivating':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test > $directory/logs/09_02_run_puppet_after_group_deactivation 2>&1",
+      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test > $directory/logs/09_2_run_puppet_after_group_deactivation 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -96,7 +96,7 @@ class posbuster (
 
 
     exec { 'delete_obsolete_packages.sh':
-      command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/09_03delete_obsolete_packages 2>&1'",
+      command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/09_3_delete_obsolete_packages 2>&1'",
       timeout   => 3600,
       logoutput => true,
       require   =>[
