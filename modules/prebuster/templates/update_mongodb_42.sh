@@ -37,12 +37,13 @@ if mongod --version | grep v3.6; then
   #update mongodb to 4.0
   apt update
   apt upgrade mongodb-org-{server,shell,tools} -y
+  sleep 30
   service mongod restart
 
   #setFeatureCompatibilityVersion to 4.0
-  sleep 30
+  sleep 120
   service mongod restart
-  sleep 30
+  sleep 120
   mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.0' } )"
 
 fi
@@ -61,12 +62,13 @@ if mongod --version | grep v4.0; then
   #update mongodb to 4.2
   apt update
   apt upgrade mongodb-org-{server,shell,tools} -y
+  sleep 30
   service mongod restart
 
   #setFeatureCompatibilityVersion to 4.2
-  sleep 30
+  sleep 120
   service mongod restart
-  sleep 30
+  sleep 120
   mongo admin --port 27017 --ssl --sslAllowInvalidCertificates  --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.2' } )"
 
 fi
