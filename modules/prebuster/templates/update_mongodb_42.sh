@@ -72,3 +72,6 @@ if mongod --version | grep v4.0; then
   mongo admin --port 27017 --ssl --sslAllowInvalidCertificates  --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.2' } )"
 
 fi
+
+#force certificate regeneration
+rm /etc/maadix/status/mongod-selfsigned-certs
