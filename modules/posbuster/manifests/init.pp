@@ -57,6 +57,14 @@ class posbuster (
       }
 
     }
+
+    exec { 'iptables apache accept':
+      command   => "/bin/bash -c '$directory/iptables_apache_accept.sh > $directory/logs/11_iptables_apache_accept 2>&1'",
+      logoutput => true,
+      require   =>[
+                  Exec['run puppet to apply buster catalog'],
+                  ],
+    }
     
     exec { 'activate all groups':
       command   => "/bin/bash -c '$directory/activate_groups.sh > $directory/logs/08_activate_groups 2>&1'",
@@ -98,14 +106,6 @@ class posbuster (
     exec { 'delete_obsolete_packages.sh':
       command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/09_3_delete_obsolete_packages 2>&1'",
       timeout   => 3600,
-      logoutput => true,
-      require   =>[
-                  Exec['run puppet after groups deactivating'],
-                  ],
-    }
-
-    exec { 'iptables apache accept':
-      command   => "/bin/bash -c '$directory/iptables_apache_accept.sh > $directory/logs/11_iptables_apache_accept 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['run puppet after groups deactivating'],
