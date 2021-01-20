@@ -41,14 +41,16 @@ if mongod --version | grep v3.6; then
 
   #setFeatureCompatibilityVersion to 4.0
   sleep 30
-  mongo admin --port 27017 --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.0' } )"
+  service mongod restart
+  sleep 30
+  mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.0' } )"
 
 fi
 
 
 echo "## Update mongo to 4.2 #####################################################"
 #if mongo version is 4.0
-if mongo --version | grep v4.0; then
+if mongod --version | grep v4.0; then
 
   #update mongo repo for mongodb 4.2
   apt-key list | grep -C 5 mongo
@@ -63,6 +65,8 @@ if mongo --version | grep v4.0; then
 
   #setFeatureCompatibilityVersion to 4.2
   sleep 30
-  mongo admin --port 27017 --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.2' } )"
+  service mongod restart
+  sleep 30
+  mongo admin --port 27017 --ssl --sslAllowInvalidCertificates  --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.2' } )"
 
 fi
