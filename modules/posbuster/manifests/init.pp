@@ -28,6 +28,18 @@ class posbuster (
       logoutput => true,
     }
 
+    #clean downloaded packages
+    exec { 'clean apt':
+      command => '/usr/bin/apt-get clean',
+    }
+
+    #clean unused images and containers
+    if ($::docker_group){
+      exec { 'clean docker before apply buster catalog':
+        command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=10 spotify/docker-gc',
+        logoutput => true,
+      }
+    }
 
     if ($::docker_group){
       exec { 'update docker':
@@ -110,6 +122,14 @@ class posbuster (
       require   =>[
                   Exec['run puppet after groups deactivating'],
                   ],
+    }
+
+    #clean unused images and containers
+    if ($::docker_group){
+      exec { 'clean docker after apply buster catalog':
+        command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=10 spotify/docker-gc',
+        logoutput => true,
+      }
     }
 
     exec { 'send cpanel to ready':
