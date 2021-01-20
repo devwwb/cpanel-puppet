@@ -36,7 +36,7 @@ if mongod --version | grep v3.6; then
 
   #update mongodb to 4.0
   apt update
-  apt upgrade mongodb-org-{server,shell,tools} -y
+  apt install mongodb-org-{server,shell,tools} -y
   sleep 30
   service mongod restart
 
@@ -61,7 +61,7 @@ if mongod --version | grep v4.0; then
 
   #update mongodb to 4.2
   apt update
-  apt upgrade mongodb-org-{server,shell,tools} -y
+  apt install mongodb-org-{server,shell,tools} -y
   sleep 30
   service mongod restart
 
