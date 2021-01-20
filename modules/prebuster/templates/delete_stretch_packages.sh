@@ -20,8 +20,15 @@ fi
 if [ -f /usr/bin/loolwsd ]; then
   #libreoffice-online stop
   service libreoffice-online stop
-  #remove libpoco* and libreoffice*
-  apt-get remove --purge libpoco* libreoffice* -y
+  #remove libpoco* and libreoffice* and collaboraoffice* and code-bran
+  apt-get remove --purge libpoco* libreoffice* collaboraoffice* code-brand -y
+fi
+
+if [ -f /usr/bin/spamassassin ]; then
+  #spamassassin stop
+  service spamassassin stop
+  #spamassassin
+  apt-get remove --purge spamassassin sa-compile -y
 fi
 
 #purge php
