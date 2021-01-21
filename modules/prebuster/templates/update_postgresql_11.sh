@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "## Update postgresql to 11 ################################################"
-#doc https://blog.samuel.domains/blog/tutorials/from-stretch-to-buster-how-to-upgrade-a-9-6-postgresql-cluster-to-11
-
 #if postgresql version is 9.6
 if pg_config --version | grep -q 9.6; then
+
+  echo "## Update postgresql to 11 ################################################"
+  #doc https://blog.samuel.domains/blog/tutorials/from-stretch-to-buster-how-to-upgrade-a-9-6-postgresql-cluster-to-11
 
   #backup postgresql
   DATE=`date +%Y-%m-%d`
