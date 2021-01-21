@@ -11,11 +11,18 @@ if [ ! -d /etc/maadix/backups/mongodb-$DATE ]; then
   echo "All databases"
   mkdir /etc/maadix/backups/mongodb-$DATE
   cd /etc/maadix/backups/mongodb-$DATE
-  echo -n "mongodump -u admin -p " > backup.sh
+  echo -n "mongodump --ssl --sslAllowInvalidCertificates -u admin -p " > backup.sh
   cat /etc/maadix/mongodbadmin | tr -d '\n' | sed "s@\\\\@@g" | tr -d \'\" >> backup.sh
   chmod +x backup.sh
+  #wait until mongod is up
+  while ! nc -z localhost 27017; do
+    echo "waiting mongod 3.6"
+    sleep 5
+  done
+  echo "mongod 3.6 running"
   ./backup.sh
   rm backup.sh
+  echo "Backup mongodb databases:"
   ls -l dump/
 fi
 
