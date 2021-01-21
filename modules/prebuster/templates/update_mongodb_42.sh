@@ -31,10 +31,10 @@ echo "## Update mongo to 4.0 ###################################################
 if mongod --version | grep v3.6; then
 
   #Upgrade MONGODB-CR to SCRAM
-  echo 'db.adminCommand({authSchemaUpgrade: 1});' | mongo --ssl --sslAllowInvalidCertificates localhost/admin
+  mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand({authSchemaUpgrade: 1})"
 
   #Set Compatibility version to 3.6
-  echo 'db.adminCommand( { setFeatureCompatibilityVersion: "3.6" } )' | mongo --ssl --sslAllowInvalidCertificates localhost/admin
+  mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '3.6' } )"
 
   #update mongo repo for mongodb 4.0
   apt-key list | grep -C 5 mongo
@@ -56,7 +56,7 @@ if mongod --version | grep v3.6; then
   echo "mongod 4.0 running"
 
   #setFeatureCompatibilityVersion to 4.0
-  until echo 'db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )' | mongo --ssl --sslAllowInvalidCertificates localhost/admin | grep version | grep -v shell | grep -v server | grep 4.0
+  until mongo --ssl --sslAllowInvalidCertificates localhost/admin --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )" | grep version | grep -v shell | grep -v server | grep 4.0
   do
     sleep 5
     echo "Trying to setFeatureCompatibilityVersion: '4.0'"
@@ -93,7 +93,7 @@ if mongod --version | grep v4.0; then
   echo "mongod 4.2 running"
 
   #setFeatureCompatibilityVersion to 4.2
-  until echo 'db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )' | mongo --ssl --sslAllowInvalidCertificates localhost/admin | grep version | grep -v shell | grep -v server | grep 4.2
+  until mongo --ssl --sslAllowInvalidCertificates localhost/admin --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )" | grep version | grep -v shell | grep -v server | grep 4.2
   do
     sleep 5
     echo "Trying to setFeatureCompatibilityVersion: '4.2'"
