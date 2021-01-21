@@ -85,52 +85,33 @@ class posbuster (
       require   =>[
                   Exec['run puppet to apply buster catalog'],
                   ],
-    }
-    
+    } ->
     exec { 'activate all groups':
       command   => "/bin/bash -c '$directory/activate_groups.sh > $directory/logs/08_activate_groups 2>&1'",
       logoutput => true,
-      require   =>[
-                  Exec['run puppet to apply buster catalog'],
-                  ],
     } ->
     exec { 'run puppet after groups reactivating':
       command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test > $directory/logs/09_run_puppet_after_group_activation 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
-      require   =>[
-                  Exec['run puppet to apply buster catalog'],
-                  ],
       timeout   => 7200,
-    }
-
+    } ->
     exec { 'deactivate deactivated groups':
       command   => "/bin/bash -c '$directory/deactivate_groups.sh > $directory/logs/09_1_deactivate_groups 2>&1'",
       logoutput => true,
-      require   =>[
-                  Exec['run puppet after groups reactivating'],
-                  ],
     } ->
     exec { 'run puppet after groups deactivating':
       command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test > $directory/logs/09_2_run_puppet_after_group_deactivation 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
-      require   =>[
-                  Exec['deactivate deactivated groups'],
-                  ],
       timeout   => 7200,
-    }
-
-
+    } ->
     exec { 'delete_obsolete_packages.sh':
       command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/09_3_delete_obsolete_packages 2>&1'",
       timeout   => 3600,
       logoutput => true,
-      require   =>[
-                  Exec['run puppet after groups deactivating'],
-                  ],
     }
 
     #clean unused images and containers

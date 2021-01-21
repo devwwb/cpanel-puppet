@@ -68,6 +68,7 @@ class prebuster (
         logoutput => true,
         timeout   => 1800,
         onlyif    => 'test -f /usr/bin/mongod',
+        path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     }
 
     if ($::mailman_venv3_group){
@@ -224,6 +225,8 @@ class prebuster (
 
     exec { 'delete persistent iptables rules':
       command   => '/bin/rm /etc/iptables/*',
+      onlyif    => 'ls -l /etc/iptables/* | grep rules',
+      path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     }
 
     exec { 'send report':
