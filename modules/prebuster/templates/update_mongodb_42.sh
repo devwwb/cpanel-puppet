@@ -1,7 +1,8 @@
 #!/bin/bash
 
 echo "## Backup all mongodb databases ############################################"
-apt-get install mongodb-org-tools -y --force-yes
+apt install mongodb-org-tools -y --force-yes
+apt install netcat -y
 DATE=`date +%Y-%m-%d`
 if [ ! -d /etc/maadix/backups ]; then
   mkdir /etc/maadix/backups
@@ -37,14 +38,26 @@ if mongod --version | grep v3.6; then
   #update mongodb to 4.0
   apt update
   apt install mongodb-org-{server,shell,tools} -y
-  sleep 30
+  sleep 10
   service mongod restart
 
+  #wait until mongod is up
+  while ! nc -z localhost 27017; do
+    echo "waiting mongod 4.0"
+    sleep 1
+  done
+  echo "mongod 4.0 running"
+
   #setFeatureCompatibilityVersion to 4.0
-  sleep 120
-  service mongod restart
-  sleep 120
-  mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.0' } )"
+  until echo 'db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )' | mongo --ssl --sslAllowInvalidCertificates localhost/admin | grep version | grep -v shell | grep -v server | grep 4.0
+  do
+    sleep 5
+    echo "Trying to setFeatureCompatibilityVersion: '4.0'"
+    mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.0' } )"
+  done
+
+  #log
+  echo 'db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )' | mongo --ssl --sslAllowInvalidCertificates localhost/admin
 
 fi
 
@@ -62,14 +75,26 @@ if mongod --version | grep v4.0; then
   #update mongodb to 4.2
   apt update
   apt install mongodb-org-{server,shell,tools} -y
-  sleep 30
+  sleep 10
   service mongod restart
 
+  #wait until mongod is up
+  while ! nc -z localhost 27017; do
+    echo "waiting mongod 4.2"
+    sleep 1
+  done
+  echo "mongod 4.2 running"
+
   #setFeatureCompatibilityVersion to 4.2
-  sleep 120
-  service mongod restart
-  sleep 120
-  mongo admin --port 27017 --ssl --sslAllowInvalidCertificates  --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.2' } )"
+  until echo 'db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )' | mongo --ssl --sslAllowInvalidCertificates localhost/admin | grep version | grep -v shell | grep -v server | grep 4.2
+  do
+    sleep 5
+    echo "Trying to setFeatureCompatibilityVersion: '4.2'"
+    mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.2' } )"
+  done
+
+  #log
+  echo 'db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )' | mongo --ssl --sslAllowInvalidCertificates localhost/admin
 
 fi
 
