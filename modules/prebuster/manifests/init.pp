@@ -38,7 +38,7 @@ class prebuster (
                 'upgrade_buster.sh', 
                 'update_postgresql_11.sh',
                 'update_onecontext.sh', 
-                'send_report.sh',
+                'send_prebuster_report.sh',
                 'send_prebuster_notify.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
@@ -49,22 +49,25 @@ class prebuster (
       }
     }
 
+    exec { 'reset prebuster log':
+      command   => "/bin/rm $directory/logs/prebuster",
+    } ->
     exec { 'backup mysql':
-      command   => "/bin/bash -c '$directory/backup_mysql.sh > $directory/logs/00_1_backup_mysql 2>&1'",
+      command   => "/bin/bash -c '$directory/backup_mysql.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
       timeout   => 1800,
     } ->
     exec { 'deactivate groups and run puppet':
-      command   => "/bin/bash -c '$directory/deactivate_groups_and_run_puppet.sh > $directory/logs/00_2_deactivate_groups_and_run_puppet 2>&1'",
+      command   => "/bin/bash -c '$directory/deactivate_groups_and_run_puppet.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
       timeout   => 3600,
     } ->
     exec { 'iptables apache drop':
-      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/01_iptables_apache_drop 2>&1'",
+      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
     } ->
     exec { 'update mongodb 4.2':
-        command   => "/bin/bash -c '$directory/update_mongodb_42.sh > $directory/logs/02_update_mongodb_42 2>&1'",
+        command   => "/bin/bash -c '$directory/update_mongodb_42.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
         timeout   => 1800,
         onlyif    => 'test -f /usr/bin/mongod',
@@ -73,7 +76,7 @@ class prebuster (
 
     if ($::mailman_venv3_group){
       exec { 'delete mailman venv 3.5':
-        command   => "/bin/bash -c '$directory/delete_mailman_venv_35.sh > $directory/logs/03_delete_mailman_venv_35 2>&1'",
+        command   => "/bin/bash -c '$directory/delete_mailman_venv_35.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['deactivate groups and run puppet'],
@@ -84,7 +87,7 @@ class prebuster (
 
     if ($::onlyoffice_group){
       exec { 'delete onlyoffice image':
-        command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh > $directory/logs/04_delete_onlyoffice_image 2>&1'",
+        command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['deactivate groups and run puppet'],
@@ -93,38 +96,38 @@ class prebuster (
     }
 
     exec { 'delete stretch packages':
-      command   => "/bin/bash -c '$directory/delete_stretch_packages.sh > $directory/logs/05_delete_stretch_packages 2>&1'",
+      command   => "/bin/bash -c '$directory/delete_stretch_packages.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['update mongodb 4.2'],
                   ],
     } ->
     exec { 'downgrade sury packages to stock packages':
-      command   => "/bin/bash -c '$directory/fix_sury_packages.sh > $directory/logs/06_fix_sury_packages 2>&1'",
+      command   => "/bin/bash -c '$directory/fix_sury_packages.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
       timeout   => 3600,
     } ->
     exec { 'delete stretch sources':
-      command   => "/bin/bash -c '$directory/delete_stretch_sources.sh > $directory/logs/07_delete_stretch_sources 2>&1'",
+      command   => "/bin/bash -c '$directory/delete_stretch_sources.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
     } ->
     exec { 'upgrade stretch':
-      command   => "/bin/bash -c '$directory/upgrade_stretch.sh > $directory/logs/08_upgrade_stretch 2>&1'",
+      command   => "/bin/bash -c '$directory/upgrade_stretch.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
       timeout   => 3600,
     } ->
     exec { 'iptables apache drop after stretch upgrade':
-      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/08_1_iptables_apache_drop 2>&1'",
+      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
     } ->
     exec { 'update source debian':
-      command   => "/bin/bash -c '$directory/update_source_debian.sh > $directory/logs/09_update_source_debian 2>&1'",
+      command   => "/bin/bash -c '$directory/update_source_debian.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
     }
 
     if ($::mongodb_group){
       exec { 'update source mongodb':
-        command   => "/bin/bash -c '$directory/update_source_mongodb.sh > $directory/logs/10_update_source_mongodb 2>&1'",
+        command   => "/bin/bash -c '$directory/update_source_mongodb.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['upgrade stretch'],
@@ -134,7 +137,7 @@ class prebuster (
 
     if ($::lool_group){
       exec { 'update source lool':
-        command   => "/bin/bash -c '$directory/update_source_lool.sh > $directory/logs/11_update_source_lool 2>&1'",
+        command   => "/bin/bash -c '$directory/update_source_lool.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['upgrade stretch'],
@@ -144,7 +147,7 @@ class prebuster (
 
     if ($::docker_group){
       exec { 'update source docker':
-        command   => "/bin/bash -c '$directory/update_source_docker.sh > $directory/logs/12_update_source_docker 2>&1'",
+        command   => "/bin/bash -c '$directory/update_source_docker.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['upgrade stretch'],
@@ -154,7 +157,7 @@ class prebuster (
 
 
     exec { 'delete mxcp':
-      command   => "/bin/bash -c '$directory/delete_mxcp.sh > $directory/logs/13_delete_mxcp 2>&1'",
+      command   => "/bin/bash -c '$directory/delete_mxcp.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['upgrade stretch'],
@@ -163,7 +166,7 @@ class prebuster (
 
     if ($::phpmyadmin_group){
       exec { 'delete phpmyadmin':
-        command   => "/bin/bash -c '$directory/delete_phpmyadmin.sh > $directory/logs/15_delete_phpmyadmin 2>&1'",
+        command   => "/bin/bash -c '$directory/delete_phpmyadmin.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['upgrade stretch'],
@@ -178,12 +181,12 @@ class prebuster (
                   ],
     } ->
     exec { 'upgrade buster':
-      command   => "/bin/bash -c '$directory/upgrade_buster.sh > $directory/logs/16_upgrade_buster 2>&1'",
+      command   => "/bin/bash -c '$directory/upgrade_buster.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
       timeout   => 7200,
     } ->
     exec { 'iptables apache drop after buster upgrade':
-      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/17_iptables_apache_drop 2>&1'",
+      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
     } ->
     exec { 'restart postfix':
@@ -191,7 +194,7 @@ class prebuster (
       logoutput => true,
     } ->
     exec { 'update postgresql 11':
-      command   => "/bin/bash -c '$directory/update_postgresql_11.sh > $directory/logs/18_update_postgresql_11 2>&1'",
+      command   => "/bin/bash -c '$directory/update_postgresql_11.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
       timeout   => 1800,
     }
@@ -199,7 +202,7 @@ class prebuster (
     #update one-context
     if ($::one_context) {
       exec { 'update onecontext':
-        command   => "/bin/bash -c '$directory/update_onecontext.sh > $directory/logs/19_update_onecontext 2>&1'",
+        command   => "/bin/bash -c '$directory/update_onecontext.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
         timeout   => 1800,
         require   =>[
@@ -230,7 +233,7 @@ class prebuster (
     }
 
     exec { 'send report':
-      command   => "/bin/bash -c '$directory/send_report.sh'",
+      command   => "/bin/bash -c '$directory/send_prebuster_report.sh'",
     }
 
     exec { 'send prebuster notify':

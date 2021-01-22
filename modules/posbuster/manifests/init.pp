@@ -14,6 +14,7 @@ class posbuster (
                 'activate_groups.sh',
                 'deactivate_groups.sh',
                 'iptables_apache_accept.sh',
+                'send_posbuster_report.sh',
                 'send_posbuster_notify.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
@@ -24,8 +25,11 @@ class posbuster (
       }
     }
 
+    exec { 'reset posbuster log':
+      command   => "/bin/rm $directory/logs/posbuster",
+    } ->
     exec { 'iptables apache drop':
-      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh > $directory/logs/00_iptables_apache_drop 2>&1'",
+      command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/posbuster 2>&1'",
       logoutput => true,
     }
 
@@ -44,7 +48,7 @@ class posbuster (
 
     if ($::docker_group){
       exec { 'update docker':
-        command   => "/bin/bash -c '$directory/update_docker.sh > $directory/logs/02_update_docker 2>&1'",
+        command   => "/bin/bash -c '$directory/update_docker.sh >> $directory/logs/posbuster 2>&1'",
         logoutput => true,
         timeout   => 1800,
       }
@@ -53,14 +57,14 @@ class posbuster (
     #upgrade openvpn
     if ($::openvpn_group){
       exec { 'update easyrsa pki openvpn':
-        command   => "/bin/bash -c '$directory/upgrade_easyrsa_openvpn.sh > $directory/logs/03_upgrade_easyrsa_openvpn.sh 2>&1'",
+        command   => "/bin/bash -c '$directory/upgrade_easyrsa_openvpn.sh >> $directory/logs/posbuster 2>&1'",
         logoutput => true,
         timeout   => 1800,
       }
     }
 
     exec { 'run puppet to apply buster catalog':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test > $directory/logs/06_run_puppet 2>&1",
+      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -69,7 +73,7 @@ class posbuster (
 
     if ($::discourse_group){
       exec { 'rebuild discourse':
-        command   => "/bin/bash -c 'sudo /var/discourse/launcher rebuild app > $directory/logs/07_rebuild_discourse 2>&1'",
+        command   => "/bin/bash -c 'sudo /var/discourse/launcher rebuild app >> $directory/logs/posbuster 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['run puppet to apply buster catalog'],
@@ -80,36 +84,36 @@ class posbuster (
     }
 
     exec { 'iptables apache accept':
-      command   => "/bin/bash -c '$directory/iptables_apache_accept.sh > $directory/logs/11_iptables_apache_accept 2>&1'",
+      command   => "/bin/bash -c '$directory/iptables_apache_accept.sh >> $directory/logs/posbuster 2>&1'",
       logoutput => true,
       require   =>[
                   Exec['run puppet to apply buster catalog'],
                   ],
     } ->
     exec { 'activate all groups':
-      command   => "/bin/bash -c '$directory/activate_groups.sh > $directory/logs/08_activate_groups 2>&1'",
+      command   => "/bin/bash -c '$directory/activate_groups.sh >> $directory/logs/posbuster 2>&1'",
       logoutput => true,
     } ->
     exec { 'run puppet after groups reactivating':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test > $directory/logs/09_run_puppet_after_group_activation 2>&1",
+      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
       timeout   => 7200,
     } ->
     exec { 'deactivate deactivated groups':
-      command   => "/bin/bash -c '$directory/deactivate_groups.sh > $directory/logs/09_1_deactivate_groups 2>&1'",
+      command   => "/bin/bash -c '$directory/deactivate_groups.sh >> $directory/logs/posbuster 2>&1'",
       logoutput => true,
     } ->
     exec { 'run puppet after groups deactivating':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test > $directory/logs/09_2_run_puppet_after_group_deactivation 2>&1",
+      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
       timeout   => 7200,
     } ->
     exec { 'delete_obsolete_packages.sh':
-      command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh > $directory/logs/09_3_delete_obsolete_packages 2>&1'",
+      command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh >> $directory/logs/posbuster 2>&1'",
       timeout   => 3600,
       logoutput => true,
     }
@@ -135,7 +139,7 @@ class posbuster (
     }
 
     exec { 'send report':
-      command   => "/bin/bash -c '$directory/send_report.sh'",
+      command   => "/bin/bash -c '$directory/send_posbuster_report.sh'",
     }
 
     exec { 'send posbuster notify':
