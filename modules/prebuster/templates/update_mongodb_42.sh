@@ -64,7 +64,7 @@ if mongod --version | grep v3.6; then
   done
 
   #log
-  echo 'db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )' | mongo --ssl --sslAllowInvalidCertificates localhost/admin
+  mongo --ssl --sslAllowInvalidCertificates localhost/admin --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )"
 
 fi
 
@@ -101,7 +101,7 @@ if mongod --version | grep v4.0; then
   done
 
   #log
-  echo 'db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )' | mongo --ssl --sslAllowInvalidCertificates localhost/admin
+  mongo --ssl --sslAllowInvalidCertificates localhost/admin --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )"
 
 fi
 
