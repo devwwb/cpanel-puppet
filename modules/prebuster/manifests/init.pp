@@ -51,6 +51,7 @@ class prebuster (
 
     exec { 'reset prebuster log':
       command   => "/bin/rm $directory/logs/prebuster",
+      onlyif    => "/usr/bin/test -f $directory/logs/prebuster",
     } ->
     exec { 'backup mysql':
       command   => "/bin/bash -c '$directory/backup_mysql.sh >> $directory/logs/prebuster 2>&1'",

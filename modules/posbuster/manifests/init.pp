@@ -27,6 +27,7 @@ class posbuster (
 
     exec { 'reset posbuster log':
       command   => "/bin/rm $directory/logs/posbuster",
+      onlyif    => "/usr/bin/test -f $directory/logs/posbuster",
     } ->
     exec { 'iptables apache drop':
       command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/posbuster 2>&1'",
