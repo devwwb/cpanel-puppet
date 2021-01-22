@@ -17,7 +17,7 @@ if pg_config --version | grep -q 9.6; then
   #sudo -u postgres psql -f BACKUP_FILE postgres
 
   #reindex databases
-  reindexdb --all
+  sudo -u postgres reindexdb --all
 
   #update postgresql to 11
   apt-get install postgresql-11 postgresql-client-11 postgresql-server-dev-11 -y
@@ -42,8 +42,6 @@ if pg_config --version | grep -q 9.6; then
   service postgresql restart
   sleep 5
   service postgresql stop
-  sleep 5
-  pg_upgradecluster 9.6 main
   sleep 10
   #if upgrade succes
   if pg_lsclusters | grep -q 11; then
