@@ -34,6 +34,13 @@ class posbuster (
       logoutput => true,
     }
 
+    #mark packages as manually installed to avoid autoremove to purge them later
+    exec { 'mark slapd as manually installed':
+      command => '/usr/bin/apt-mark manual slapd',
+      logoutput => true,
+    }
+
+
     #clean downloaded packages
     exec { 'clean apt':
       command => '/usr/bin/apt-get clean',
