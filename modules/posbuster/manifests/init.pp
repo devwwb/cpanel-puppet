@@ -130,7 +130,15 @@ class posbuster (
       command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh >> $directory/logs/posbuster 2>&1'",
       timeout   => 3600,
       logoutput => true,
+    } ->
+    exec { 'run puppet after removing obsolete packages':
+      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
+      logoutput => true,
+      # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
+      returns   => 2,
+      timeout   => 7200,
     }
+
 
     #clean unused images and containers
     if ($::docker_group){
@@ -160,7 +168,7 @@ class posbuster (
       command   => "/bin/bash -c '$directory/send_posbuster_notify.sh'",
       logoutput => true,
       require   =>[
-                  Exec['run puppet after groups deactivating'],
+                  Exec['run puppet after removing obsolete packages'],
                   ],
     }
 
