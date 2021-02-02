@@ -164,6 +164,7 @@ class posbuster (
     exec { 'delete persistent iptables rules':
       command   => '/bin/rm /etc/iptables/*',
       onlyif    => 'ls -l /etc/iptables/* | grep rules',
+      path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     }
 
     exec { 'send report':
