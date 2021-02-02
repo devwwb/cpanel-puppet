@@ -14,6 +14,7 @@ class posbuster (
                 'activate_groups.sh',
                 'deactivate_groups.sh',
                 'iptables_apache_accept.sh',
+                'set_ready_api.sh',
                 'send_posbuster_report.sh',
                 'send_posbuster_notify.sh']
     $scripts.each |String $script| {
@@ -137,6 +138,10 @@ class posbuster (
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
       timeout   => 7200,
+    } ->
+    exec { 'set_ready_api.sh':
+      command   => "/bin/bash -c '$directory/set_ready_api.sh >> $directory/logs/posbuster 2>&1'",
+      logoutput => true,
     }
 
 
@@ -168,7 +173,7 @@ class posbuster (
       command   => "/bin/bash -c '$directory/send_posbuster_notify.sh'",
       logoutput => true,
       require   =>[
-                  Exec['run puppet after removing obsolete packages'],
+                  Exec['set_ready_api.sh'],
                   ],
     }
 
