@@ -163,6 +163,7 @@ class posbuster (
 
     exec { 'delete persistent iptables rules':
       command   => '/bin/rm /etc/iptables/*',
+      onlyif    => 'ls -l /etc/iptables/* | grep rules',
     }
 
     exec { 'send report':
