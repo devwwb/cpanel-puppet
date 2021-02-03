@@ -86,18 +86,6 @@ class posbuster (
       timeout   => 7200,
     }
 
-    if ($::discourse_group){
-      exec { 'rebuild discourse':
-        command   => "/bin/bash -c 'sudo /var/discourse/launcher rebuild app >> $directory/logs/posbuster 2>&1'",
-        logoutput => true,
-        require   =>[
-                    Exec['run puppet to apply buster catalog'],
-                    ],
-        timeout   => 7200,
-      }
-
-    }
-
     exec { 'iptables apache accept':
       command   => "/bin/bash -c '$directory/iptables_apache_accept.sh >> $directory/logs/posbuster 2>&1'",
       logoutput => true,
