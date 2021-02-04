@@ -166,6 +166,9 @@ class posbuster (
       require   =>[
                   Exec['set_ready_api.sh'],
                   ],
+    } ->
+    exec { 'enable setreadycpanel':
+      command   => '/bin/systemctl enable setreadycpanel',
     }
 
 

@@ -237,11 +237,14 @@ class prebuster (
       command   => "/bin/bash -c '$directory/send_prebuster_report.sh'",
     }
 
-    exec { 'send prebuster notify':
-      command   => "/bin/bash -c '$directory/send_prebuster_notify.sh  && sleep 120'",
+    exec { 'disable setreadycpanel':
+      command   => '/bin/systemctl disable setreadycpanel',
       require   =>[
                   Exec['upgrade buster'],
                   ],
+    } ->
+    exec { 'send prebuster notify':
+      command   => "/bin/bash -c '$directory/send_prebuster_notify.sh  && sleep 120'",
     }
 
     #reboot the server
