@@ -73,6 +73,7 @@ class posbuster (
     if ($::openvpn_group){
       exec { 'update easyrsa pki openvpn':
         command   => "/bin/bash -c '$directory/upgrade_easyrsa_openvpn.sh >> $directory/logs/posbuster 2>&1'",
+        creates   => "/etc/openvpn/$::fqdn/easy-rsa/openssl-easyrsa.cnf",
         logoutput => true,
         timeout   => 1800,
       }
