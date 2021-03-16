@@ -17,8 +17,11 @@ node default {
   ## report
   include report
 
-  ## clean
-  include clean
+  ## cleanapt
+  include cleanapt
+
+  ## cleandocker
+  include cleandocker
 
   ## samhainreset
   include samhainreset

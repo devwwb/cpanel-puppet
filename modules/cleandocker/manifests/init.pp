@@ -1,15 +1,10 @@
-class clean (
-  $enabled = str2bool("$::clean"),
+class cleandocker (
+  $enabled = str2bool("$::cleandocker"),
 ) {
 
   validate_bool($enabled)
 
   if $enabled {
-
-    #clean downloaded packages
-    exec { 'clean apt':
-      command => '/usr/bin/apt-get clean',
-    }
 
     #clean unused images and containers
     #https://github.com/spotify/docker-gc

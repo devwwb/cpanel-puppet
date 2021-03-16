@@ -21,7 +21,8 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     prestretch
     posstretch
     report
-    clean
+    cleanapt
+    cleandocker
     samhainreset
     samhaincheck
     domains
