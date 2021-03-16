@@ -28,6 +28,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     trash
     prebuster
     posbuster
+    mysql
 
 # Modules TODO
 
