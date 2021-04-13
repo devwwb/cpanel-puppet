@@ -121,6 +121,11 @@ class posbuster (
       timeout   => 3600,
       logoutput => true,
     } ->
+    exec { 'purge jitsi passwords':
+      command   => 'rm /etc/maadix/jicofo && rm /etc/maadix/jicofoauth && rm /etc/maadix/jitsivideobridge',
+      onlyif    => 'test -f /etc/maadix/jicofo',
+      path      => '/usr/bin:/bin',
+    } ->
     exec { 'run puppet after removing obsolete packages':
       command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
