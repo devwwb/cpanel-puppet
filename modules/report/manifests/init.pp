@@ -20,7 +20,7 @@ class report (
     }
 
     #define scripts
-    $scripts = ['list_groups.sh','vm_packages_report.sh','vm_docker_report.sh','iptables_report.sh','disk_report.sh','send_report.sh']
+    $scripts = ['list_groups.sh','list_fqdn_apps.sh',''vm_packages_report.sh','vm_docker_report.sh','iptables_report.sh','disk_report.sh','send_report.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
@@ -37,6 +37,12 @@ class report (
     
     exec { "list groups":
       command   => "/bin/bash -c '$directory/list_groups.sh > $directory/logs/01_list_groups.sh.log 2>&1'",
+      logoutput => true,
+      timeout   => 3600,
+    }
+
+    exec { "list fqdn apps":
+      command   => "/bin/bash -c '$directory/list_fqdn_apps.sh > $directory/logs/02_list_fqdn_apps.sh.log 2>&1'",
       logoutput => true,
       timeout   => 3600,
     }
