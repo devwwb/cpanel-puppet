@@ -126,6 +126,11 @@ class posbuster (
       onlyif    => 'test -f /etc/maadix/jicofo',
       path      => '/usr/bin:/bin',
     } ->
+    exec { 'purge jitsi and prosody packages':
+      command   => 'apt remove --purge -y jicofo jitsi-meet jitsi-meet-prosody jitsi-meet-web jitsi-meet-web-config jitsi-videobridge2 prosody prosody-modules lua-ldap',
+      onlyif    => 'test -f /etc/maadix/jicofo',
+      path      => '/usr/bin:/bin',
+    } ->
     exec { 'run puppet after removing obsolete packages':
       command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
