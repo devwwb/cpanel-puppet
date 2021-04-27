@@ -121,16 +121,31 @@ class posbuster (
       timeout   => 3600,
       logoutput => true,
     } ->
-    exec { 'purge jitsi passwords':
-      command   => 'rm /etc/maadix/jicofo && rm /etc/maadix/jicofoauth && rm /etc/maadix/jitsivideobridge',
-      onlyif    => 'test -f /etc/maadix/jicofo',
-      path      => '/usr/bin:/bin',
-    } ->
     exec { 'purge jitsi and prosody packages':
       command   => 'apt remove --purge -y jicofo jitsi-meet jitsi-meet-prosody jitsi-meet-web jitsi-meet-web-config jitsi-videobridge2 prosody prosody-modules lua-ldap',
       onlyif    => 'test -f /etc/maadix/jicofo',
       path      => '/usr/bin:/bin',
     } ->
+    exec { 'purge jitsi passwords':
+      command   => 'rm /etc/maadix/jicofo && rm /etc/maadix/jicofoauth && rm /etc/maadix/jitsivideobridge',
+      onlyif    => 'test -f /etc/maadix/jicofo',
+      path      => '/usr/bin:/bin',
+    } ->
+    exec { 'purge prosody conf':
+      command => 'rm -r /etc/prosody',
+      onlyif  => 'test -d /etc/prosody',
+      path    => '/usr/bin:/bin',
+    }->
+    exec { 'purge jitsi conf':
+      command => 'rm -r /etc/jitsi',
+      onlyif  => 'test -d /etc/jitsi',
+      path    => '/usr/bin:/bin',
+    }->
+    exec { 'purge prosody var':
+      command => 'rm -r /var/lib/prosody',
+      onlyif  => 'test -d /var/lib/prosody',
+      path    => '/usr/bin:/bin',
+    }->
     exec { 'run puppet after removing obsolete packages':
       command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
