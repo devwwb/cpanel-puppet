@@ -123,7 +123,7 @@ class posbuster (
     } ->
     exec { 'purge jitsi and prosody packages':
       command   => 'apt remove --purge -y jicofo jitsi-meet jitsi-meet-prosody jitsi-meet-web jitsi-meet-web-config jitsi-videobridge2 prosody prosody-modules lua-ldap',
-      onlyif    => 'test -f /etc/maadix/jicofo',
+      onlyif    => 'dpkg -l | grep jitsi',
       path      => '/usr/bin:/bin',
     } ->
     exec { 'purge jitsi passwords':
