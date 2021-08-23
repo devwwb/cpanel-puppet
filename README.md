@@ -2,7 +2,7 @@
 Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
 
 # Latest Version
-    release_202101
+    release_202102
 
 # How to run
 
