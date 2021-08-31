@@ -67,6 +67,7 @@ class report (
     exec { 'iptables report':
       command   => "/bin/bash -c '$directory/iptables_report.sh > $directory/logs/05_iptables_report.sh.log 2>&1'",
       logoutput => true,
+      timeout   => 3600,
     }
 
     exec { 'disk report':
