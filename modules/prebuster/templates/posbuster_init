@@ -12,10 +12,25 @@
 # Using the lsb functions to perform the operations.
 . /lib/lsb/init-functions
 
+function setlockstatus ()
+{
+#echo "$1"
+ldapmodify -Q -Y EXTERNAL -H ldapi:///  << EOF
+dn: $cpanelobject
+changetype: modify
+replace: status
+status: $1
+
+EOF
+}
+
 case "$1" in
 start)
      #set cpanel to running
      /etc/maadix/scripts/setrunningcpanel.sh
+     #set prebuster to ready
+     cpanelobject="ou=prebuster,ou=cpanel,dc=example,dc=tld"
+     setlockstatus ready
      #launch puppet local module to finish stretch upgrade
      cd /usr/share/cpanel-puppet
      export FACTERLIB='./facts'
