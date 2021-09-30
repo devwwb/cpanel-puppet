@@ -225,7 +225,14 @@ class prebuster (
       require   =>[
                   Exec['upgrade buster'],
                   ],
+    } ->
+    file {'/etc/systemd/system/posbuster.service.d':
+      ensure   => directory,
+    } ->
+    file {'/etc/systemd/system/posbuster.service.d/deps.conf':
+      content => template("prebuster/posbuster_init_deps"),
     }
+
 
     exec { 'delete persistent iptables rules':
       command   => '/bin/rm /etc/iptables/*',

@@ -172,7 +172,7 @@ class posbuster (
     }
 
     exec { 'disable and remove script posbuster':
-      command   => '/usr/sbin/update-rc.d posbuster remove && /bin/rm /etc/init.d/posbuster',
+      command   => '/usr/sbin/update-rc.d posbuster remove && /bin/rm /etc/init.d/posbuster && /bin/rm -r /etc/systemd/system/posbuster.service.d',
     }
 
     exec { 'delete persistent iptables rules':
