@@ -229,7 +229,7 @@ class prebuster (
     file {'/etc/systemd/system/posbuster.service.d':
       ensure   => directory,
     } ->
-    file {'/etc/systemd/system/posbuster.service.d/deps.conf ':
+    file {'/etc/systemd/system/posbuster.service.d/deps.conf':
       content => template("prebuster/posbuster_init_deps"),
     }
 
