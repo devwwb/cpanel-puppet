@@ -43,7 +43,7 @@ node default {
   include prebuster
   include posbuster
 
-  ## trash
+  ## mysql
   include mysql
 
 }
