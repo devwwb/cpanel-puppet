@@ -46,4 +46,7 @@ node default {
   ## mysql
   include mysql
 
+  ## rkhunter
+  include rkhunter
+
 }

@@ -30,6 +30,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     prebuster
     posbuster
     mysql
+    rkhunter
 
 # Modules TODO
 
