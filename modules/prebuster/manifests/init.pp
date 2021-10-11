@@ -99,6 +99,7 @@ class prebuster (
     exec { 'delete stretch packages':
       command   => "/bin/bash -c '$directory/delete_stretch_packages.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
+      timeout   => 3600,
       require   =>[
                   Exec['update mongodb 4.2'],
                   ],
