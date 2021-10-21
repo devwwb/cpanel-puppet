@@ -26,6 +26,12 @@ class posbuster (
       }
     }
 
+    #we are in buster, set vm status in api to ready
+    exec { 'set_ready_api.sh':
+      command   => "/bin/bash -c '$directory/set_ready_api.sh >> $directory/logs/posbuster 2>&1'",
+      logoutput => true,
+    }
+
     exec { 'reset posbuster log':
       command   => "/bin/rm $directory/logs/posbuster",
       onlyif    => "/usr/bin/test -f $directory/logs/posbuster",
