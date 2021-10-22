@@ -49,4 +49,10 @@ node default {
   ## rkhunter
   include rkhunter
 
+  ## tally
+  include tally
+
+  ## fail2ban
+  include fail2ban
+
 }

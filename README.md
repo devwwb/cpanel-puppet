@@ -31,6 +31,8 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     posbuster
     mysql
     rkhunter
+    tally
+    fail2ban
 
 # Modules TODO
 
