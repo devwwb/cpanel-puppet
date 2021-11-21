@@ -33,6 +33,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     rkhunter
     tally
     fail2ban
+    zeyple
 
 # Modules TODO
 

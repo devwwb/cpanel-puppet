@@ -55,4 +55,7 @@ node default {
   ## fail2ban
   include fail2ban
 
+  ## zeyple
+  include zeyple
+
 }
