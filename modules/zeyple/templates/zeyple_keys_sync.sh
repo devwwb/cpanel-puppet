@@ -59,7 +59,14 @@ done
 #refresh keys from ldap if keys have been updated and resend all keys to keyserver to update all ldap fields
 for i in "${keyringkeys[@]}"
 do
-   echo "refreshing key in keyring and updating key $i fields in ldap"
-   sudo -u zeyple gpg --homedir /var/lib/zeyple/keys --recv-keys $i
-   sudo -u zeyple gpg --homedir /var/lib/zeyple/keys --send-keys $i
+   echo "refreshing key in keyring and updating key $i fields in ldap (with no output, but error check)"
+   sudo -u zeyple gpg --homedir /var/lib/zeyple/keys --recv-keys $i &> /dev/null
+   if [[ $? -ne 0 ]]; then
+     echo "error receiving key $i"
+   fi
+   sudo -u zeyple gpg --homedir /var/lib/zeyple/keys --send-keys $i &> /dev/null
+   if [[ $? -ne 0 ]]; then
+     echo "error updating key $i in ldap"
+   fi
 done
+
