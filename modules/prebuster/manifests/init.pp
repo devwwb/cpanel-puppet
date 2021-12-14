@@ -2,6 +2,7 @@ class prebuster (
   $enabled = str2bool("$::prebuster"),
   $extlinux = str2bool("$::extlinux"),
   $directory = '/etc/maadix/buster',
+  $disablereboot = str2bool("$::disablereboot"),
 ) {
 
   validate_bool($enabled)
@@ -255,14 +256,22 @@ class prebuster (
       command   => "/bin/bash -c '$directory/send_prebuster_notify.sh  && sleep 120'",
     }
 
-    #reboot the server
-    exec { 'reboot server':
-        command   => "/bin/bash -c '/lib/molly-guard/shutdown -r now' &",
-        logoutput => true,
-        require   =>[
-                    Exec['upgrade buster'],
-                    Exec['update postgresql 11'],
-                    ],
+    #reboot the server unless $disablereboot==true
+    if $disablereboot {
+
+      notify { 'reboot server disabled': }
+
+    } else {
+
+      exec { 'reboot server':
+          command   => "/bin/bash -c '/lib/molly-guard/shutdown -r now' &",
+          logoutput => true,
+          require   =>[
+                      Exec['upgrade buster'],
+                      Exec['update postgresql 11'],
+                      ],
+      }
+
     }
  
   }
