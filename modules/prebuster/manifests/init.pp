@@ -97,6 +97,32 @@ class prebuster (
       }
     }
 
+    #clean jitsi. stretch installations are not able to update
+    exec { 'purge jitsi and prosody packages':
+      command   => 'apt remove --purge -y jicofo jitsi-meet jitsi-meet-prosody jitsi-meet-web jitsi-meet-web-config jitsi-videobridge2 prosody prosody-modules lua-ldap',
+      onlyif    => 'dpkg -l | grep jitsi',
+      path      => '/usr/bin:/bin',
+    } ->
+    exec { 'purge jitsi passwords':
+      command   => 'rm /etc/maadix/jicofo && rm /etc/maadix/jicofoauth && rm /etc/maadix/jitsivideobridge',
+      onlyif    => 'test -f /etc/maadix/jicofo',
+      path      => '/usr/bin:/bin',
+    } ->
+    exec { 'purge prosody conf':
+      command => 'rm -r /etc/prosody',
+      onlyif  => 'test -d /etc/prosody',
+      path    => '/usr/bin:/bin',
+    }->
+    exec { 'purge jitsi conf':
+      command => 'rm -r /etc/jitsi',
+      onlyif  => 'test -d /etc/jitsi',
+      path    => '/usr/bin:/bin',
+    }->
+    exec { 'purge prosody var':
+      command => 'rm -r /var/lib/prosody',
+      onlyif  => 'test -d /var/lib/prosody',
+      path    => '/usr/bin:/bin',
+    }->
     exec { 'delete stretch packages':
       command   => "/bin/bash -c '$directory/delete_stretch_packages.sh >> $directory/logs/prebuster 2>&1'",
       logoutput => true,
