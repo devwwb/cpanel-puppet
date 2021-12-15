@@ -50,7 +50,7 @@ class posbuster (
     #clean phamm packages before running puppet
     exec { 'clean phamm':
       command => '/usr/bin/apt-get -y remove --purge phamm-ldap phamm-ldap-amavis phamm-ldap-vacation',
-      onlyif    => 'dpkg -l | grep phamm',
+      onlyif    => '/usr/bin/dpkg -l | grep phamm',
       logoutput => true,
     }
 
