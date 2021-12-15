@@ -101,7 +101,7 @@ class prebuster (
     exec { 'purge jitsi and prosody packages':
       command   => 'apt remove --purge -y jicofo jitsi-meet jitsi-meet-prosody jitsi-meet-web jitsi-meet-web-config jitsi-videobridge2 prosody prosody-modules lua-ldap',
       onlyif    => 'dpkg -l | grep jitsi',
-      path      => '/usr/bin:/bin',
+      path      => '/usr/bin:/bin:/sbin',
     } ->
     exec { 'purge jitsi passwords':
       command   => 'rm /etc/maadix/jicofo && rm /etc/maadix/jicofoauth && rm /etc/maadix/jitsivideobridge',
