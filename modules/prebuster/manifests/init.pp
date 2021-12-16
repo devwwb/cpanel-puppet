@@ -25,6 +25,7 @@ class prebuster (
                 'iptables_apache_drop.sh',
                 'update_mongodb_42.sh', 
                 'delete_mailman_venv_35.sh', 
+                'delete_odoo_venv_35.sh',
                 'delete_onlyoffice_image.sh', 
                 'fix_sury_packages.sh',
                 'upgrade_stretch.sh', 
@@ -79,6 +80,16 @@ class prebuster (
     if ($::mailman_venv3_group){
       exec { 'delete mailman venv 3.5':
         command   => "/bin/bash -c '$directory/delete_mailman_venv_35.sh >> $directory/logs/prebuster 2>&1'",
+        logoutput => true,
+        require   =>[
+                    Exec['deactivate groups and run puppet'],
+                    ],
+      }
+    }
+
+    if ($::odoo_venv3_group){
+      exec { 'delete odoo venv 3.5':
+        command   => "/bin/bash -c '$directory/delete_odoo_venv_35.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['deactivate groups and run puppet'],
