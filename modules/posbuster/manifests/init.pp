@@ -86,8 +86,8 @@ class posbuster (
       }
     }
 
-    exec { 'run puppet to apply buster catalog':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
+    exec { 'run puppet to apply buster catalog without purging certs':
+      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test --skip_tags letsencrypt::certonly >> $directory/logs/posbuster 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
