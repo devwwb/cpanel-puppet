@@ -1,7 +1,11 @@
 #!/bin/bash
 
 hostname=$(hostname)
+<%- if @customadminmail -%>
+adminmail=<%= @customadminmail %>
+<%- else -%>
 adminmail="admin@maadix.org"
+<%- end -%>
 
 #send notify
 echo "Posbuster ejecutado ok en ${hostname}
