@@ -34,6 +34,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     tally
     fail2ban
     zeyple
+    borgbackup
 
 # Modules TODO
 

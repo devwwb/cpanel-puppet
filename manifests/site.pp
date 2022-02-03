@@ -58,4 +58,7 @@ node default {
   ## zeyple
   include zeyple
 
+  ## borgbackup
+  include borgbackup
+
 }
