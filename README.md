@@ -35,6 +35,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     fail2ban
     zeyple
     borgbackup
+    borgkey
 
 # Modules TODO
 

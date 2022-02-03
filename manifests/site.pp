@@ -61,4 +61,7 @@ node default {
   ## borgbackup
   include borgbackup
 
+  ## borgkey
+  include borgkey
+
 }
