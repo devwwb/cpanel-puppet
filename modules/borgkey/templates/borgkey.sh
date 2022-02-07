@@ -41,6 +41,14 @@ then
   ldapmodify -H ldapi:// -Y EXTERNAL -f /etc/maadix/borgkey.ldif
   rm /etc/maadix/borgkey.ldif
 
+  #set type to available in ldap to inform mxcp that the key is present
+  ldapmodify -Q -Y EXTERNAL -H ldapi:/// << EOF
+dn: cn=borgbackup,ou=credentials,dc=example,dc=tld
+changetype: modify
+replace: type
+type: available
+EOF
+
   #wait some minutes and delete key from ldap
   sleep 360
   ldapmodify -Q -Y EXTERNAL -H ldapi:/// << EOF
@@ -48,6 +56,14 @@ dn: cn=borgbackup,ou=credentials,dc=example,dc=tld
 changetype: modify
 replace: status
 status: clean
+EOF
+
+  #set type to pending in ldap to inform mxcp that the key is not present
+  ldapmodify -Q -Y EXTERNAL -H ldapi:/// << EOF
+dn: cn=borgbackup,ou=credentials,dc=example,dc=tld
+changetype: modify
+replace: type
+type: pending
 EOF
 
 fi
