@@ -31,6 +31,7 @@ class borgbackup (
       file {'borg root folder for mounts':
         ensure       => directory,
         path         => "/home/$sudouser/$::hostname-backups",
+        owner        => "$sudouser",
         mode         => '700',
       }
 
