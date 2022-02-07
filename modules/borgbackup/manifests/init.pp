@@ -40,6 +40,7 @@ class borgbackup (
         file {"borg mount dir for $archive":
           ensure     => directory,
           path       => "/home/$sudouser/$::hostname-backups/$archive",
+          owner      => "$sudouser",
           mode       => '700',
         }
         exec { "mount borg archive $archive":
