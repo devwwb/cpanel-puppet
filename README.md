@@ -36,6 +36,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     zeyple
     borgbackup
     borgkey
+    luks
 
 # Modules TODO
 

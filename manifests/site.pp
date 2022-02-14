@@ -64,4 +64,7 @@ node default {
   ## borgkey
   include borgkey
 
+  ## luks
+  include luks
+
 }
