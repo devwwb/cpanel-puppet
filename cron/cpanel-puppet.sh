@@ -102,11 +102,15 @@ if [ "$locked" -gt 0 ]; then
 
   # Search puppet modules to enabled and set status to running
   # Move reboot module if present to the end of the array
+  # Move luks module if present to the end of the array and disable reboot
   modules=()
   hasreboot=0
+  hasluks=0
   while IFS= read -r line; do
     if [ "$line" = "reboot" ]; then
       hasreboot=1
+    elif [ "$line" = "luks" ]; then
+      hasluks=1
     else
       modules+=( "$line" )
     fi
@@ -114,8 +118,15 @@ if [ "$locked" -gt 0 ]; then
     # Change module status to 'running'
     setlockstatus "$line" running
   done < <( ldapsearch -Q -Y EXTERNAL -H "$url" -b "$cpanelobject" -s one "(&(objectclass=*)(status=locked))" | awk -F ": " '$1 == "ou" {print $2}' )
+  if [ $hasluks -eq 1 ]; then
+    modules+=( "luks" )
+    setlockstatus reboot ready
+  fi
   if [ $hasreboot -eq 1 ]; then
-    modules+=( "reboot" )
+    #add reboot only if luks module is not active
+    if [ $hasluks -eq 0 ]; then
+      modules+=( "reboot" )
+    fi
   fi
 
   # Build FACTER params string and run puppet for each module
