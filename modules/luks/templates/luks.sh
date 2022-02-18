@@ -12,7 +12,7 @@ date=$(date +%Y_%m_%d-%H_%M_%S)
 
 #read luks passwords from ldap
 declare -A LUKS
-for value in luksinit luks0 luks1
+for value in luks0 luks1
 do
   dn="ou=$value,ou=luks,ou=credentials,dc=example,dc=tld"
   #try to decrypt password if gnupg kit is setup
@@ -47,19 +47,20 @@ if [ ${test_exit} -eq 0 ]; then
     #clean ldap and keyfiles
     if [ ${slot0_exit} -eq 0 ]; then
       echo "Change luks 0 / ok"
-      for value in luksinit luks0 luks1
+      for value in luks0 luks1
       do
         #delete ldap passwords
         dn="ou=$value,ou=luks,ou=credentials,dc=example,dc=tld"
         ldapdelete -H ldapi:// -Y EXTERNAL "$dn"
         #delete luks keyfiles
         rm /etc/maadix/$value
-        #send log
-        #TODO
-        #reboot
-        sleep 10
-        /lib/molly-guard/shutdown -r now
       done
+      rm /etc/maadix/luksinit
+      #send log
+      #TODO
+      #reboot
+      sleep 10
+      /lib/molly-guard/shutdown -r now
     fi
 
   fi
