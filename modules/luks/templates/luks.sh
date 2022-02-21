@@ -56,11 +56,16 @@ if [ ${test_exit} -eq 0 ]; then
         rm /etc/maadix/$value
       done
       rm /etc/maadix/luksinit
+      #set ou=luks info attribute to ready
+      /etc/maadix/scripts/setldapdnattribute.sh 'ou=luks,ou=cpanel,dc=example,dc=tld' info ready
       #send log
       #TODO
       #reboot
       sleep 10
       /lib/molly-guard/shutdown -r now
+    else
+      #set ou=luks info attribute to error
+      /etc/maadix/scripts/setldapdnattribute.sh 'ou=luks,ou=cpanel,dc=example,dc=tld' info error
     fi
 
   fi
