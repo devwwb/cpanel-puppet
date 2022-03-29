@@ -39,7 +39,7 @@ if mongod --version | grep v3.6; then
   #update mongo repo for mongodb 4.0
   apt-key list | grep -C 5 mongo
   apt-key del '2930 ADAE 8CAF 5059 EE73  BB4B 5871 2A22 91FA 4AD5'
-  curl 'https://www.mongodb.org/static/pgp/server-4.0.asc' | apt-key add -
+  curl 'https://pgp.mongodb.com/server-4.0.asc' | apt-key add -
   sed -i 's/3.6/4.0/g' /etc/apt/sources.list.d/mongodb.list
 
   #update mongodb to 4.0
