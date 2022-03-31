@@ -106,4 +106,6 @@ if mongod --version | grep v4.0; then
 fi
 
 #force certificate regeneration
-rm /etc/maadix/status/mongod-selfsigned-certs
+if [ -f /etc/maadix/status/mongod-selfsigned-certs ]; then
+  rm /etc/maadix/status/mongod-selfsigned-certs
+fi
