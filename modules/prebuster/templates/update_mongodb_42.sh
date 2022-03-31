@@ -11,7 +11,7 @@ if [ ! -d /etc/maadix/backups/mongodb-$DATE ]; then
   echo "All databases"
   mkdir /etc/maadix/backups/mongodb-$DATE
   cd /etc/maadix/backups/mongodb-$DATE
-  echo -n "mongodump --ssl --sslAllowInvalidCertificates -u admin -p " > backup.sh
+  echo -n "mongodump --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt -u admin -p " > backup.sh
   cat /etc/maadix/mongodbadmin | tr -d '\n' | sed "s@\\\\@@g" | tr -d \'\" >> backup.sh
   chmod +x backup.sh
   #wait until mongod is up
@@ -31,10 +31,10 @@ echo "## Update mongo to 4.0 ###################################################
 if mongod --version | grep v3.6; then
 
   #Upgrade MONGODB-CR to SCRAM
-  mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand({authSchemaUpgrade: 1})"
+  mongo admin --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt --eval "load('/root/.mongorc.js'); db.adminCommand({authSchemaUpgrade: 1})"
 
   #Set Compatibility version to 3.6
-  mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '3.6' } )"
+  mongo admin --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '3.6' } )"
 
   #update mongo repo for mongodb 4.0
   apt-key list | grep -C 5 mongo
@@ -56,15 +56,15 @@ if mongod --version | grep v3.6; then
   echo "mongod 4.0 running"
 
   #setFeatureCompatibilityVersion to 4.0
-  until mongo --ssl --sslAllowInvalidCertificates localhost/admin --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )" | grep version | grep -v shell | grep -v server | grep 4.0
+  until mongo admin --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )" | grep version | grep -v shell | grep -v server | grep 4.0
   do
     sleep 5
     echo "Trying to setFeatureCompatibilityVersion: '4.0'"
-    mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.0' } )"
+    mongo admin --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.0' } )"
   done
 
   #log
-  mongo --ssl --sslAllowInvalidCertificates localhost/admin --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )"
+  mongo admin --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )"
 
 fi
 
@@ -93,15 +93,15 @@ if mongod --version | grep v4.0; then
   echo "mongod 4.2 running"
 
   #setFeatureCompatibilityVersion to 4.2
-  until mongo --ssl --sslAllowInvalidCertificates localhost/admin --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )" | grep version | grep -v shell | grep -v server | grep 4.2
+  until mongo admin --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )" | grep version | grep -v shell | grep -v server | grep 4.2
   do
     sleep 5
     echo "Trying to setFeatureCompatibilityVersion: '4.2'"
-    mongo admin --port 27017 --ssl --sslAllowInvalidCertificates --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.2' } )"
+    mongo admin --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt --eval "load('/root/.mongorc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '4.2' } )"
   done
 
   #log
-  mongo --ssl --sslAllowInvalidCertificates localhost/admin --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )"
+  mongo admin --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt --eval "load('/root/.mongorc.js'); db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )"
 
 fi
 
