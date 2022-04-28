@@ -53,6 +53,40 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     vhosts
   end
 
+  #fpm pool
+  chunk(:pool) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      pool=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" "(objectClass=VirtualDomain)" | grep status: | sed "s|.*: \(.*\)|\1|"')
+      if not pool.empty?
+        vhosts[domain.strip] = {:pool => pool}
+      else
+        vhosts[domain.strip] = {:pool => 'www'}
+      end
+    end
+    vhosts
+  end
+
+  #oldpool: the current group of the webroot folder
+  chunk(:oldpool) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      webroot = '/var/www/html/' + domain.strip
+      if File.directory?(webroot)
+        gid = File.stat(webroot).gid
+        if gid==33
+          oldpool = 'www'
+        else
+          oldpool = Etc.getgrgid(gid).name
+        end
+        vhosts[domain.strip] = {:oldpool => oldpool}
+      else
+        vhosts[domain.strip] = {:oldpool => ''}
+      end
+    end
+    vhosts
+  end
+
 
   #todo, add extra vhosts options to parse in the template file
 

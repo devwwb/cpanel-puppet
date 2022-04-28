@@ -6,6 +6,8 @@ define domains::vhosts(
   $regenerate           = undef,
   $dns			= undef,
   $oldwebmaster		= undef,
+  $pool			= undef,
+  $oldpool		= undef,
 ) {
 
   #create vhost and cert only if domain has DNS resolution
@@ -17,30 +19,69 @@ define domains::vhosts(
       notify	=> Exec['reload apache'],
     }
 
-    #change perms/owner of domain webroot only if webmaster changes for existent domains
-    if ($webmaster != $oldwebmaster) and ($oldwebmaster != '') {
+    #webroot folder group
+    case $pool {
+      'www':  {
+         $group = 'www-data'
+      }
+      default:  {
+         $group = $pool
+      }
+    }
+    case $oldpool {
+      'www':  {
+         $oldgroup = 'www-data'
+      }
+      default:  {
+         $oldgroup = $pool
+      }
+    }
+
+    #change perms/owner of domain webroot only if webmaster or pool changes for existent domains
+    if (($webmaster != $oldwebmaster) and ($oldwebmaster != '')) or (($pool != $oldpool) and ($oldpool != '')){
       #webroot folder + owner/group and permissions
-      file {"/var/www/html/$domain":
-        ensure	=> directory,
-        owner	=> $webmaster,
-        group	=> 'www-data',
-        mode	=> '2770',
-        notify	=> Exec['reload apache'],
-      } ~>
-      #when domain is assigned to another webmaster, change owner recursive
+      if ($webmaster != $oldwebmaster) and ($oldwebmaster != '') {
+        file {"/var/www/html/$domain":
+          ensure	=> directory,
+          owner		=> $webmaster,
+          group		=> $group,
+          mode		=> '2770',
+          notify	=> Exec["owner recursive of $domain",
+                                'reload apache'
+                               ],
+        }
+      }
+      if ($pool != $oldpool) and ($oldpool != '') {
+        file {"/var/www/html/$domain":
+          ensure	=> directory,
+          owner		=> $webmaster,
+          group		=> $group,
+          mode		=> '2770',
+          notify	=> Exec["group recursive of $domain",
+                                'reload apache'
+                               ],
+        }
+      }
+      #when domain is assigned to another webmaster or pool, change owner or group recursive
       #change only files and folders owned by oldwebmaster. If user has change the owner of a file or dir manually, leave it as is
-      exec {"owner/group recursive of $domain":
-        command	   => "find /var/www/html/$domain -user $oldwebmaster -exec chown $webmaster:www-data {} +",
+      exec {"owner recursive of $domain":
+        command	   => "find /var/www/html/$domain -user $oldwebmaster -exec chown $webmaster {} +",
         refreshonly  => true,
         path	   => ['/usr/bin', '/usr/sbin', '/bin'],
       }
+      #change only files and folders owned by group oldpool. If user has change the group of a file or dir manually, leave it as is
+      exec {"group recursive of $domain":
+        command	   => "find /var/www/html/$domain -group $oldgroup -exec chgrp $oldgroup {} +",
+        refreshonly  => true,
+        path	   => ['/usr/bin', '/usr/sbin', '/bin'],
+      } 
     #perms/owner of domain webroot for new domains
     } elsif $oldwebmaster == '' {
       #webroot folder + owner/group and permissions
       file {"/var/www/html/$domain":
         ensure	=> directory,
         owner	=> $webmaster,
-        group	=> 'www-data',
+        group	=> $group,
         mode	=> '2770',
         notify	=> Exec['reload apache'],
       }

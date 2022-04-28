@@ -6,6 +6,8 @@ define domains::cleanfailedvhosts(
   $regenerate           = undef,
   $dns                  = undef,
   $oldwebmaster         = undef,
+  $pool			= undef,
+  $oldpool              = undef,
 ) {
 
   if $dns {

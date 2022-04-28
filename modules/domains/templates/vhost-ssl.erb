@@ -26,7 +26,11 @@
         SSLCACertificatePath    /etc/ssl/certs
 
         <FilesMatch .php>
+          <% if @pool == 'www' %>
             SetHandler proxy:fcgi://127.0.0.1:9000/
+          <% else %>
+            SetHandler "proxy:unix:/run/php/<%= @pool %>-fpm.sock|fcgi://localhost"
+          <% end %>
         </FilesMatch>
 
 </VirtualHost>
