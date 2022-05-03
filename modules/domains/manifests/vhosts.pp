@@ -10,6 +10,7 @@ define domains::vhosts(
   $oldpool		= undef,
 ) {
 
+
   #create vhost and cert only if domain has DNS resolution
   if $dns {
 
@@ -74,6 +75,7 @@ define domains::vhosts(
         command	   => "find /var/www/html/$domain -group $oldgroup -exec chgrp $oldgroup {} +",
         refreshonly  => true,
         path	   => ['/usr/bin', '/usr/sbin', '/bin'],
+        notify     => Exec['clean php sessions'],
       } 
     #perms/owner of domain webroot for new domains
     } elsif $oldwebmaster == '' {

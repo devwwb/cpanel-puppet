@@ -65,7 +65,12 @@ class domains (
       refreshonly => true,
     }
 
-
+    #clean php sessions
+    Exec {'clean php sessions':
+      command     => 'rm /var/lib/php/sessions/*',
+      require     => Exec['reload apache end'],
+      refreshonly => true,
+    }
 
   }
 
