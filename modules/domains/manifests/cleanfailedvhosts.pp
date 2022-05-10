@@ -1,4 +1,5 @@
 define domains::cleanfailedvhosts(
+  $active		= undef,
   $domain               = undef,
   $webmaster            = undef,
   $webmaster_type       = undef,
@@ -10,7 +11,7 @@ define domains::cleanfailedvhosts(
   $oldpool              = undef,
 ) {
 
-  if $dns {
+  if $dns and $active {
     #delete non-ssl vhosts of domains without certificate / in case certbot fails
     exec {"delete $domain if certbot has failed":
       command      => "rm /etc/apache2/ldap-enabled/$domain.conf",

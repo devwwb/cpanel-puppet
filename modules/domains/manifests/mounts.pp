@@ -1,4 +1,5 @@
 define domains::mounts(
+  $active		= undef,
   $domain		= undef,
   $webmaster		= undef,
   $webmaster_type	= undef,

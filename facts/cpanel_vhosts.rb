@@ -87,6 +87,24 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     vhosts
   end
 
+  #vhost active
+  chunk(:active) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      active=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" "(objectClass=VirtualDomain)" | grep status: | sed "s|.*: \(.*\)|\1|"')
+      if not active.empty?
+        if active == 'offline' || active == 'purged'
+          vhosts[domain.strip] = {:active => false}
+        else
+          vhosts[domain.strip] = {:active => true}
+        end
+      else
+        vhosts[domain.strip] = {:active => true}
+      end
+    end
+    vhosts
+  end
+
 
   #todo, add extra vhosts options to parse in the template file
 

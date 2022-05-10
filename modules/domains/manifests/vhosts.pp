@@ -1,4 +1,5 @@
 define domains::vhosts(
+  $active		= undef,
   $domain		= undef,
   $webmaster		= undef,
   $webmaster_type       = undef,
@@ -11,8 +12,8 @@ define domains::vhosts(
 ) {
 
 
-  #create vhost and cert only if domain has DNS resolution
-  if $dns {
+  #create vhost and cert only if domain has DNS resolution and if domain is active
+  if $dns and $active {
 
     #vhost non-ssl
     file {"/etc/apache2/ldap-enabled/$domain.conf":
@@ -144,6 +145,24 @@ define domains::vhosts(
       mode	=> '2770',
     }
   
+  }
+
+  #delete certs for inactive domains
+  unless $active {
+    #remove certs
+    file {"/etc/letsencrypt/live/$domain":
+      ensure    => absent,
+      recurse   => true,
+      force     => true,
+    }
+    file {"/etc/letsencrypt/archive/$domain":
+      ensure    => absent,
+      recurse   => true,
+      force     => true,
+    }
+    file {"/etc/letsencrypt/renewal/$domain.conf":
+      ensure    => absent,
+    }
   }
 
 
