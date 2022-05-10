@@ -68,6 +68,7 @@ class domains (
     #clean php sessions
     Exec {'clean php sessions':
       command     => 'rm /var/lib/php/sessions/*',
+      path        => ['/usr/bin', '/bin'],
       require     => Exec['reload apache end'],
       refreshonly => true,
     }
