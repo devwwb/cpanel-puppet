@@ -57,7 +57,7 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
   chunk(:pool) do
     vhosts = {}
     Facter.value(:cpanel_domains).each do |domain, value|
-      pool=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" "(objectClass=VirtualDomain)" | grep status: | sed "s|.*: \(.*\)|\1|"')
+      pool=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" "(objectClass=VirtualDomain)" | grep type: | sed "s|.*: \(.*\)|\1|"')
       if not pool.empty?
         vhosts[domain.strip] = {:pool => pool}
       else
