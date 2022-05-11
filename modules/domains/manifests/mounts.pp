@@ -1,5 +1,6 @@
 define domains::mounts(
   $active		= undef,
+  $webroot		= undef,
   $domain		= undef,
   $webmaster		= undef,
   $webmaster_type	= undef,
@@ -11,8 +12,8 @@ define domains::mounts(
   $oldpool              = undef,
 ) {
 
-  #only mount domains assigned to webmaster of type sftp
-  if $webmaster_type == 'sftp' {
+  #only mount domains with webroot enabled, assigned to webmaster of type sftp
+  if $webmaster_type == 'sftp' and $webroot {
     #ensure sftpuser home domain folder to mount domain
     file {"/home/sftpusers/$webmaster/$domain":
       owner	=> $webmaster,

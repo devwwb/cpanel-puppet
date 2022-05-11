@@ -105,6 +105,23 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     vhosts
   end
 
+  #vhost webroot
+  chunk(:webroot) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      webroot=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" "(objectClass=VirtualDomain)" | grep status: | sed "s|.*: \(.*\)|\1|"')
+      if not webroot.empty?
+        if webroot == 'purged'
+          vhosts[domain.strip] = {:webroot => false}
+        else
+          vhosts[domain.strip] = {:webroot => true}
+        end
+      else
+        vhosts[domain.strip] = {:webroot => true}
+      end
+    end
+    vhosts
+  end
 
   #todo, add extra vhosts options to parse in the template file
 

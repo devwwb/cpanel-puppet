@@ -1,5 +1,6 @@
 define domains::vhosts(
   $active		= undef,
+  $webroot		= undef,
   $domain		= undef,
   $webmaster		= undef,
   $webmaster_type       = undef,
@@ -137,12 +138,15 @@ define domains::vhosts(
 
   } else {
 
-    #webroot folder + owner/group and permissions
-    file {"/var/www/html/$domain":
-      ensure	=> directory,
-      owner	=> $webmaster,
-      group	=> 'www-data',
-      mode	=> '2770',
+    #create webroot if enabled
+    if $webroot {
+      #webroot folder + owner/group and permissions
+      file {"/var/www/html/$domain":
+        ensure	=> directory,
+        owner	=> $webmaster,
+        group	=> 'www-data',
+        mode	=> '2770',
+      }
     }
   
   }

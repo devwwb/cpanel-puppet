@@ -19,9 +19,12 @@ Facter.add(:cpanel_umount) do
     #build hash with domain/user pairs that are not in ldap (cpanel_vhosts facter)
     umounts = {}
     system_mounts.each do |mount, value|
-      #if domain doesn't exist in cpanel_vhosts add to umount always, else check if webmaster has changed
+      #if domain doesn't exist in cpanel_vhosts add to umount always, else check if webmaster has changed or if webroot is disabled
       if Facter.value(:cpanel_vhosts).key? (mount.strip)
         if not (Facter.value(:cpanel_vhosts)[mount.strip][:domain] == mount.strip and Facter.value(:cpanel_vhosts)[mount.strip][:webmaster] == value.strip)
+          umounts[mount.strip] = {:domain => mount.strip, :webmaster => value.strip}
+        end
+        if not Facter.value(:cpanel_vhosts)[mount.strip][:webroot]
           umounts[mount.strip] = {:domain => mount.strip, :webmaster => value.strip}
         end
       else

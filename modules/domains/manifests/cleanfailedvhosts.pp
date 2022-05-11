@@ -1,5 +1,6 @@
 define domains::cleanfailedvhosts(
   $active		= undef,
+  $webroot		= undef,
   $domain               = undef,
   $webmaster            = undef,
   $webmaster_type       = undef,

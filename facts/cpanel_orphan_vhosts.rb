@@ -15,7 +15,12 @@ Facter.add(:cpanel_orphan_vhosts) do
       domains.each_line do |domain|
         domainname = Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "cn=' + domain.strip + ',ou=domains,ou=trash,dc=example,dc=tld" "(&(objectClass=applicationProcess)(status=totrash))" | grep type: | sed "s|.*: \(.*\)|\1|"')
         webroot = Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "cn=' + domain.strip + ',ou=domains,ou=trash,dc=example,dc=tld" "(&(objectClass=applicationProcess)(status=totrash))" | grep otherPath: | sed "s|.*: \(.*\)|\1|"')
-        purgecerts = true
+        #avoid managing certs when domain is still managed as vhost
+        if Facter.value(:cpanel_vhosts).key? (domainname.strip)
+          purgecerts = false
+        else
+          purgecerts = true
+        end
         orphandomains[domain.strip] = {:cn => domain.strip, :domain => domainname.strip, :webroot => webroot.strip, :trashname => domain.strip, :purgecerts => purgecerts }
       end
     end
