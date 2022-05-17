@@ -28,6 +28,13 @@ class domains (
       notify  => Exec['reload apache'],
     }
 
+    #wp cms setup script
+    file {"/etc/maadix/scripts/wp_setup.sh":
+      content   => template('domains/wp_setup.sh'),
+      mode      => '700',
+    }
+
+
     #ensure sftpuser home folders to mount domains
     create_resources(domains::sftpusershome, $::cpanel_users)
 
@@ -36,6 +43,9 @@ class domains (
 
     #create vhosts (vhost, webroot, letsencrypt cert)
     create_resources(domains::vhosts, $::cpanel_vhosts)
+
+    #setup cms
+    create_resources(domains::cms, $::cpanel_vhosts)
 
     #delete vhosts non-ssl for those domains without certs
     create_resources(domains::cleanfailedvhosts, $::cpanel_vhosts)

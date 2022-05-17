@@ -1,4 +1,6 @@
 define domains::vhosts(
+  $cms                  = undef,
+  $cms_type             = undef,
   $active		= undef,
   $webroot		= undef,
   $domain		= undef,

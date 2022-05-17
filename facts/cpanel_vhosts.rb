@@ -123,6 +123,38 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     vhosts
   end
 
+  #cms enabled
+  chunk(:cms) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      cms=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "ou=cms,vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" | grep status: | sed "s|.*: \(.*\)|\1|"')
+      if not cms.empty?
+        if cms == 'install'
+          vhosts[domain.strip] = {:cms => true}
+        else
+          vhosts[domain.strip] = {:cms => false}
+        end
+      else
+        vhosts[domain.strip] = {:cms => false}
+      end
+    end
+    vhosts
+  end
+
+  #cms_type enabled
+  chunk(:cms_type) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      cms_type=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "ou=cms,vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" | grep type: | sed "s|.*: \(.*\)|\1|"')
+      if not cms_type.empty?
+          vhosts[domain.strip] = {:cms_type => cms_type}
+      else
+        vhosts[domain.strip] = {:cms_type => ''}
+      end
+    end
+    vhosts
+  end
+
   #todo, add extra vhosts options to parse in the template file
 
 end
