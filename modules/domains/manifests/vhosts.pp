@@ -38,7 +38,7 @@ define domains::vhosts(
          $oldgroup = 'www-data'
       }
       default:  {
-         $oldgroup = $pool
+         $oldgroup = $oldpool
       }
     }
 
