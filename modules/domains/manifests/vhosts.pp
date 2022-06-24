@@ -76,7 +76,7 @@ define domains::vhosts(
       }
       #change only files and folders owned by group oldpool. If user has change the group of a file or dir manually, leave it as is
       exec {"group recursive of $domain":
-        command	   => "find /var/www/html/$domain -group $oldgroup -exec chgrp $oldgroup {} +",
+        command	   => "find /var/www/html/$domain -group $oldgroup -exec chgrp $group {} +",
         refreshonly  => true,
         path	   => ['/usr/bin', '/usr/sbin', '/bin'],
         notify     => Exec['clean php sessions'],
