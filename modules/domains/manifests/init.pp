@@ -77,7 +77,7 @@ class domains (
 
     #clean php sessions
     Exec {'clean php sessions':
-      command     => 'rm /var/lib/php/sessions/*',
+      command     => 'find /var/lib/php/sessions -type f -delete',
       path        => ['/usr/bin', '/bin'],
       require     => Exec['reload apache end'],
       refreshonly => true,
