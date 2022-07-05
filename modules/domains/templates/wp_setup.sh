@@ -98,10 +98,10 @@ PHP
 sudo -u $VHOSTUSER wp core install --url=$DOMAIN --title=$DOMAIN --admin_user=$ADMINUSER --admin_password=$ADMINPASS --admin_email=$ADMINMAIL
 
 #wp default conf
+#sudo -u $VHOSTUSER wp option update permalink_structure '/%postname%'
 sudo -u $VHOSTUSER wp option update default_pingback_flag ""
 sudo -u $VHOSTUSER wp option update default_ping_status ""
 sudo -u $VHOSTUSER wp option update default_comment_status ""
-sudo -u $VHOSTUSER wp option update permalink_structure '/%postname%'
 sudo -u $VHOSTUSER wp config set DISALLOW_FILE_EDIT true --raw
 cat > wp-content/uploads/.htaccess << ENDOFFILE
 <Files *.php>
