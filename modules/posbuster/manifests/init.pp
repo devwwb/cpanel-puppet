@@ -76,6 +76,13 @@ class posbuster (
       }
     }
 
+    if ($::discourse_group){
+      exec { 'rebuild discourse app':
+        command   => '/usr/bin/sudo /var/discourse/launcher rebuild app',
+        timeout   => 3600,
+      }
+    }
+
     #upgrade openvpn
     if ($::openvpn_group){
       exec { 'update easyrsa pki openvpn':
