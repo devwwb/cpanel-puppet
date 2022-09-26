@@ -12,6 +12,7 @@ define domains::mounts(
   $oldwebmaster		= undef,
   $pool			= undef,
   $oldpool              = undef,
+  $tree			= undef,
 ) {
 
   #only mount domains with webroot enabled, assigned to webmaster of type sftp

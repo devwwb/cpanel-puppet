@@ -12,6 +12,7 @@ define domains::cleanfailedvhosts(
   $oldwebmaster         = undef,
   $pool			= undef,
   $oldpool              = undef,
+  $tree			= undef,
 ) {
 
   if $dns and $active {

@@ -155,6 +155,33 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     vhosts
   end
 
+  #public tree path
+  chunk(:tree) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      tree=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "ou=path,vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" | grep type: | sed "s|.*: \(.*\)|\1|"')
+      if not tree.empty?
+          treearray = tree.split("/")
+          ll = treearray.length()
+          tt = Array.new
+          treearray.each_with_index {|val, index|
+            for i in index..ll-1
+              if tt.length() > i
+                tt[i] = tt[i] + "/" + val
+              else
+                tt[i] = "/var/www/html/" + domain.strip + "/" + val
+              end
+            end
+          }
+          tt.insert(0, "/var/www/html/" + domain.strip)
+          vhosts[domain.strip] = {:tree => tt}
+      else
+        vhosts[domain.strip] = {:tree => ["/var/www/html/" + domain.strip]}
+      end
+    end
+    vhosts
+  end
+
   #todo, add extra vhosts options to parse in the template file
 
 end

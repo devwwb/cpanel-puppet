@@ -2,7 +2,7 @@
 
 #params
 DOMAIN=$1
-WEBROOT="/var/www/html/$1"
+WEBROOT=$4
 VHOSTUSER=$2
 VHOSTGROUP=$3
 BASEDN="vd=$1,o=hosting,dc=example,dc=tld"
@@ -16,18 +16,18 @@ read -r -d '' BODY << EOM
 [ES] English below
 
 Hola,
-La instalación del Worpdress en el dominio $DOMAIN no se ha podido completar debido a que la carpeta /var/www/html/$DOMAIN contiene archivos. Para evitar perdida de datos se ha interrumpido el proceso.
+La instalación del Worpdress en el dominio $DOMAIN no se ha podido completar debido a que la carpeta $WEBROOT contiene archivos. Para evitar perdida de datos se ha interrumpido el proceso.
 
-Para poder instalar Wordpress asegúrate que la carpeta /var/www/html/$DOMAIN esté vacía borrando o moviendo los archivos que contiene y luego vuelve a lanzar la instalación.
+Para poder instalar Wordpress asegúrate que la carpeta $WEBROOT esté vacía borrando o moviendo los archivos que contiene y luego vuelve a lanzar la instalación.
 
 Tu Sistema Automatizado
 
 [EN]
 
 Hello,
-The Worpdress installation at $DOMAIN could not be completed due to the fact that the /var/www/html/$DOMAIN folder contains files. To avoid data loss the process has been interrupted.
+The Worpdress installation at $DOMAIN could not be completed due to the fact that the $WEBROOT folder contains files. To avoid data loss the process has been interrupted.
 
-To be able to install Wordpress make sure that the /var/www/html/$DOMAIN folder is empty by deleting or moving the files it contains and then relaunch the installation.
+To be able to install Wordpress make sure that the $WEBROOT folder is empty by deleting or moving the files it contains and then relaunch the installation.
 
 Your Automated System
 
@@ -55,6 +55,14 @@ if [ $? -eq 0 ]; then
   DBNAME=$(ldapsearch -o ldif-wrap=no -H ldapi:// -Y EXTERNAL -s base -b "ou=cms,$BASEDN" | grep note: | sed "s|.*: \(.*\)|\1|" )
 else
   #no db, exit
+  exit 0
+fi
+
+#check webroot exists
+if [ -d "$WEBROOT" ]; then
+  echo "Installing wp in ${WEBROOT}"
+else
+  echo "Error: ${WEBROOT} not found"
   exit 0
 fi
 

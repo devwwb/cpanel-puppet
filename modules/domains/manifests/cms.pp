@@ -12,8 +12,12 @@ define domains::cms(
   $oldwebmaster		= undef,
   $pool			= undef,
   $oldpool		= undef,
+  $tree			= undef,
 ) {
 
+
+  #vars
+  $path = $tree[-1]
 
   #setup cms only if domain has DNS resolution and if domain is active and webroot if enabled and cms is enabled
   if $dns and $active and $webroot and $cms{
@@ -41,7 +45,7 @@ define domains::cms(
     if $cms_type != '' {
 
       exec {"setup $cms_type of $domain":
-        command	   => "/etc/maadix/scripts/$setup_script $domain $webmaster $group",
+        command	   => "/etc/maadix/scripts/$setup_script $domain $webmaster $group $path",
         logoutput  => true,
         path	   => ['/usr/bin', '/usr/sbin', '/bin', '/usr/local/bin'],
       }

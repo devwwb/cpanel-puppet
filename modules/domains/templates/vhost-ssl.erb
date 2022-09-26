@@ -4,10 +4,10 @@
         ServerAlias www.<%= @domain -%>
 
         ## Vhost docroot
-        DocumentRoot /var/www/html/<%= @domain -%>
+        DocumentRoot <%= @path -%>
 
         ## Directories, there should at least be a declaration for /var/www/html
-        <Directory /var/www/html/<%= @domain -%>>
+        <Directory <%= @path -%>>
           Options FollowSymLinks MultiViews
           AllowOverride All
           Require all granted

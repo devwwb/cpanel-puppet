@@ -12,8 +12,11 @@ define domains::vhosts(
   $oldwebmaster		= undef,
   $pool			= undef,
   $oldpool		= undef,
+  $tree			= undef,
 ) {
 
+  #vars
+  $path = $tree[-1]
 
   #create vhost and cert only if domain has DNS resolution and if domain is active
   if $dns and $active {
@@ -46,7 +49,7 @@ define domains::vhosts(
     if (($webmaster != $oldwebmaster) and ($oldwebmaster != '')) or (($pool != $oldpool) and ($oldpool != '')){
       #webroot folder + owner/group and permissions
       if (($webmaster != $oldwebmaster) and ($oldwebmaster != '')) and (($pool != $oldpool) and ($oldpool != '')){
-        file {"/var/www/html/$domain":
+        file { $tree:
           ensure	=> directory,
           owner		=> $webmaster,
           group		=> $group,
@@ -57,7 +60,7 @@ define domains::vhosts(
                                ],
         }
       } elsif ($webmaster != $oldwebmaster) and ($oldwebmaster != '') {
-        file {"/var/www/html/$domain":
+        file { $tree:
           ensure	=> directory,
           owner		=> $webmaster,
           group		=> $group,
@@ -67,7 +70,7 @@ define domains::vhosts(
                                ],
         }
       } elsif ($pool != $oldpool) and ($oldpool != '') {
-        file {"/var/www/html/$domain":
+        file { $tree:
           ensure	=> directory,
           owner		=> $webmaster,
           group		=> $group,
@@ -94,7 +97,7 @@ define domains::vhosts(
     #perms/owner of domain webroot for new domains
     } elsif $oldwebmaster == '' {
       #webroot folder + owner/group and permissions
-      file {"/var/www/html/$domain":
+      file { $tree:
         ensure	=> directory,
         owner	=> $webmaster,
         group	=> $group,
@@ -102,7 +105,7 @@ define domains::vhosts(
         notify	=> Exec['reload apache'],
       }
     } else {
-      file {"/var/www/html/$domain":
+      file { $tree:
         ensure	=> directory,
       }
     }
@@ -110,21 +113,21 @@ define domains::vhosts(
     #letsencrypt certs
     if $www {
       exec {"SSL for $domain":
-        command	  => "certbot -d $domain -d www.$domain --agree-tos --email $::adminmail --webroot --webroot-path /var/www/html/$domain --non-interactive --text --rsa-key-size 4096  certonly",
+        command	  => "certbot -d $domain -d www.$domain --agree-tos --email $::adminmail --webroot --webroot-path $path --non-interactive --text --rsa-key-size 4096  certonly",
         path      => ['/usr/bin', '/usr/sbin', '/bin'],
         creates	  => "/etc/letsencrypt/live/$domain/cert.pem",
         require   => [
-                     File["/var/www/html/$domain"],
+                     File[$path],
                      Exec['reload apache'],
                      ],
       }
     } else {
       exec {"SSL for $domain":
-        command	  => "certbot -d $domain --agree-tos --email $::adminmail --webroot --webroot-path /var/www/html/$domain --non-interactive --text --rsa-key-size 4096  certonly",
+        command	  => "certbot -d $domain --agree-tos --email $::adminmail --webroot --webroot-path $path --non-interactive --text --rsa-key-size 4096  certonly",
         path      => ['/usr/bin', '/usr/sbin', '/bin'],
         creates	  => "/etc/letsencrypt/live/$domain/cert.pem",
         require   => [
-                     File["/var/www/html/$domain"],
+                     File[$path],
                      Exec['reload apache'],
                      ],
       }
@@ -132,10 +135,10 @@ define domains::vhosts(
 
     if $regenerate {
       exec {"SSL expand for $domain":
-        command	=> "certbot -d $domain -d www.$domain --agree-tos --expand --email $::adminmail --webroot --webroot-path /var/www/html/$domain --non-interactive --text --rsa-key-size 4096  certonly",
+        command	=> "certbot -d $domain -d www.$domain --agree-tos --expand --email $::adminmail --webroot --webroot-path $path --non-interactive --text --rsa-key-size 4096  certonly",
         path      => ['/usr/bin', '/usr/sbin', '/bin'],
         require   => [
-                     File["/var/www/html/$domain"],
+                     File[$path],
                      Exec['reload apache'],
                      ],
       }
@@ -153,7 +156,7 @@ define domains::vhosts(
     #create webroot if enabled
     if $webroot {
       #webroot folder + owner/group and permissions
-      file {"/var/www/html/$domain":
+      file { $tree:
         ensure	=> directory,
         owner	=> $webmaster,
         group	=> 'www-data',
