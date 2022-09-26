@@ -45,7 +45,18 @@ define domains::vhosts(
     #change perms/owner of domain webroot only if webmaster or pool changes for existent domains
     if (($webmaster != $oldwebmaster) and ($oldwebmaster != '')) or (($pool != $oldpool) and ($oldpool != '')){
       #webroot folder + owner/group and permissions
-      if ($webmaster != $oldwebmaster) and ($oldwebmaster != '') {
+      if (($webmaster != $oldwebmaster) and ($oldwebmaster != '')) and (($pool != $oldpool) and ($oldpool != '')){
+        file {"/var/www/html/$domain":
+          ensure	=> directory,
+          owner		=> $webmaster,
+          group		=> $group,
+          mode		=> '2770',
+          notify	=> Exec["owner recursive of $domain",
+                                "group recursive of $domain",
+                                'reload apache'
+                               ],
+        }
+      } elsif ($webmaster != $oldwebmaster) and ($oldwebmaster != '') {
         file {"/var/www/html/$domain":
           ensure	=> directory,
           owner		=> $webmaster,
@@ -55,8 +66,7 @@ define domains::vhosts(
                                 'reload apache'
                                ],
         }
-      }
-      if ($pool != $oldpool) and ($oldpool != '') {
+      } elsif ($pool != $oldpool) and ($oldpool != '') {
         file {"/var/www/html/$domain":
           ensure	=> directory,
           owner		=> $webmaster,
