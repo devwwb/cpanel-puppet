@@ -18,6 +18,9 @@ class domains (
     }->
     file {'/home/.trash/domains':
       ensure  => directory,
+    }->
+    file {'/home/.trash/mails':
+      ensure  => directory,
     }
 
     #purge ldap-enabled vhost dir
@@ -55,6 +58,9 @@ class domains (
 
     #clean orphan domains (certs and permissions)
     create_resources(domains::orphandomains, $::cpanel_orphan_vhosts)
+
+    #clean orphan mails
+    create_resources(domains::orphanmails, $::cpanel_orphan_mails)
 
     #move orphan users homes to trash
     create_resources(domains::orphanhomes, $::cpanel_orphan_homes)

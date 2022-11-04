@@ -14,6 +14,9 @@ class trash (
     #purge domains webroot from trash
     create_resources(trash::purgewebroots, $::trash_purge_webroots)
 
+    #purge mails from trash
+    create_resources(trash::purgemails, $::trash_purge_mails)
+
     #purge backup files from trash
     create_resources(trash::purgebackups, $::trash_purge_backups)
 
