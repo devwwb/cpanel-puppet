@@ -78,7 +78,7 @@ class posbuster (
 
     if ($::discourse_group){
       exec { 'rebuild discourse app':
-        command   => '/usr/bin/sudo /var/discourse/launcher rebuild app >> $directory/logs/posbuster 2>&1',
+        command   => "/usr/bin/sudo /var/discourse/launcher rebuild app >> $directory/logs/posbuster 2>&1",
         timeout   => 7200,
       }
     }
