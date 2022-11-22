@@ -99,7 +99,11 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
           vhosts[domain.strip] = {:active => true}
         end
       else
-        vhosts[domain.strip] = {:active => true}
+        if File.file?('/etc/apache2/ldap-enabled/' + domain.strip + '.conf')
+          vhosts[domain.strip] = {:active => true}
+        else
+          vhosts[domain.strip] = {:active => false}
+        end
       end
     end
     vhosts
