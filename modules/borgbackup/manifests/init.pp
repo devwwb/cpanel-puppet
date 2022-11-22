@@ -45,7 +45,7 @@ class borgbackup (
           mode       => '700',
         }
         exec { "mount borg archive $archive":
-          command    => "/usr/bin/borg mount --rsh 'ssh -i /root/.ssh/id_rsa_borgbackup' -o allow_other,ignore_permissions,ro --strip-components 1 ssh://$user@$server:$port/./backup::$archive /home/$sudouser/$::hostname-backups/$archive",
+          command    => "/usr/bin/borg mount --rsh 'ssh -i /root/.ssh/id_rsa_borgbackup' -o allow_other,ignore_permissions,ro --strip-components 0 ssh://$user@$server:$port/./backup::$archive /home/$sudouser/$::hostname-backups/$archive",
         }
         exec { "delete borg ldap object of $archive":
           command    => "/usr/bin/ldapdelete -H ldapi:// -Y EXTERNAL 'cn=$archive,ou=borgbackup,ou=cpanel,dc=example,dc=tld'",
