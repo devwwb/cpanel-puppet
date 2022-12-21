@@ -24,8 +24,8 @@ then
   port=$(echo "${conf}" | jq -r '.backup_port')
   server=$(echo "${conf}" | jq -r '.backup_server')
   user=$(echo "${conf}" | jq -r '.backup_user')
-  server2=$(echo "${conf}" | jq -r '.backup_secondary_server')
-  user2=$(echo "${conf}" | jq -r '.backup_secondary_user')
+  server2=$(echo "${conf}" | jq -r '.backup_secondary_server // empty')
+  user2=$(echo "${conf}" | jq -r '.backup_secondary_user // empty')
 
   #borg backup vars
   export BORG_RSH="ssh -i /root/.ssh/id_rsa_borgbackup"
