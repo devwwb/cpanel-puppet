@@ -21,25 +21,47 @@ if [ $enabled == 'true' ]
 then
 
   #backup vars
-  server=$(echo "${conf}" | jq -r '.backup_server')
   port=$(echo "${conf}" | jq -r '.backup_port')
+  server=$(echo "${conf}" | jq -r '.backup_server')
   user=$(echo "${conf}" | jq -r '.backup_user')
+  server2=$(echo "${conf}" | jq -r '.backup_secondary_server')
+  user2=$(echo "${conf}" | jq -r '.backup_secondary_user')
 
   #borg backup vars
   export BORG_RSH="ssh -i /root/.ssh/id_rsa_borgbackup"
   export BORG_PASSPHRASE=""
 
-  #borg export key
-  borg key export ssh://$user@$server:$port/./backup /etc/maadix/borgkey.ldif
+  #borg export keys
+  borg key export ssh://$user@$server:$port/./backup /etc/maadix/borgkey
+  if [ ! -z "$server2" ] && [ ! -z "$user2" ]; then
+    borg key export ssh://$user2@$server2:$port/./backup /etc/maadix/borgkey2
+  fi
+
+  #add repo info
+  { echo "REPO ssh://$user@$server:$port/./backup KEYFILE:"; 
+    echo "-------------------------------------------------------------------------"; 
+    cat /etc/maadix/borgkey; } > /etc/maadix/borgkeymix
+  if [ ! -z "$server2" ] && [ ! -z "$user2" ]; then
+      echo "" >> /etc/maadix/borgkeymix
+    { echo "REPO ssh://$user2@$server2:$port/./backup KEYFILE:"; 
+      echo "-------------------------------------------------------------------------"; 
+      cat /etc/maadix/borgkey2; } >> /etc/maadix/borgkeymix
+  fi
+
+  #convert to base64
+  cat /etc/maadix/borgkeymix | base64 > /etc/maadix/borgkeymix.ldif
 
   #copy key to ldap
-  sed -i -e 's/^/ /' /etc/maadix/borgkey.ldif
-  sed -i '1s/^/status:/' /etc/maadix/borgkey.ldif
-  sed -i '1 i\replace: status' /etc/maadix/borgkey.ldif
-  sed -i '1 i\changetype: modify' /etc/maadix/borgkey.ldif
-  sed -i '1 i\dn: cn=borgbackup,ou=credentials,dc=example,dc=tld' /etc/maadix/borgkey.ldif
-  ldapmodify -H ldapi:// -Y EXTERNAL -f /etc/maadix/borgkey.ldif
-  rm /etc/maadix/borgkey.ldif
+  sed -i -e 's/^/ /' /etc/maadix/borgkeymix.ldif
+  sed -i '1s/^/status::/' /etc/maadix/borgkeymix.ldif
+  sed -i '1 i\replace: status' /etc/maadix/borgkeymix.ldif
+  sed -i '1 i\changetype: modify' /etc/maadix/borgkeymix.ldif
+  sed -i '1 i\dn: cn=borgbackup,ou=credentials,dc=example,dc=tld' /etc/maadix/borgkeymix.ldif
+  ldapmodify -H ldapi:// -Y EXTERNAL -f /etc/maadix/borgkeymix.ldif
+  rm -f /etc/maadix/borgkey
+  rm -f /etc/maadix/borgkey2
+  rm -f /etc/maadix/borgkeymix
+  rm -f /etc/maadix/borgkeymix.ldif
 
   #set type to available in ldap to inform mxcp that the key is present
   ldapmodify -Q -Y EXTERNAL -H ldapi:/// << EOF
