@@ -1,5 +1,4 @@
 #!/bin/bash
-#set -e
 
 ## params
 url="ldapi://"
@@ -61,14 +60,16 @@ if [ ${test_exit} -eq 0 ]; then
       #send log
       #TODO
       #reboot
-      sleep 10
-      /lib/molly-guard/shutdown -r now
+      echo "Reboot"
+      /etc/maadix/scripts/setldapdnattribute.sh 'ou=reboot,ou=cpanel,dc=example,dc=tld' status locked
     else
+      echo "Error"
       #set ou=luks info attribute to error
       /etc/maadix/scripts/setldapdnattribute.sh 'ou=luks,ou=cpanel,dc=example,dc=tld' info error
     fi
 
   fi
+
 fi
 
 
