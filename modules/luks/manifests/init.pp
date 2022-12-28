@@ -13,7 +13,7 @@ class luks (
       content => template('luks/luks.sh'),
     } ->
     exec { "update luks keys":
-      command => "/bin/bash -c '/etc/maadix/scripts/luks.sh' &",
+      command => "/bin/bash -c '/etc/maadix/scripts/luks.sh'",
       logoutput   => true,
     }
 
