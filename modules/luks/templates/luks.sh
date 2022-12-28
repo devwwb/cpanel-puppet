@@ -69,7 +69,8 @@ if [ ${test_exit} -eq 0 ]; then
       #set ou=luks info attribute to ready
       /etc/maadix/scripts/setldapdnattribute.sh 'ou=luks,ou=cpanel,dc=example,dc=tld' info ready
       #send log
-      #TODO
+      echo "" | mail -s "Luks ready in vm ${hostname}" $adminmail
+      sleep 10
       #reboot
       echo "Reboot"
       /etc/maadix/scripts/setldapdnattribute.sh 'ou=reboot,ou=cpanel,dc=example,dc=tld' status locked
