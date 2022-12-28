@@ -9,6 +9,17 @@ email=root@$hostname
 adminmail="admin@maadix.org"
 date=$(date +%Y_%m_%d-%H_%M_%S)
 
+#check if luksinit present
+FILE=/etc/maadix/luksinit
+if [ -f "$FILE" ]; then
+    echo "$FILE exists"
+else
+    echo "$FILE does not exist"
+    /etc/maadix/scripts/setldapdnattribute.sh 'ou=luks,ou=cpanel,dc=example,dc=tld' info ready
+    exit 0
+fi
+
+
 #read luks passwords from ldap
 declare -A LUKS
 for value in luks0 luks1
