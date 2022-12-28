@@ -75,12 +75,22 @@ if [ ${test_exit} -eq 0 ]; then
       /etc/maadix/scripts/setldapdnattribute.sh 'ou=reboot,ou=cpanel,dc=example,dc=tld' status locked
     else
       echo "Error"
+      echo "" | mail -s "Luks0 error in vm ${hostname}" $adminmail
       #set ou=luks info attribute to error
       /etc/maadix/scripts/setldapdnattribute.sh 'ou=luks,ou=cpanel,dc=example,dc=tld' info error
     fi
 
+  else
+    echo "Error luks1"
+    echo "" | mail -s "Luks1 error in vm ${hostname}" $adminmail
+    #set ou=luks info attribute to error
+    /etc/maadix/scripts/setldapdnattribute.sh 'ou=luks,ou=cpanel,dc=example,dc=tld' info error
   fi
 
+else
+  echo "" | mail -s "Luksinit error in vm ${hostname}" $adminmail
+  #set ou=luks info attribute to error
+  /etc/maadix/scripts/setldapdnattribute.sh 'ou=luks,ou=cpanel,dc=example,dc=tld' info error
 fi
 
 
