@@ -52,7 +52,7 @@ fi
 #check dbname is present
 ldapsearch -o ldif-wrap=no -H ldapi:// -Y EXTERNAL -s base -b "ou=cms,$BASEDN" | grep note:
 if [ $? -eq 0 ]; then
-  DBNAME=$(ldapsearch -o ldif-wrap=no -H ldapi:// -Y EXTERNAL -s base -b "ou=cms,$BASEDN" | grep note: | sed "s|.*: \(.*\)|\1|" )
+  DBNAME=$(ldapsearch -o ldif-wrap=no -H ldapi:// -Y EXTERNAL -s base -b "ou=cms,$BASEDN" | grep note: | sed "s|.*: \(.*\)|\1|" | tr '-' '_')
 else
   #no db, exit
   exit 0
