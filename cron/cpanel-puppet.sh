@@ -17,6 +17,7 @@ date=$(date -u +"%Y-%m-%d-%T")
 hostname=$(hostname)
 logdir="/etc/maadix/logs"
 logmail="logs@maadix.org"
+lifetime=3600
 #debug
 if test -f "/etc/maadix/conf/debug"; then
   debug=true
@@ -35,6 +36,24 @@ replace: $lockattribute
 $lockattribute: $2
 
 EOF
+}
+
+function reset_module()
+{
+  now=$(TZ=GMT date +"%Y-%m-%d %H:%M:%S")
+  echo "now $now"
+  d1=$(ldapsearch -Q -H ldapi:// -Y EXTERNAL -LLL -s base -b "ou=$1,ou=cpanel,dc=example,dc=tld" modifyTimestamp | grep modifyTimestamp: | sed "s|.*: \(.*\)|\1|")
+  d1=${d1::-1}
+  date1="${d1:0:4}-${d1:4:2}-${d1:6:2} ${d1:8:2}:${d1:10:2}:${d1:12:2}"
+  diff=$(( $(date -d "$now" +"+%s") - $(date -d "$date1" +"+%s") ))
+  if [ "$diff" -gt "$lifetime" ]; then
+    echo "Reset module $1"
+    return 0
+  else
+    wait=$(( "$lifetime" - "$diff"))
+    echo "Resetting module $1 in $wait seconds"
+    return 1
+  fi
 }
 
 ##### Tasks ###############################
@@ -69,6 +88,22 @@ fi
 # Search if any of the modules is running
 running=`ldapsearch -Q -Y EXTERNAL -H "$url" -b "$cpanelobject" -s one "(status=running)" | grep ^dn: | wc -l`
 if [ "$running" -gt 0 ]; then
+  #check if modules needs to be reseted a while after launched
+  exclude='luks mysql posbuster posstretch prebuster prestretch report'
+  while IFS= read -r liner; do
+    if [[ ! " $exclude " =~ .*\ $liner\ .* ]] ; then
+      echo "not any of $exclude"
+      if reset_module $liner; then
+        if [ "$liner" = "reboot" ]; then
+          echo "$liner to ready"
+          setlockstatus "$liner" ready
+        else
+          echo "$liner to locked"
+          setlockstatus "$liner" locked
+        fi
+      fi
+    fi
+  done < <( ldapsearch -Q -Y EXTERNAL -H "$url" -b "$cpanelobject" -s one "(&(objectclass=*)(status=running))" | awk -F ": " '$1 == "ou" {print $2}' )
   #atencion, si uno de los modulos al menos está en running, hay que esperar al siguiente cron!
   echo "Modules running: $running, exiting"
   exit 1
