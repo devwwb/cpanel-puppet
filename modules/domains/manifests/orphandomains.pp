@@ -22,6 +22,27 @@ define domains::orphandomains(
     recurse     => true,
   } ->
 
+  #purge acls
+  posix_acl { "/home/.trash/domains/$trashname":
+    action     => 'purge',
+    permission => [
+          "user::rwx",
+          "group::rwx",
+          "mask::rwx",
+          "other::---",
+          "user:nobody:rwx",
+          "group:nogroup:rwx",
+          "default:user::rwx",
+          "default:group::rwx",
+          "default:mask::rwx",
+          "default:other::---",
+          "default:user:nobody:rwx",
+          "default:group:nogroup:rwx",
+    ],
+    provider   => posixacl,
+    recursive  => true,
+  }
+
   #set deleted domain as moved to trash: status=intrash
   ldapdn{"set $cn status=intrash":
     dn                  => "cn=$cn,ou=domains,ou=trash,dc=example,dc=tld",

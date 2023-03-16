@@ -186,6 +186,42 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     vhosts
   end
 
+  #acl enabled
+  chunk(:acl_enabled) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      acl_enabled=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "ou=acl,vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" | grep type: | sed "s|.*: \(.*\)|\1|"')
+      if not acl_enabled.empty?
+        if acl_enabled == 'true'
+          vhosts[domain.strip] = {:acl_enabled => true}
+        else
+          vhosts[domain.strip] = {:acl_enabled => false}
+        end
+      else
+        vhosts[domain.strip] = {:acl_enabled => false}
+      end
+    end
+    vhosts
+  end
+
+  #acl apply
+  chunk(:acl_apply) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      acl_apply=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "ou=acl,vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" | grep status: | sed "s|.*: \(.*\)|\1|"')
+      if not acl_apply.empty?
+        if acl_apply == 'pending'
+          vhosts[domain.strip] = {:acl_apply => true}
+        else
+          vhosts[domain.strip] = {:acl_apply => false}
+        end
+      else
+        vhosts[domain.strip] = {:acl_apply => false}
+      end
+    end
+    vhosts
+  end
+
   #todo, add extra vhosts options to parse in the template file
 
 end

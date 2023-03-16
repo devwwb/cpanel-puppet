@@ -13,10 +13,13 @@ define domains::vhosts(
   $pool			= undef,
   $oldpool		= undef,
   $tree			= undef,
+  $acl_enabled          = undef,
+  $acl_apply            = undef,
 ) {
 
   #vars
   $path = $tree[-1]
+  $path_acl = $tree[0]
 
   #create vhost and cert only if domain has DNS resolution and if domain is active
   if $dns and $active {
@@ -107,6 +110,40 @@ define domains::vhosts(
     } else {
       file { $tree:
         ensure	=> directory,
+      }
+    }
+
+    #acl
+    if $acl_apply {
+      if $acl_enabled {
+        $acl_action = 'exact'
+      } else {
+        $acl_action = 'purge'
+      }
+      posix_acl { "$path_acl":
+        action     => $acl_action,
+        permission => [
+          "user::rwx",
+          "group::rwx",
+          "mask::rwx",
+          "other::---",
+          "user:$webmaster:rwx",
+          "group:$group:rwx",
+          "default:user::rwx",
+          "default:group::rwx",
+          "default:mask::rwx",
+          "default:other::---",
+          "default:user:$webmaster:rwx",
+          "default:group:$group:rwx",
+        ],
+        provider   => posixacl,
+        recursive  => true,
+      }
+      ldapdn{"set ou=acl,vd=$domain,o=hosting,dc=example,dc=tld status=ready":
+        dn                  => "ou=acl,vd=$domain,o=hosting,dc=example,dc=tld",
+        attributes          => ["status: ready"],
+        unique_attributes   => ["status"],
+        ensure              => present
       }
     }
 

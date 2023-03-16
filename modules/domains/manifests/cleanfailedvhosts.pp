@@ -13,6 +13,8 @@ define domains::cleanfailedvhosts(
   $pool			= undef,
   $oldpool              = undef,
   $tree			= undef,
+  $acl_enabled          = undef,
+  $acl_apply            = undef,
 ) {
 
   if $dns and $active {

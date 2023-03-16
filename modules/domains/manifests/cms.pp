@@ -13,6 +13,8 @@ define domains::cms(
   $pool			= undef,
   $oldpool		= undef,
   $tree			= undef,
+  $acl_enabled          = undef,
+  $acl_apply            = undef,
 ) {
 
 
