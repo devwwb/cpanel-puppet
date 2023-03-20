@@ -81,7 +81,7 @@ if [[ "$status" = 'running' ]]; then
   echo "Puppet agent is running, exit"
   exit 1
 else
-  echo "Puppet agent is not locked or running, continue"
+  echo "Puppet agent is not running, continue"
 fi
 
 ## If release is new, continue, because there are pending changes for local puppet in current release that must by applied before release update
