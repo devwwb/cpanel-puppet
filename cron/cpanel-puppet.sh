@@ -74,11 +74,11 @@ if [[ $(pgrep -f "puppet agent") ]]; then
   exit 1
 fi
 
-# If global puppet is locked or running, exit
+# If global puppet is running, exit
 status=`ldapsearch -Q -Y EXTERNAL -H "$url" -b "$basedn" "$cpaneldn" | awk -F ": " '$1 == "'"$lockattribute"'" {print $2}'`
 echo "Global puppet status: $status"
-if [[ "$status" = 'locked' ]] || [[ "$status" = 'running' ]]; then
-  echo "Puppet agent is locked or running, exit"
+if [[ "$status" = 'running' ]]; then
+  echo "Puppet agent is running, exit"
   exit 1
 else
   echo "Puppet agent is not locked or running, continue"
