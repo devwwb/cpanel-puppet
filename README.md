@@ -12,6 +12,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
 # Requirements
 
     Module ldapdn: https://github.com/gtmtechltd/puppet_ldapdn.git
+    Module posix_acl: https://github.com/voxpupuli/puppet-posix_acl.git
 
 # Modules included
 
