@@ -181,7 +181,7 @@ if [ "$locked" -gt 0 ]; then
     facter="FACTER_${i}=true"
 
     # Build puppet commando
-    puppet="cd /usr/share/cpanel-puppet && export FACTERLIB='./facts' && $facter /usr/local/bin/puppet apply --detailed-exitcode --modulepath ./modules manifests/site.pp &> ${logdir}/${date}_${i}_stdout.txt"
+    puppet="cd /usr/share/cpanel-puppet && export FACTERLIB='./facts' && $facter /usr/local/bin/puppet apply --detailed-exitcode --modulepath ./modules:/etc/puppetlabs/code/environments/production/modules manifests/site.pp &> ${logdir}/${date}_${i}_stdout.txt"
     echo "$puppet"
     eval $puppet
 
