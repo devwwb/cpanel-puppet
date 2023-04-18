@@ -44,7 +44,7 @@ if mongod --version | grep v3.6; then
 
   #update mongodb to 4.0
   apt update
-  apt install mongodb-org-{server,shell,tools} -y
+  apt install mongodb-org-{server,shell,tools} -y --allow-unauthenticated
   sleep 10
   service mongod restart
 
