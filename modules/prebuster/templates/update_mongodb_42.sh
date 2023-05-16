@@ -43,7 +43,7 @@ if mongod --version | grep v3.6; then
   sed -i 's/3.6/4.0/g' /etc/apt/sources.list.d/mongodb.list
 
   #update mongodb to 4.0
-  apt update
+  apt -o Acquire::AllowInsecureRepositories=true update
   apt install mongodb-org-{server,shell,tools} -y --allow-unauthenticated
   sleep 10
   service mongod restart
