@@ -27,6 +27,12 @@ class borgbackup (
     #if service is active
     if $borg_enabled {
 
+      #sudo user home
+      exec {"mkhomedir_helper $sudouser 0077 /etc/skel":
+        creates      => "/home/$sudouser",
+        path         => ['/usr/bin', '/usr/sbin',],
+      }
+
       #main directory
       file {'borg root folder for mounts':
         ensure       => directory,
