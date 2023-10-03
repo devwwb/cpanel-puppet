@@ -139,7 +139,7 @@ if [ "$locked" -gt 0 ]; then
   elif [ $LOCAL = $BASE ]; then
     echo "Need to pull, exit"
     /usr/bin/git pull
-    exit 1
+    exit 0
   fi
 
   echo "cpanel-puppet is locked, triggering puppet!"
