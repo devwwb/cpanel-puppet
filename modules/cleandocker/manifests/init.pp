@@ -18,6 +18,10 @@ class cleandocker (
         path        => ['/usr/bin', '/usr/sbin', '/bin'],
         onlyif      => 'docker images --quiet --filter=dangling=true | grep none',
       }
+      exec { 'prune volumes':
+        command     => 'docker volume prune -f',
+        path        => ['/usr/bin', '/usr/sbin', '/bin'],
+      }
     }
 
   }
