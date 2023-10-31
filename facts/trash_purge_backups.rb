@@ -14,7 +14,7 @@ Facter.add(:trash_purge_backups) do
     if not backups.nil?
       backups.each_line do |backup|
        trashname = Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "cn=' + backup.strip + ',ou=backups,ou=trash,dc=example,dc=tld" "(&(objectClass=applicationProcess)(status=purge))" | grep cn: | sed "s|.*: \(.*\)|\1|"')
-       backupstopurge[backup.strip] = {:uid => backup.strip ,:trashname => trashname.strip}
+       backupstopurge[backup.strip] = {:uid => backup.strip.gsub("+", "\\\\+") ,:trashname => trashname.strip}
       end
     end
     backupstopurge
