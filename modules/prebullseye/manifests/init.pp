@@ -32,7 +32,7 @@ class prebullseye (
                 'update_source_mongodb.sh', 
                 'update_source_docker.sh', 
                 'update_source_lool.sh', 
-                'update_source_sury.sh, 
+                'update_source_sury.sh', 
                 'delete_buster_packages.sh', 
                 'delete_mxcp.sh',
                 'upgrade_bullseye.sh', 
