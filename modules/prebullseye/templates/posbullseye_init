@@ -1,0 +1,43 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          posbullseye
+# Required-Start:    $all
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: posbullseye script
+# Description:       posbullseye script
+### END INIT INFO
+
+# Using the lsb functions to perform the operations.
+. /lib/lsb/init-functions
+
+function setlockstatus ()
+{
+#echo "$1"
+ldapmodify -Q -Y EXTERNAL -H ldapi:///  << EOF
+dn: $cpanelobject
+changetype: modify
+replace: status
+status: $1
+
+EOF
+}
+
+case "$1" in
+start)
+     #set cpanel to running
+     /etc/maadix/scripts/setrunningcpanel.sh
+     #set prebullseye to ready
+     cpanelobject="ou=prebullseye,ou=cpanel,dc=example,dc=tld"
+     setlockstatus ready
+     #launch puppet local module to finish stretch upgrade
+     cd /usr/share/cpanel-puppet
+     export FACTERLIB='./facts'
+     FACTER_posbullseye=true puppet apply --modulepath ./modules manifests/site.pp &
+     ;;
+stop)
+     ;;
+esac
+
+exit 0

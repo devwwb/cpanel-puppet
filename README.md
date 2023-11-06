@@ -38,6 +38,8 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     borgbackup
     borgkey
     luks
+    prebullseye
+    posbullseye
 
 # Modules TODO
 
