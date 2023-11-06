@@ -67,4 +67,8 @@ node default {
   ## luks
   include luks
 
+  ## buster
+  include prebullseye
+  include posbullseye
+
 }
