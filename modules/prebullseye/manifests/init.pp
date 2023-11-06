@@ -107,16 +107,14 @@ class prebullseye (
     }
 
     #delete buster packages
-    /* TODO
     exec { 'delete buster packages':
       command   => "/bin/bash -c '$directory/delete_buster_packages.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
       timeout   => 3600,
       require   =>[
-                  Exec['update mongodb 4.2'],
+                  Exec['update mongodb 5.0'],
                   ],
     } ->
-    */
     exec { 'upgrade buster':
       command   => "/bin/bash -c '$directory/upgrade_buster.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
