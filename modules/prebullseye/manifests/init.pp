@@ -133,7 +133,7 @@ class prebullseye (
       command   => "/bin/bash -c '$directory/update_source_sury.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
       require   =>[
-                  Exec['upgrade stretch'],
+                  Exec['upgrade buster'],
                   ],
     }
 
@@ -142,7 +142,7 @@ class prebullseye (
         command   => "/bin/bash -c '$directory/update_source_lool.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
         require   =>[
-                    Exec['upgrade stretch'],
+                    Exec['upgrade buster'],
                     ],
       }
     }
@@ -152,7 +152,7 @@ class prebullseye (
         command   => "/bin/bash -c '$directory/update_source_docker.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
         require   =>[
-                    Exec['upgrade stretch'],
+                    Exec['upgrade buster'],
                     ],
       }
     }
@@ -162,7 +162,7 @@ class prebullseye (
       command   => "/bin/bash -c '$directory/delete_mxcp.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
       require   =>[
-                  Exec['upgrade stretch'],
+                  Exec['upgrade buster'],
                   ],
     }
 
