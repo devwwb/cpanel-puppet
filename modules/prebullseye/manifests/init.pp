@@ -30,6 +30,7 @@ class prebullseye (
                 'fix_sury_packages.sh',
                 'upgrade_buster.sh', 
                 'update_source_debian.sh', 
+                'update_source_mongodb.sh', 
                 'update_source_docker.sh', 
                 'update_source_lool.sh', 
                 'delete_buster_packages.sh', 
@@ -135,6 +136,16 @@ class prebullseye (
       require   =>[
                   Exec['upgrade buster'],
                   ],
+    }
+
+    if ($::mongodb_group){
+      exec { 'update source mongodb':
+        command   => "/bin/bash -c '$directory/update_source_mongodb.sh >> $directory/logs/prebullseye 2>&1'",
+        logoutput => true,
+        require   =>[
+                    Exec['upgrade buster'],
+                    ],
+      }
     }
 
     if ($::lool_group){

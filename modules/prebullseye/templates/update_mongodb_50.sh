@@ -38,7 +38,6 @@ if mongod --version | grep v4.4; then
   apt-key del '2069 1EEC 3521 6C63 CAF6  6CE1 6564 08E3 90CF B1F5'
   wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
   sed -i 's/4.4/5.0/g' /etc/apt/sources.list.d/mongodb.list
-  sed -i 's/buster/bullseye/g' /etc/apt/sources.list.d/mongodb.list
 
   #update mongodb to 5.0
   apt update
