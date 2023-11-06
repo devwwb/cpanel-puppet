@@ -189,6 +189,11 @@ class prebullseye (
     exec { 'restart postfix':
       command   => '/usr/sbin/service postfix restart',
       logoutput => true,
+    } ->    
+    exec { 'fix resolv.conf':
+      command   => "/bin/bash -c 'echo nameserver 1.1.1.1 > /etc/resolv.conf'",
+      logoutput => true,
+      timeout   => 1800,
     } ->
     exec { 'update postgresql 13':
       command   => "/bin/bash -c '$directory/update_postgresql_13.sh >> $directory/logs/prebullseye 2>&1'",
