@@ -138,7 +138,7 @@ if [ "$locked" -gt 0 ]; then
     echo "Up-to-date, continue"
   elif [ $LOCAL = $BASE ]; then
     echo "Need to pull, exit"
-    /usr/bin/git pull
+    /usr/bin/git pull --no-rebase
     exit 0
   fi
 
