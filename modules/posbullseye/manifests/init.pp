@@ -69,14 +69,12 @@ class posbullseye (
       }
     }
 
-    /* TODO
     if ($::discourse_group){
       exec { 'rebuild discourse app':
         command   => "/usr/bin/sudo /var/discourse/launcher rebuild app >> $directory/logs/posbullseye 2>&1",
         timeout   => 7200,
       }
     }
-    */
 
     #upgrade openvpn
     /* TODO
