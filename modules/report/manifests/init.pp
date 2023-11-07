@@ -36,7 +36,7 @@ class report (
     }
 
     exec { "list services":
-      command   => "/bin/bash -c 'service --status-all > $directory/logs/00_list_services.log 2>&1'",
+      command   => "/bin/bash -c 'echo \"## Services ######\" > $directory/logs/00_list_services.log && service --status-all >> $directory/logs/00_list_services.log'",
       logoutput => true,
     }
     
