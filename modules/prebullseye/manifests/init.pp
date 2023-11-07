@@ -179,6 +179,9 @@ class prebullseye (
       command   => "/bin/bash -c '$directory/upgrade_bullseye.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
       timeout   => 7200,
+      require   =>[
+                  Exec['upgrade buster'],
+                  ],
     } ->
     exec { 'iptables apache drop after bullseye upgrade':
       command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/prebullseye 2>&1'",
@@ -246,7 +249,7 @@ class prebullseye (
     exec { 'disable setreadycpanel':
       command   => '/bin/systemctl disable setreadycpanel',
       require   =>[
-                  Exec['upgrade bullseye'],
+                  Exec['update postgresql 13'],
                   ],
     } ->
     exec { 'send prebullseye notify':

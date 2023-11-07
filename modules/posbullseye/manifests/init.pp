@@ -137,7 +137,7 @@ class posbullseye (
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
       timeout   => 7200,
-    }
+    } ->
     exec { 'set_ready_api.sh':
       command   => "/bin/bash -c '$directory/set_ready_api.sh >> $directory/logs/posbullseye 2>&1'",
       logoutput => true,
