@@ -47,8 +47,8 @@ class report (
       timeout   => 3600,
     }
 
-    file {'/tmp/stretch_reference':
-      content => template('report/stretch_reference'),
+    file {"/tmp/$::lsbdistcodename_reference":
+      content => template("report/$::lsbdistcodename_reference"),
     } ->
     exec { 'vm packages report':
       command   => "/bin/bash -c '$directory/vm_packages_report.sh > $directory/logs/03_vm_packages_report.sh.log 2>&1'",
