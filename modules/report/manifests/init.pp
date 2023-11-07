@@ -30,6 +30,11 @@ class report (
       }
     }
 
+    exec { "cpu info":
+      command   => "/bin/bash -c 'echo \"## CPU info ######\" > $directory/logs/00_list_cpu.log && cat /proc/cpuinfo | grep \"model name\" >> $directory/logs/00_list_cpu.log'",
+      logoutput => true,
+    }
+
     exec { "list services":
       command   => "/bin/bash -c 'service --status-all > $directory/logs/00_list_services.log 2>&1'",
       logoutput => true,
