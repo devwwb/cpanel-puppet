@@ -44,4 +44,4 @@ apt-mark showhold
 #Check non-Debian packages
 echo "## Non-Debain packages ################################################################"
 apt install apt-forktracer
-apt-forktracer | sort | | awk '{print $1}'
+apt-forktracer | sort | awk '{print $1}'
