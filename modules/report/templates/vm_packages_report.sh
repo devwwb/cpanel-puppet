@@ -42,6 +42,7 @@ echo "## Showhold ##############################################################
 apt-mark showhold
 
 #Check non-Debian packages
-echo "## Non-Debain packages ################################################################"
+echo "## Install apt-forktracer ##################################################"
 apt install apt-forktracer -y
+echo "## Non-Debian packages ######################################################"
 apt-forktracer | sort | awk '{print $1}'
