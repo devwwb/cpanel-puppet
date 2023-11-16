@@ -10,7 +10,7 @@ class customfqdn (
       file_line{'change fqdn':
         ensure => present,
         path   => '/etc/hosts',
-        line   => "${::ipaddress} ${::hostname}.${::fqdn_domain} ${::hostname}",
+        line   => "${::public_ip} ${::hostname}.${::fqdn_domain} ${::hostname}",
         match  => ".*${::hostname}.${::fqdn_domain_old}.*${::hostname}.*$",
       }
 
