@@ -15,7 +15,7 @@ Facter.add(:cpanel_domains) do
         if Facter.value(:cpanel_domains_certs)[domain.strip][:www] == false
           begin
             IPSocket::getaddress('www.' + domain.strip)
-            if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
+            if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:public_ip)
               domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => true, :dns => true}
             else
               domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
@@ -31,11 +31,11 @@ Facter.add(:cpanel_domains) do
           #check if domain has DNS
           IPSocket::getaddress(domain.strip)
           #if domain point to this ip
-          if IPSocket::getaddress(domain.strip) == Facter.value(:ipaddress)
+          if IPSocket::getaddress(domain.strip) == Facter.value(:public_ip)
             begin
               #check if domain as www. DNS resolution
               IPSocket::getaddress('www.' + domain.strip)
-              if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:ipaddress)
+              if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:public_ip)
                 domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => false, :dns => true}
               else
                 domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
