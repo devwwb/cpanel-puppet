@@ -35,6 +35,11 @@ class report (
       logoutput => true,
     }
 
+    exec { "avx cpu support":
+      command   => "/bin/bash -c 'echo \"## CPU avx SUPPORT ######\" >> $directory/logs/00_list_cpu.log && if [ $(grep -c \"avx\" /proc/cpuinfo) -gt 0 ]; then echo \"AVX SUPPORT / OK\" >> $directory/logs/00_list_cpu.log; else echo \"AVX NOT SUPPORTED!\" >> $directory/logs/00_list_cpu.log; fi'",
+      logoutput => true,
+    }
+
     exec { "list services":
       command   => "/bin/bash -c 'echo \"## Services ######\" > $directory/logs/00_list_services.log && service --status-all >> $directory/logs/00_list_services.log'",
       logoutput => true,
