@@ -32,7 +32,7 @@ Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
     posbuster
     mysql
     rkhunter
-    tally
+    tally/faillock
     fail2ban
     zeyple
     borgbackup
