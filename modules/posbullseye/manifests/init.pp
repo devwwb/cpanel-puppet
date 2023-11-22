@@ -77,16 +77,13 @@ class posbullseye (
     }
 
     #upgrade openvpn
-    /* TODO
     if ($::openvpn_group){
-      exec { 'update easyrsa pki openvpn':
-        command   => "/bin/bash -c '$directory/upgrade_easyrsa_openvpn.sh >> $directory/logs/posbullseye 2>&1'",
-        creates   => "/etc/openvpn/$::fqdn/easy-rsa/openssl-easyrsa.cnf",
+      exec { 'openvpn restore crl.pem':
+        command   => "rm /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem && cp /etc/openvpn/$::fqdn/crl.pem /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem && chmod 600 /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem",
         logoutput => true,
         timeout   => 1800,
       }
     }
-    */
 
     exec { 'run puppet to apply bullseye catalog':
       #run puppet to apply bullseye catalog without purging certs
