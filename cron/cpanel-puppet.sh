@@ -99,7 +99,7 @@ fi
 running=`ldapsearch -Q -Y EXTERNAL -H "$url" -b "$cpanelobject" -s one "(status=running)" | grep ^dn: | wc -l`
 if [ "$running" -gt 0 ]; then
   #check if modules needs to be reseted a while after launched
-  exclude='luks mysql posbuster posstretch prebuster prestretch report'
+  exclude='luks mysql posbuster posstretch prebuster prestretch report prebullseye posbullseye'
   while IFS= read -r liner; do
     if [[ ! " $exclude " =~ .*\ $liner\ .* ]] ; then
       echo "not any of $exclude"
