@@ -58,6 +58,9 @@ class prebullseye (
       logoutput => true,
       timeout   => 1800,
     } ->
+    exec { 'clean apt before running puppet':
+      command => '/usr/bin/apt-get clean',
+    } ->
     exec { 'deactivate groups and run puppet':
       command   => "/bin/bash -c '$directory/deactivate_groups_and_run_puppet.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
@@ -182,6 +185,9 @@ class prebullseye (
       require   =>[
                   Exec['upgrade buster'],
                   ],
+    } ->
+    exec { 'clean apt after upgrading bullseye':
+      command => '/usr/bin/apt-get clean',
     } ->
     exec { 'iptables apache drop after bullseye upgrade':
       command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/prebullseye 2>&1'",

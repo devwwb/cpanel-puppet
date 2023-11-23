@@ -112,6 +112,9 @@ class posbullseye (
       returns   => 2,
       timeout   => 7200,
     } ->
+    exec { 'clean apt after groups reactivating':
+      command => '/usr/bin/apt-get clean',
+    } ->
     exec { 'deactivate deactivated groups':
       command   => "/bin/bash -c '$directory/deactivate_groups.sh >> $directory/logs/posbullseye 2>&1'",
       logoutput => true,
