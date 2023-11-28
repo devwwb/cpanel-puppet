@@ -79,7 +79,7 @@ class posbullseye (
     #upgrade openvpn
     if ($::openvpn_group){
       exec { 'openvpn restore crl.pem':
-        command   => "rm /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem && cp /etc/openvpn/$::fqdn/crl.pem /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem && chmod 600 /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem",
+        command   => "/usr/bin/rm /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem && /usr/bin/cp /etc/openvpn/$::fqdn/crl.pem /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem && /usr/bin/chmod 600 /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem",
         logoutput => true,
         timeout   => 1800,
       }
