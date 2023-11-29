@@ -49,6 +49,10 @@ class prebullseye (
       }
     }
 
+    exec { 'reset prebullseye log':
+      command   => "/bin/rm $directory/logs/prebullseye",
+      onlyif    => "/usr/bin/test -f $directory/logs/prebullseye",
+    } ->
     exec { 'system background wait 1':
       command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
@@ -57,10 +61,6 @@ class prebullseye (
     exec { 'system background stop 1':
       command   => "/bin/bash -c '/etc/maadix/scripts/system_background_stop.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
-    } ->
-    exec { 'reset prebullseye log':
-      command   => "/bin/rm $directory/logs/prebullseye",
-      onlyif    => "/usr/bin/test -f $directory/logs/prebullseye",
     } ->
     exec { 'backup mysql':
       command   => "/bin/bash -c '$directory/backup_mysql.sh >> $directory/logs/prebullseye 2>&1'",
