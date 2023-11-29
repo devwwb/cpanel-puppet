@@ -36,6 +36,16 @@ class posbullseye (
       command   => "/bin/rm $directory/logs/posbullseye",
       onlyif    => "/usr/bin/test -f $directory/logs/posbullseye",
     } ->
+    exec { 'system background wait 1':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
+    } ->
+    exec { 'system background stop 1':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_stop.sh >> $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
+    } ->
     exec { 'iptables apache drop':
       command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/posbullseye 2>&1'",
       logoutput => true,
@@ -102,6 +112,16 @@ class posbullseye (
                   Exec['run puppet to apply bullseye catalog'],
                   ],
     } ->
+    exec { 'system background wait 2':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
+    } ->
+    exec { 'system background stop 2':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_stop.sh >> $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
+    } ->
     exec { 'activate all groups':
       command   => "/bin/bash -c '$directory/activate_groups.sh >> $directory/logs/posbullseye 2>&1'",
       logoutput => true,
@@ -115,6 +135,16 @@ class posbullseye (
     } ->
     exec { 'clean apt after groups reactivating':
       command => '/usr/bin/apt-get clean',
+    } ->
+    exec { 'system background wait 3':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
+    } ->
+    exec { 'system background stop 3':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_stop.sh >> $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
     } ->
     exec { 'deactivate deactivated groups':
       command   => "/bin/bash -c '$directory/deactivate_groups.sh >> $directory/logs/posbullseye 2>&1'",
@@ -131,6 +161,16 @@ class posbullseye (
       command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh >> $directory/logs/posbullseye 2>&1'",
       timeout   => 3600,
       logoutput => true,
+    } ->
+    exec { 'system background wait 4':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
+    } ->
+    exec { 'system background stop 4':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_stop.sh >> $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
     } ->
     exec { 'run puppet after removing obsolete packages':
       command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
@@ -165,6 +205,12 @@ class posbullseye (
       command   => '/bin/rm /etc/iptables/*',
       onlyif    => 'ls -l /etc/iptables/* | grep rules',
       path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
+    }
+
+    exec { 'system background start':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_start.sh >> $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
     }
 
     exec { 'send report':

@@ -49,6 +49,15 @@ class prebullseye (
       }
     }
 
+    exec { 'system background wait 1':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/prebullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
+    } ->
+    exec { 'system background stop 1':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_stop.sh >> $directory/logs/prebullseye 2>&1'",
+      logoutput => true,
+    } ->
     exec { 'reset prebullseye log':
       command   => "/bin/rm $directory/logs/prebullseye",
       onlyif    => "/usr/bin/test -f $directory/logs/prebullseye",
@@ -69,6 +78,16 @@ class prebullseye (
     exec { 'iptables apache drop':
       command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
+    } ->
+    exec { 'system background wait 2':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/prebullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
+    } ->
+    exec { 'system background stop 2':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_stop.sh >> $directory/logs/prebullseye 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
     } ->
     exec { 'update mongodb 5.0':
         command   => "/bin/bash -c '$directory/update_mongodb_50.sh >> $directory/logs/prebullseye 2>&1'",
@@ -248,6 +267,11 @@ class prebullseye (
       path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     }
 
+    exec { 'system background start':
+      command   => "/bin/bash -c '/etc/maadix/scripts/system_background_start.sh >> $directory/logs/prebullseye 2>&1'",
+      logoutput => true,
+    }
+
     exec { 'send report':
       command   => "/bin/bash -c '$directory/send_prebullseye_report.sh'",
     }
@@ -261,6 +285,7 @@ class prebullseye (
     exec { 'send prebullseye notify':
       command   => "/bin/bash -c '$directory/send_prebullseye_notify.sh  && sleep 120'",
     }
+
 
     #reboot the server unless $disablereboot==true
     if $disablereboot {
