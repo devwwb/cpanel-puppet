@@ -28,7 +28,7 @@ class posbullseye (
 
     #we are in bullseye, set vm status in api to ready
     exec { 'set_ready_api':
-      command   => "/bin/bash -c '$directory/set_ready_api.sh >> $directory/logs/posbullseye 2>&1'",
+      command   => "/bin/bash -c '$directory/set_ready_api.sh > $directory/logs/posbullseye 2>&1'",
       logoutput => true,
     }
 
