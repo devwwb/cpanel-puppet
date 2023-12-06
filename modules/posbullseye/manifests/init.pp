@@ -26,15 +26,14 @@ class posbullseye (
       }
     }
 
-    #we are in bullseye, set vm status in api to ready
-    exec { 'set_ready_api':
-      command   => "/bin/bash -c '$directory/set_ready_api.sh > $directory/logs/posbullseye 2>&1'",
-      logoutput => true,
-    }
-
     exec { 'reset posbullseye log':
       command   => "/bin/rm $directory/logs/posbullseye",
       onlyif    => "/usr/bin/test -f $directory/logs/posbullseye",
+    } ->
+    #we are in bullseye, set vm status in api to ready
+    exec { 'set_ready_api 1':
+      command   => "/bin/bash -c '$directory/set_ready_api.sh > $directory/logs/posbullseye 2>&1'",
+      logoutput => true,
     } ->
     exec { 'system background wait 1':
       command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/posbullseye 2>&1'",
@@ -179,7 +178,7 @@ class posbullseye (
       returns   => 2,
       timeout   => 7200,
     } ->
-    exec { 'set_ready_api.sh':
+    exec { 'set_ready_api 2':
       command   => "/bin/bash -c '$directory/set_ready_api.sh >> $directory/logs/posbullseye 2>&1'",
       logoutput => true,
     }

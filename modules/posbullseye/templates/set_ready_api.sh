@@ -19,7 +19,7 @@ apiurl="${host}/vm/${hostname}/"
 token=`echo "$tokenbase64" | base64 --decode`
 
 # Update status
-curl -s $apiurl -X PATCH -H "Content-Type: application/json" -H "Authorization: Token ${token}" -H "X-HOSTNAME: ${hostname}" -d '{"status" : "'"$1"'"}'
+curl $apiurl -X PATCH -H "Content-Type: application/json" -H "Authorization: Token ${token}" -H "X-HOSTNAME: ${hostname}" -d '{"status" : "'"$1"'"}'
 
 }
 
@@ -27,3 +27,8 @@ curl -s $apiurl -X PATCH -H "Content-Type: application/json" -H "Authorization: 
 ##### Tasks ###############################
 
 updatevmstatus 0
+if [ $? -eq 0 ]; then
+    echo "set ready api OK"
+else
+    echo "set ready api FAILED"
+fi
