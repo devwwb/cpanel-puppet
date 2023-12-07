@@ -220,7 +220,7 @@ class posbullseye (
       command   => "/bin/bash -c '$directory/send_posbullseye_notify.sh'",
       logoutput => true,
       require   =>[
-                  Exec['set_ready_api.sh'],
+                  Exec['set_ready_api 2'],
                   ],
     } ->
     exec { 'enable setreadycpanel':
