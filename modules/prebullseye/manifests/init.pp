@@ -246,18 +246,18 @@ class prebullseye (
       mode    => '0700',
       content => template("prebullseye/posbullseye_init"),
     } ->
-    exec { 'activate posbullseye init':
-      command   => "/bin/bash -c 'update-rc.d posbullseye defaults 99'",
-      logoutput => true,
-      require   =>[
-                  Exec['upgrade bullseye'],
-                  ],
-    } ->
     file {'/etc/systemd/system/posbullseye.service.d':
       ensure   => directory,
     } ->
     file {'/etc/systemd/system/posbullseye.service.d/deps.conf':
       content => template("prebullseye/posbullseye_init_deps"),
+    } ->
+    exec { 'activate posbullseye init':
+      command   => "/bin/bash -c 'update-rc.d posbullseye defaults 99'",
+      logoutput => true,
+      require   =>[
+                  Exec['update postgresql 13'],
+                  ],
     }
 
 
