@@ -13,6 +13,8 @@ Facter.add(:public_ip) do
       dns = Resolv::DNS.new( :nameserver => ['1.1.1.1'] )
       public_ip = dns.getaddress( fqdn ).to_s
     end
+    dns = Resolv::DNS.new( :nameserver => ['127.0.0.1'] )
+    public_ip = dns.getaddress( fqdn ).to_s
   end
 end
 
