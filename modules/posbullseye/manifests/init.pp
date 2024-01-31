@@ -97,7 +97,7 @@ class posbullseye (
 
     exec { 'run puppet to apply bullseye catalog':
       #run puppet to apply bullseye catalog without purging certs
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test --skip_tags letsencrypt::certonly >> $directory/logs/posbullseye 2>&1",
+      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname $::hostname.maadix.org --test --skip_tags letsencrypt::certonly >> $directory/logs/posbullseye 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -126,7 +126,7 @@ class posbullseye (
       logoutput => true,
     } ->
     exec { 'run puppet after groups reactivating':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
+      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -150,7 +150,7 @@ class posbullseye (
       logoutput => true,
     } ->
     exec { 'run puppet after groups deactivating':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
+      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -172,7 +172,7 @@ class posbullseye (
       timeout   => 7200,
     } ->
     exec { 'run puppet after removing obsolete packages':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
+      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,

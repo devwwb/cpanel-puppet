@@ -30,7 +30,7 @@ if [ ${#egroups[@]} -eq 0 ]; then
     exitscript=0
 else
     echo "## Some groups enabled, run puppet without purging certs #########################################"
-    /usr/local/bin/puppet agent --certname ${hostname}.maadix.org --test --skip_tags letsencrypt::certonly
+    /usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname ${hostname}.maadix.org --test --skip_tags letsencrypt::certonly
     # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
     #get puppet exit code
     puppetexit=$?
