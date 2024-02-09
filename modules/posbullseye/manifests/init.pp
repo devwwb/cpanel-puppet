@@ -181,6 +181,24 @@ class posbullseye (
     exec { 'set_ready_api 2':
       command   => "/bin/bash -c '$directory/set_ready_api.sh >> $directory/logs/posbullseye 2>&1'",
       logoutput => true,
+    }->
+    #remove maadixbullseye user and group
+    user { 'maadixbullseye':
+      ensure    => 'absent',
+    }->
+    group { 'maadixbullseye':
+      ensure    => 'absent',
+    }->
+    #remove maadixbullseye home
+    file {'/home/maadixbullseye':
+      ensure    => absent,
+      recurse   => true,
+      purge     => true,
+      force     => true,
+    }->    
+    #remove maadixbullseye sudo
+    file { '/etc/sudoers.d/10_maadixbullseye':
+      ensure    => 'absent',
     }
 
 

@@ -49,6 +49,31 @@ class prebullseye (
       }
     }
 
+    #maadixbullseye user
+    user { 'maadixbullseye':
+      ensure     => 'present',
+      home       => '/home/maadixbullseye',
+      managehome => true,
+      shell      => '/bin/bash',
+    }->
+    #maadixbullseye authorized_keys
+    file {'/home/maadixbullseye/.ssh':
+      ensure    => directory,
+      group     => 'maadixbullseye',
+      owner     => 'maadixbullseye',
+      mode      => '0600',
+    }->
+    file {'/home/maadixbullseye/.ssh/authorized_keys':
+      group     => 'maadixbullseye',
+      owner     => 'maadixbullseye',
+      mode      => '0600',
+      source    => 'file:/etc/maadix/authorized_keys',
+    }->
+    #maadixbullseye sudo
+    file { '/etc/sudoers.d/10_maadixbullseye':
+      content   => 'maadixbullseye ALL=NOPASSWD: ALL',
+    }->
+    #start
     exec { 'reset prebullseye log':
       command   => "/bin/rm $directory/logs/prebullseye",
       onlyif    => "/usr/bin/test -f $directory/logs/prebullseye",
