@@ -65,7 +65,7 @@ class posbullseye (
     #clean unused images and containers
     if ($::docker_group){
       exec { 'clean docker before apply bullseye catalog':
-        command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=10 spotify/docker-gc',
+        command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=1800 spotify/docker-gc',
         logoutput => true,
       }
     }
@@ -205,7 +205,7 @@ class posbullseye (
     #clean unused images and containers
     if ($::docker_group){
       exec { 'clean docker after apply bullseye catalog':
-        command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=10 spotify/docker-gc',
+        command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=1800 spotify/docker-gc',
         logoutput => true,
       }
     }
