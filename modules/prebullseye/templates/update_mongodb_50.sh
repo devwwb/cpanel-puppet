@@ -44,7 +44,7 @@ if mongod --version | grep v4.4; then
   service monit stop
   service mongod stop
   apt remove mongodb-org-database-tools-extra mongodb-org-tools -y
-  apt install mongodb-org-{server,shell,tools,database-tools-extra} -y
+  apt install mongodb-org-{server,shell,tools,database-tools-extra}=5.0.23 -y --allow-downgrades
   sleep 10
   service mongod restart
 
