@@ -3,5 +3,5 @@
 echo "## Update docker ###########################################################"
 
 #update docker
-apt-get install --reinstall docker-ce=5:20.10.21~3-0~debian-bullseye -y --allow-downgrades
+apt-get install --reinstall docker-ce=5:25.0.0-1~debian.11~bullseye -y --allow-downgrades
 service docker restart
