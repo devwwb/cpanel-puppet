@@ -63,12 +63,14 @@ class posbullseye (
     }
 
     #clean unused images and containers
+    /*
     if ($::docker_group){
       exec { 'clean docker before apply bullseye catalog':
         command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=1800 spotify/docker-gc',
         logoutput => true,
       }
     }
+    */
 
     if ($::docker_group){
       exec { 'update docker':
@@ -78,12 +80,14 @@ class posbullseye (
       }
     }
 
+    /*
     if ($::discourse_group){
       exec { 'rebuild discourse app':
         command   => "/usr/bin/sudo /var/discourse/launcher rebuild app >> $directory/logs/posbullseye 2>&1",
         timeout   => 7200,
       }
     }
+    */
 
     #upgrade openvpn
     if ($::openvpn_group){
@@ -156,11 +160,13 @@ class posbullseye (
       returns   => 2,
       timeout   => 7200,
     } ->
+    /*
     exec { 'delete_obsolete_packages.sh':
       command   => "/bin/bash -c '$directory/delete_obsolete_packages.sh >> $directory/logs/posbullseye 2>&1'",
       timeout   => 3600,
       logoutput => true,
     } ->
+    */
     exec { 'system background wait 4':
       command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/posbullseye 2>&1'",
       logoutput => true,
@@ -203,12 +209,14 @@ class posbullseye (
 
 
     #clean unused images and containers
+    /*
     if ($::docker_group){
       exec { 'clean docker after apply bullseye catalog':
         command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=1800 spotify/docker-gc',
         logoutput => true,
       }
     }
+    */
 
     exec { 'send cpanel to ready':
       command   => '/etc/init.d/setreadycpanel restart',
