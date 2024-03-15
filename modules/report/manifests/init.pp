@@ -30,6 +30,11 @@ class report (
       }
     }
 
+    exec { "disk info":
+      command   => "/bin/bash -c 'echo \"## DISK info ######\" > $directory/logs/00_disk.log && lsblk -l >> $directory/logs/00_disk.log'",
+      logoutput => true,
+    }
+
     exec { "cpu info":
       command   => "/bin/bash -c 'echo \"## CPU info ######\" > $directory/logs/00_list_cpu.log && cat /proc/cpuinfo | grep \"model name\" >> $directory/logs/00_list_cpu.log'",
       logoutput => true,
@@ -37,6 +42,26 @@ class report (
 
     exec { "avx cpu support":
       command   => "/bin/bash -c 'echo \"## CPU avx SUPPORT ######\" >> $directory/logs/00_list_cpu.log && if [ $(grep -c \"avx\" /proc/cpuinfo) -gt 0 ]; then echo \"AVX SUPPORT / OK\" >> $directory/logs/00_list_cpu.log; else echo \"AVX NOT SUPPORTED!\" >> $directory/logs/00_list_cpu.log; fi'",
+      logoutput => true,
+    }
+
+    exec { "puppet info":
+      command   => "/bin/bash -c 'echo \"## Puppet info ######\" > $directory/logs/00_puppet.log && apt-show-versions | grep puppet >> $directory/logs/00_puppet.log'",
+      logoutput => true,
+    }
+
+    exec { "www info":
+      command   => "/bin/bash -c 'echo \"## WWW info ######\" > $directory/logs/00_www.log && du -sch /var/www/* >> $directory/logs/00_www.log && du -sch /var/www/html/* >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
+    exec { "ddbb info":
+      command   => "/bin/bash -c 'echo \"## DDBB info ######\" >> $directory/logs/00_www.log && du -sch /var/lib/mysql/* >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
+    exec { "crontabs info":
+      command   => "/bin/bash -c 'echo \"## CRONTABS info ######\" > $directory/logs/00_zcron.log && for f in /var/spool/cron/crontabs/*; do echo \"USER \$f file\"; cat \$f | grep -v \"#\"; done >> $directory/logs/00_zcron.log'",
       logoutput => true,
     }
 
