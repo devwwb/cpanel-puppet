@@ -78,6 +78,10 @@ class prebullseye (
       command   => "/bin/rm $directory/logs/prebullseye",
       onlyif    => "/usr/bin/test -f $directory/logs/prebullseye",
     } ->
+    exec { 'update sury key':
+      command   => "/bin/bash -c 'apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B188E2B695BD4743 >> $directory/logs/prebullseye 2>&1'",
+      logoutput => true,
+    } ->
     exec { 'system background wait 1':
       command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
