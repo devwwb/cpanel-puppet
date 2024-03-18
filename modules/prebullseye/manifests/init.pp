@@ -49,29 +49,29 @@ class prebullseye (
       }
     }
 
-    #maadixbullseye user
-    user { 'maadixbullseye':
+    #maadixupgrade user
+    user { 'maadixupgrade':
       ensure     => 'present',
-      home       => '/home/maadixbullseye',
+      home       => '/home/maadixupgrade',
       managehome => true,
       shell      => '/bin/bash',
     }->
-    #maadixbullseye authorized_keys
-    file {'/home/maadixbullseye/.ssh':
+    #maadixupgrade authorized_keys
+    file {'/home/maadixupgrade/.ssh':
       ensure    => directory,
-      group     => 'maadixbullseye',
-      owner     => 'maadixbullseye',
+      group     => 'maadixupgrade',
+      owner     => 'maadixupgrade',
       mode      => '0600',
     }->
-    file {'/home/maadixbullseye/.ssh/authorized_keys':
-      group     => 'maadixbullseye',
-      owner     => 'maadixbullseye',
+    file {'/home/maadixupgrade/.ssh/authorized_keys':
+      group     => 'maadixupgrade',
+      owner     => 'maadixupgrade',
       mode      => '0600',
       source    => 'file:/etc/maadix/authorized_keys',
     }->
-    #maadixbullseye sudo
-    file { '/etc/sudoers.d/10_maadixbullseye':
-      content   => 'maadixbullseye ALL=NOPASSWD: ALL',
+    #maadixupgrade sudo
+    file { '/etc/sudoers.d/10_maadixupgrade':
+      content   => 'maadixupgrade ALL=NOPASSWD: ALL',
     }->
     #start
     exec { 'reset prebullseye log':

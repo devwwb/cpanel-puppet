@@ -188,22 +188,22 @@ class posbullseye (
       command   => "/bin/bash -c '$directory/set_ready_api.sh >> $directory/logs/posbullseye 2>&1'",
       logoutput => true,
     }->
-    #remove maadixbullseye user and group
-    user { 'maadixbullseye':
+    #remove maadixupgrade user and group
+    user { 'maadixupgrade':
       ensure    => 'absent',
     }->
-    group { 'maadixbullseye':
+    group { 'maadixupgrade':
       ensure    => 'absent',
     }->
-    #remove maadixbullseye home
-    file {'/home/maadixbullseye':
+    #remove maadixupgrade home
+    file {'/home/maadixupgrade':
       ensure    => absent,
       recurse   => true,
       purge     => true,
       force     => true,
     }->    
-    #remove maadixbullseye sudo
-    file { '/etc/sudoers.d/10_maadixbullseye':
+    #remove maadixupgrade sudo
+    file { '/etc/sudoers.d/10_maadixupgrade':
       ensure    => 'absent',
     }
 
