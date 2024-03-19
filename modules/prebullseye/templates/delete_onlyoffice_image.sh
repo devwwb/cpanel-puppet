@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "## Delete onlyoffice image #################################################"
 #if onlyoffice image exists

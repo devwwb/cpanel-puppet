@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "## Backup all mysql databases ##############################################"
 sleep 30

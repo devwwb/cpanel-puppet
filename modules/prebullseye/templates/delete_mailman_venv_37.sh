@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "## Delete mailman venv #####################################################"
 #delete mailman venv 3.7

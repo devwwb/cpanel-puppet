@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "## Delete odoo venv #####################################################"
 #delete odoo venv 3.7

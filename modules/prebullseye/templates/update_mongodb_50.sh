@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "## Backup all mongodb databases ############################################"
 apt install mongodb-org-tools -y --force-yes

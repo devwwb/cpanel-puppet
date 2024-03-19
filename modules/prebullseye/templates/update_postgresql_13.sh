@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 #if postgresql version is 11
 if pg_config --version | grep -q 11; then
