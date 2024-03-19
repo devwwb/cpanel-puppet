@@ -49,7 +49,7 @@ if pg_config --version | grep -q 11; then
     #drop 11 cluster
     pg_dropcluster 11 main
     #purge old packages
-    apt-get --purge remove postgresql-11 postgresql-client-11 postgresql-server-dev-11 -y
+    apt-get --purge remove postgresql-11 postgresql-client-11 -y
     #restart postgresql
     service postgresql restart
     #list clusters
