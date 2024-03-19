@@ -94,7 +94,7 @@ class prebullseye (
     exec { 'backup mysql':
       command   => "/bin/bash -c '$directory/backup_mysql.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
-      timeout   => 1800,
+      timeout   => 3600,
     } ->
     exec { 'clean apt before running puppet':
       command => '/usr/bin/apt-get clean',
@@ -102,7 +102,7 @@ class prebullseye (
     exec { 'deactivate groups and run puppet':
       command   => "/bin/bash -c '$directory/deactivate_groups_and_run_puppet.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
-      timeout   => 3600,
+      timeout   => 7200,
     } ->
     exec { 'iptables apache drop':
       command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/prebullseye 2>&1'",
@@ -121,7 +121,7 @@ class prebullseye (
     exec { 'update mongodb 5.0':
         command   => "/bin/bash -c '$directory/update_mongodb_50.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
-        timeout   => 1800,
+        timeout   => 3600,
         onlyif    => 'test -f /usr/bin/mongod',
         path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     }
@@ -169,7 +169,7 @@ class prebullseye (
     exec { 'upgrade buster':
       command   => "/bin/bash -c '$directory/upgrade_buster.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
-      timeout   => 3600,
+      timeout   => 7200,
     } ->
     exec { 'iptables apache drop after buster upgrade':
       command   => "/bin/bash -c '$directory/iptables_apache_drop.sh >> $directory/logs/prebullseye 2>&1'",
@@ -229,7 +229,7 @@ class prebullseye (
     exec { 'upgrade bullseye':
       command   => "/bin/bash -c '$directory/upgrade_bullseye.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
-      timeout   => 7200,
+      timeout   => 10800,
       require   =>[
                   Exec['upgrade buster'],
                   ],
@@ -244,16 +244,16 @@ class prebullseye (
     exec { 'restart postfix':
       command   => '/usr/sbin/service postfix restart',
       logoutput => true,
+      timeout   => 300,
     } ->    
     exec { 'fix resolv.conf':
       command   => "/bin/bash -c 'echo nameserver 1.1.1.1 > /etc/resolv.conf'",
       logoutput => true,
-      timeout   => 1800,
     } ->
     exec { 'update postgresql 13':
       command   => "/bin/bash -c '$directory/update_postgresql_13.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
-      timeout   => 1800,
+      timeout   => 3600,
     }
 
     #update one-context
@@ -261,7 +261,7 @@ class prebullseye (
       exec { 'update onecontext':
         command   => "/bin/bash -c '$directory/update_onecontext.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
-        timeout   => 1800,
+        timeout   => 3600,
         require   =>[
                     Exec['upgrade bullseye'],
                     ],
@@ -299,6 +299,7 @@ class prebullseye (
     exec { 'system background start':
       command   => "/bin/bash -c '/etc/maadix/scripts/system_background_start.sh >> $directory/logs/prebullseye 2>&1'",
       logoutput => true,
+      timeout   => 300,
     }
 
     exec { 'send report':

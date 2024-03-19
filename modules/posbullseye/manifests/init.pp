@@ -33,6 +33,7 @@ class posbullseye (
     exec { 'set_ready_api 1':
       command   => "/bin/bash -c '$directory/set_ready_api.sh > $directory/logs/posbullseye 2>&1'",
       logoutput => true,
+      timeout   => 300,
     } ->
     exec { 'system background wait 1':
       command   => "/bin/bash -c '/etc/maadix/scripts/system_background_wait.sh >> $directory/logs/posbullseye 2>&1'",
@@ -75,7 +76,7 @@ class posbullseye (
       exec { 'update docker':
         command   => "/bin/bash -c '$directory/update_docker.sh >> $directory/logs/posbullseye 2>&1'",
         logoutput => true,
-        timeout   => 1800,
+        timeout   => 3600,
       }
     }
 
@@ -186,6 +187,7 @@ class posbullseye (
     exec { 'set_ready_api 2':
       command   => "/bin/bash -c '$directory/set_ready_api.sh >> $directory/logs/posbullseye 2>&1'",
       logoutput => true,
+      timeout   => 300,
     }->
     #remove maadixupgrade user and group
     user { 'maadixupgrade':
@@ -239,11 +241,13 @@ class posbullseye (
 
     exec { 'send report':
       command   => "/bin/bash -c '$directory/send_posbullseye_report.sh'",
+      timeout   => 300,
     }
 
     exec { 'send posbullseye notify':
       command   => "/bin/bash -c '$directory/send_posbullseye_notify.sh'",
       logoutput => true,
+      timeout   => 300,
       require   =>[
                   Exec['set_ready_api 2'],
                   ],
