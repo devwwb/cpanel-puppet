@@ -9,7 +9,6 @@ class posbullseye (
 
     #define scripts
     $scripts = ['delete_obsolete_packages.sh',
-                'upgrade_easyrsa_openvpn.sh',
                 'update_docker.sh',
                 'activate_groups.sh',
                 'deactivate_groups.sh',
