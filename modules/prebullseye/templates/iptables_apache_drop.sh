@@ -10,5 +10,5 @@ if ! iptables -C INPUT -p tcp --dport 80 -j DROP; then
 fi
 
 #list iptables
-iptables -L
+iptables -L -n
 

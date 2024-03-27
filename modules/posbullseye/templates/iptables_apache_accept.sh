@@ -12,5 +12,5 @@ if [[ -f /etc/iptables/rules.v4 ]]; then
 fi
 
 #list iptables
-iptables -L
+iptables -L -n
 
