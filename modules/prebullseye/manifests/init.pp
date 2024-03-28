@@ -147,15 +147,18 @@ class prebullseye (
     }
 
 
+    /*
     if ($::onlyoffice_group){
       exec { 'delete onlyoffice image':
         command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
+        timeout   => 3600,
         require   =>[
                     Exec['deactivate groups and run puppet'],
                     ],
       }
     }
+    */
 
     #delete buster packages
     exec { 'delete buster packages':
