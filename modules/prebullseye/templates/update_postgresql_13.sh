@@ -2,7 +2,7 @@
 set -e
 
 #if postgresql version is 11
-if pg_config --version | grep -q 11; then
+if apt-show-versions | grep postgresql-11; then
 
   echo "## Update postgresql to 13 ################################################"
   #doc https://blog.samuel.domains/blog/tutorials/from-stretch-to-buster-how-to-upgrade-a-9-6-postgresql-cluster-to-11
