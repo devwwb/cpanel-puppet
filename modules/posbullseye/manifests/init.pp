@@ -99,6 +99,9 @@ class posbullseye (
       }
     }
 
+    package { 'libncurses-dev':
+      ensure    => 'present',
+    } ->
     exec { 'run puppet to apply bullseye catalog':
       #run puppet to apply bullseye catalog without purging certs
       command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname $::hostname.maadix.org --test --skip_tags letsencrypt::certonly >> $directory/logs/posbullseye 2>&1",
