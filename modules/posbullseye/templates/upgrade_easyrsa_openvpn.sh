@@ -8,11 +8,11 @@ echo "## Update easyrsa pki from v2 to v3 ######################################
 sleep 30
 DATE=`date +%Y-%m-%d`
 FQDN=`hostname -f`
-if [ ! -d /etc/maadix/backups ]; then
-  mkdir /etc/maadix/backups
+if [ ! -d /home/.trash/backups ]; then
+  mkdir /home/.trash/backups
 fi
 sleep 2
-cp -Rp /etc/openvpn/$FQDN /etc/maadix/backups/$FQDN-$DATE
+cp -Rp /etc/openvpn/$FQDN /home/.trash/backups/$FQDN-$DATE
 
 ##Download easyrsa-3.0.7 tha ships with upgrade script
 cd /etc/openvpn/$FQDN

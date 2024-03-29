@@ -9,11 +9,11 @@ if apt-show-versions | grep postgresql-11; then
 
   #backup postgresql
   DATE=`date +%Y-%m-%d`
-  if [ ! -d /etc/maadix/backups ]; then
-    mkdir /etc/maadix/backups
+  if [ ! -d /home/.trash/backups ]; then
+    mkdir /home/.trash/backups
   fi
   cd /tmp
-  sudo -u postgres pg_dumpall > /etc/maadix/backups/postgresql-$DATE.sql
+  sudo -u postgres pg_dumpall > /home/.trash/backups/postgresql-$DATE.sql
   #to restore backup
   #sudo -u postgres psql -f BACKUP_FILE postgres
 

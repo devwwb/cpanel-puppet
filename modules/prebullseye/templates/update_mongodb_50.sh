@@ -5,13 +5,13 @@ echo "## Backup all mongodb databases ##########################################
 apt install mongodb-org-tools -y --force-yes
 apt install netcat -y
 DATE=`date +%Y-%m-%d`
-if [ ! -d /etc/maadix/backups ]; then
-  mkdir /etc/maadix/backups
+if [ ! -d /home/.trash/backups ]; then
+  mkdir /home/.trash/backups
 fi
-if [ ! -d /etc/maadix/backups/mongodb-$DATE ]; then
+if [ ! -d /home/.trash/backups/mongodb-$DATE ]; then
   echo "All databases"
-  mkdir /etc/maadix/backups/mongodb-$DATE
-  cd /etc/maadix/backups/mongodb-$DATE
+  mkdir /home/.trash/backups/mongodb-$DATE
+  cd /home/.trash/backups/mongodb-$DATE
   echo -n "mongodump --host localhost --port 27017 --ssl --sslCAFile /opt/mongod/certs/rootCA.crt -u admin -p " > backup.sh
   cat /etc/maadix/mongodbadmin | tr -d '\n' | sed "s@\\\\@@g" | tr -d \'\" >> backup.sh
   chmod +x backup.sh
