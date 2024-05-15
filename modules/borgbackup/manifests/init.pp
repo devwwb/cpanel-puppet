@@ -43,10 +43,10 @@ class borgbackup (
           path       => "/home/$sudouser/$::hostname-backups/$archive",
           owner      => "$sudouser",
           mode       => '700',
-        }
+        }->
         exec { "mount borg archive $archive":
           command    => "/usr/bin/borg mount --rsh 'ssh -i /root/.ssh/id_rsa_borgbackup' -o allow_other,ignore_permissions,ro --strip-components 1 ssh://$user@$server:$port/./backup::$archive /home/$sudouser/$::hostname-backups/$archive",
-        }
+        }->
         exec { "delete borg ldap object of $archive":
           command    => "/usr/bin/ldapdelete -H ldapi:// -Y EXTERNAL 'cn=$archive,ou=borgbackup,ou=cpanel,dc=example,dc=tld'",
         }
@@ -56,10 +56,10 @@ class borgbackup (
       $::borg_umount.each |$archive| {
         exec { "umount borg archive $archive":
           command    => "/usr/bin/borg umount /home/$sudouser/$::hostname-backups/$archive",
-        }
+        }->
         exec { "delete borg ldap object of $archive":
           command    => "/usr/bin/ldapdelete -H ldapi:// -Y EXTERNAL 'cn=$archive,ou=borgbackup,ou=cpanel,dc=example,dc=tld'",
-        }
+        }->
         #delete mount directory
         file {"delete borg mount dir for $archive":
           ensure     => absent,
