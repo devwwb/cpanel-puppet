@@ -222,6 +222,24 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     vhosts
   end
 
+  #mail
+  chunk(:mail) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      mail=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" | grep accountActive: | sed "s|.*: \(.*\)|\1|"')
+      if not mail.empty?
+        if mail == 'TRUE'
+          vhosts[domain.strip] = {:mail => true}
+        else
+          vhosts[domain.strip] = {:mail => false}
+        end
+      else
+        vhosts[domain.strip] = {:mail => false}
+      end
+    end
+    vhosts
+  end
+
   #todo, add extra vhosts options to parse in the template file
 
 end
