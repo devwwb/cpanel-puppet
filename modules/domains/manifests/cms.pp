@@ -15,6 +15,7 @@ define domains::cms(
   $tree			= undef,
   $acl_enabled          = undef,
   $acl_apply            = undef,
+  $mail                 = undef,
 ) {
 
 

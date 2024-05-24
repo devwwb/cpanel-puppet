@@ -15,6 +15,7 @@ define domains::vhosts(
   $tree			= undef,
   $acl_enabled          = undef,
   $acl_apply            = undef,
+  $mail                 = undef,
 ) {
 
   #vars
@@ -221,6 +222,15 @@ define domains::vhosts(
     }
   }
 
+  #snappymail domains
+  if $mail and $::snappymail_enabled {
+    file {"/var/www/snappymail/data/_data_/_default_/domains/$domain.json":
+      content   => template('domains/snappy_domain.erb'),
+      owner     => 'fpmsnappymail',
+      group     => 'fpmsnappymail',
+      mode      => '0644',
+    }
+  }
 
 }
 
