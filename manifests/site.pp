@@ -12,7 +12,7 @@ node default {
   #certs and conf for each domain
   opendkim::domain{$facts['maildomains']:}
   #certs and conf for fqdn
-  opendkim::domain{$facts['fqdn']:}
+  opendkim::domain{$facts['networking']['fqdn']:}
 
   ## report
   include report
