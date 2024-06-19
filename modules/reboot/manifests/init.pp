@@ -1,8 +1,6 @@
 class reboot (
-  $enabled = str2bool("$::reboot"),
+  Boolean $enabled = str2bool("$::reboot"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
     #set module reboot to ready

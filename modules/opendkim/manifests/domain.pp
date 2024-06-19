@@ -1,5 +1,5 @@
 define opendkim::domain (
-  $enabled = str2bool("$::opendkim"),
+  Boolean $enabled = str2bool("$::opendkim"),
   $domain        = $name,
   $selector      = 'default',
   $pathkeys      = '/etc/opendkim/keys',
@@ -7,8 +7,6 @@ define opendkim::domain (
   $signing_table = 'SigningTable',
   $pathconf      = '/etc/opendkim',
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

@@ -1,11 +1,9 @@
 class prebullseye (
-  $enabled = str2bool("$::prebullseye"),
+  Boolean $enabled = str2bool("$::prebullseye"),
   $extlinux = str2bool("$::extlinux"),
   $directory = '/etc/maadix/bullseye',
   $disablereboot = str2bool("$::disablereboot"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

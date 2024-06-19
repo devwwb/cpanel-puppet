@@ -1,10 +1,8 @@
 class prestretch (
-  $enabled = str2bool("$::prestretch"),
+  Boolean $enabled = str2bool("$::prestretch"),
   $extlinux = str2bool("$::extlinux"),
   $directory = '/etc/maadix/stretch',
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

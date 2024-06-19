@@ -1,9 +1,7 @@
 class domains (
-  $enabled   = str2bool("$::domains"),
+  Boolean $enabled   = str2bool("$::domains"),
   $vhost_dir = '/etc/apache2/ldap-enabled',
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

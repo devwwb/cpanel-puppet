@@ -1,8 +1,6 @@
 class luks (
-  $enabled = str2bool("$::luks"),
+  Boolean $enabled = str2bool("$::luks"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

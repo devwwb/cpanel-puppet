@@ -1,10 +1,8 @@
 class prebuster (
-  $enabled = str2bool("$::prebuster"),
+  Boolean $enabled = str2bool("$::prebuster"),
   $extlinux = str2bool("$::extlinux"),
   $directory = '/etc/maadix/buster',
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

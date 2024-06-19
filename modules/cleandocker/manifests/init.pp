@@ -1,8 +1,6 @@
 class cleandocker (
-  $enabled = str2bool("$::cleandocker"),
+  Boolean $enabled = str2bool("$::cleandocker"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

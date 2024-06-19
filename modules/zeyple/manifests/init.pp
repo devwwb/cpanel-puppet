@@ -1,8 +1,6 @@
 class zeyple (
-  $enabled = str2bool("$::zeyple"),
+  Boolean $enabled = str2bool("$::zeyple"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

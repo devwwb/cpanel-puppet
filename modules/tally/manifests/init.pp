@@ -1,8 +1,6 @@
 class tally (
-  $enabled = str2bool("$::tally"),
+  Boolean $enabled = str2bool("$::tally"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

@@ -1,9 +1,7 @@
 class posbuster (
-  $enabled = str2bool("$::posbuster"),
+  Boolean $enabled = str2bool("$::posbuster"),
   $directory = '/etc/maadix/buster',
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

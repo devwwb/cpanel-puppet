@@ -1,8 +1,6 @@
 class opendkim (
-  $enabled = str2bool("$::opendkim"),
+  Boolean $enabled = str2bool("$::opendkim"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

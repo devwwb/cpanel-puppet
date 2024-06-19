@@ -1,8 +1,6 @@
 class samhainreset (
-  $enabled = str2bool("$::samhainreset"),
+  Boolean $enabled = str2bool("$::samhainreset"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

@@ -1,8 +1,6 @@
 class borgkey (
-  $enabled = str2bool("$::borgkey"),
+  Boolean $enabled = str2bool("$::borgkey"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

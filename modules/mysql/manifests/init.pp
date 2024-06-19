@@ -1,8 +1,6 @@
 class mysql (
-  $enabled = str2bool("$::mysql"),
+  Boolean $enabled = str2bool("$::mysql"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

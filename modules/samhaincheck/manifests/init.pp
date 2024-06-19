@@ -1,8 +1,6 @@
 class samhaincheck (
-  $enabled = str2bool("$::samhaincheck"),
+  Boolean $enabled = str2bool("$::samhaincheck"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

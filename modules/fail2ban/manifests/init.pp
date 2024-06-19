@@ -1,8 +1,6 @@
 class fail2ban (
-  $enabled = str2bool("$::fail2ban"),
+  Boolean $enabled = str2bool("$::fail2ban"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

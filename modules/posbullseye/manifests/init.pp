@@ -1,9 +1,7 @@
 class posbullseye (
-  $enabled = str2bool("$::posbullseye"),
+  Boolean $enabled = str2bool("$::posbullseye"),
   $directory = '/etc/maadix/bullseye',
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

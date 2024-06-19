@@ -1,9 +1,7 @@
 class report (
-  $enabled   = str2bool("$::report"),
+  Boolean $enabled   = str2bool("$::report"),
   $directory = '/etc/maadix/report',
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

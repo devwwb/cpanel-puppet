@@ -1,20 +1,15 @@
 class borgbackup (
-  $enabled = str2bool("$::borgbackup"),
+  Boolean $enabled = str2bool("$::borgbackup"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 
     #params
-    $borg_enabled = $::borg_params['borg_enabled']
+    Boolean $borg_enabled = $::borg_params['borg_enabled']
     $user         = $::borg_params['user']
     $server       = $::borg_params['server']
     $port         = $::borg_params['port']
     $sudouser     = $::borg_params['sudouser']
-
-    #validate params
-    validate_bool($borg_enabled)
 
     #checks
     if $borg_enabled==undef or $user==undef or $server==undef or $port==undef or $sudouser==undef{

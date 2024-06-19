@@ -1,8 +1,6 @@
 class customfqdn (
-  $enabled = str2bool("$::customfqdn"),
+  Boolean $enabled = str2bool("$::customfqdn"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

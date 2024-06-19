@@ -1,8 +1,6 @@
 class trash (
-  $enabled   = str2bool("$::trash"),
+  Boolean $enabled   = str2bool("$::trash"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

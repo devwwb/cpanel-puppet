@@ -1,8 +1,6 @@
 class cleanapt (
-  $enabled = str2bool("$::cleanapt"),
+  Boolean $enabled = str2bool("$::cleanapt"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

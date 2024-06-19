@@ -1,9 +1,7 @@
 class posstretch (
-  $enabled = str2bool("$::posstretch"),
+  Boolean $enabled = str2bool("$::posstretch"),
   $directory = '/etc/maadix/stretch',
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 

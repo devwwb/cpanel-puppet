@@ -1,8 +1,6 @@
 class rkhunter (
-  $enabled = str2bool("$::rkhunter"),
+  Boolean $enabled = str2bool("$::rkhunter"),
 ) {
-
-  validate_bool($enabled)
 
   if $enabled {
 
