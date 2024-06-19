@@ -10,9 +10,9 @@ node default {
   include customfqdn
 
   #certs and conf for each domain
-  opendkim::domain{$::maildomains:}
+  opendkim::domain{$facts['maildomains']:}
   #certs and conf for fqdn
-  opendkim::domain{$::fqdn:}
+  opendkim::domain{$facts['fqdn']:}
 
   ## report
   include report
