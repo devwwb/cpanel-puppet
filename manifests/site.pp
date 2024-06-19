@@ -1,74 +1,74 @@
 node default {
 
   ## opendkim
-  include opendkim
+#  include opendkim
 
   ## reboot
-  include reboot
+#  include reboot
 
   ## customfqdn
-  include customfqdn
+#  include customfqdn
 
   #certs and conf for each domain
-  opendkim::domain{$facts['maildomains']:}
+#  opendkim::domain{$facts['maildomains']:}
   #certs and conf for fqdn
-  opendkim::domain{$facts['networking']['fqdn']:}
+#  opendkim::domain{$facts['fqdn']:}
 
   ## report
-  include report
+#  include report
 
   ## cleanapt
-  include cleanapt
+#  include cleanapt
 
   ## cleandocker
-  include cleandocker
+#  include cleandocker
 
   ## samhainreset
-  include samhainreset
+#  include samhainreset
 
   ## samhaincheck
-  include samhaincheck
+#  include samhaincheck
 
   ## stretch
-  include prestretch
-  include posstretch
+#  include prestretch
+#  include posstretch
 
   ## domains
-  include domains
+#  include domains
 
   ## trash
-  include trash
+#  include trash
 
   ## buster
-  include prebuster
-  include posbuster
+#  include prebuster
+#  include posbuster
 
   ## mysql
   include mysql
 
   ## rkhunter
-  include rkhunter
+#  include rkhunter
 
   ## tally
-  include tally
+#  include tally
 
   ## fail2ban
-  include fail2ban
+#  include fail2ban
 
   ## zeyple
-  include zeyple
+#  include zeyple
 
   ## borgbackup
-  include borgbackup
+#  include borgbackup
 
   ## borgkey
-  include borgkey
+#  include borgkey
 
   ## luks
-  include luks
+#  include luks
 
   ## buster
-  include prebullseye
-  include posbullseye
+#  include prebullseye
+#  include posbullseye
 
 }
