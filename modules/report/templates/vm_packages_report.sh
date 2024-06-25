@@ -11,12 +11,12 @@ aptitude update
 
 ##List Packages in this server absent in the reference
 echo "## List NON CANONICAL packages #############################################"
-aptitude search '~i' --disable-columns -F '%p' > /tmp/<%= @lsbdistcodename %>_installed
-diff /tmp/<%= @lsbdistcodename %>_reference /tmp/<%= @lsbdistcodename %>_installed | grep '>'
+aptitude search '~i' --disable-columns -F '%p' > /tmp/<%= @facts['os']['distro']['codename'] %>_installed
+diff /tmp/<%= @facts['os']['distro']['codename'] %>_reference /tmp/<%= @facts['os']['distro']['codename'] %>_installed | grep '>'
 
 ##List Packages in the reference absent in this server
 echo "## List ABSENT packages #############################################"
-diff /tmp/<%= @lsbdistcodename %>_reference /tmp/<%= @lsbdistcodename %>_installed | grep '<'
+diff /tmp/<%= @facts['os']['distro']['codename'] %>_reference /tmp/<%= @facts['os']['distro']['codename'] %>_installed | grep '<'
 
 ##List Installed packages
 echo "## List Installed packages #################################################"

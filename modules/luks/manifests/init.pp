@@ -1,5 +1,5 @@
 class luks (
-  Boolean $enabled = str2bool("$::luks"),
+  Boolean $enabled = str2bool($facts['luks']),
 ) {
 
   if $enabled {

@@ -1,5 +1,5 @@
 class posstretch (
-  Boolean $enabled = str2bool("$::posstretch"),
+  Boolean $enabled = str2bool($facts['posstretch']),
   $directory = '/etc/maadix/stretch',
 ) {
 
@@ -22,7 +22,7 @@ class posstretch (
     }
 
 
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'update docker':
         command   => "/bin/bash -c '$directory/update_docker.sh > $directory/logs/02_update_docker 2>&1'",
         logoutput => true,
@@ -48,7 +48,7 @@ class posstretch (
       timeout   => 7200,
     }
 
-    if ($::discourse_group){
+    if ($facts['discourse_group']){
       exec { 'rebuild discourse':
         command   => "/bin/bash -c 'sudo /var/discourse/launcher rebuild app > $directory/logs/07_rebuild_discourse 2>&1'",
         logoutput => true,

@@ -1,11 +1,11 @@
 class fail2ban (
-  Boolean $enabled = str2bool("$::fail2ban"),
+  Boolean $enabled = str2bool($facts['fail2ban']),
 ) {
 
   if $enabled {
 
     $jails = ['dovecot', 'mxcp', 'apache-auth', 'sshd', 'postfix-sasl']
-    $fail2ban_ips = $::fail2ban_ips
+    $fail2ban_ips = $facts['fail2ban_ips']
     $fail2ban_ips.each |$fail2ban_ip| {
       $jails.each |$jail| {
         exec { "unlock ip $fail2ban_ip from $jail jail":

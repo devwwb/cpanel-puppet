@@ -13,10 +13,10 @@ Facter.add(:borg_params) do
 
     #check if borbackup module is enabled
     borgbackup = Facter.value(:borgbackup)
+    params = {}
     
     #if borgbackup module is enabled
     if borgbackup
-      params = {}
 
       #api params
       hostname = Socket.gethostname
@@ -44,7 +44,14 @@ Facter.add(:borg_params) do
       params['port'] = data['backup_port']
       params['sudouser']=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "ou=sshd,ou=People,dc=example,dc=tld" "(&(objectClass=person)(uid=*)(gidnumber=27))" | grep uid: | sed "s|.*: \(.*\)|\1|"')
       params
-    end
+    else
+      params['borg_enabled'] = nil
+      params['user'] = nil
+      params['server'] = nil
+      params['port'] = nil
+      params['sudouser']= nil
+      params
+    end    
   end
 end
 

@@ -1,5 +1,5 @@
 define opendkim::domain (
-  Boolean $enabled = str2bool("$::opendkim"),
+  Boolean $enabled = str2bool($facts['opendkim']),
   $domain        = $name,
   $selector      = 'default',
   $pathkeys      = '/etc/opendkim/keys',

@@ -1,5 +1,5 @@
 class reboot (
-  Boolean $enabled = str2bool("$::reboot"),
+  Boolean $enabled = str2bool($facts['reboot']),
 ) {
 
   if $enabled {

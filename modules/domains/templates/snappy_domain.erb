@@ -1,6 +1,6 @@
 {
     "IMAP": {
-        "host": "<%= @fqdn -%>",
+        "host": "<%= @facts['networking']['fqdn'] -%>",
         "port": 993,
         "type": 1,
         "timeout": 300,
@@ -31,7 +31,7 @@
         "search_filter": ""
     },
     "SMTP": {
-        "host": "<%= @fqdn %>",
+        "host": "<%= @facts['networking']['fqdn'] %>",
         "port": 25,
         "type": 2,
         "timeout": 60,

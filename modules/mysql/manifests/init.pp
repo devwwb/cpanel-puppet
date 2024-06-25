@@ -1,5 +1,5 @@
 class mysql (
-  Boolean $enabled = str2bool("$::mysql"),
+  Boolean $enabled = str2bool($facts['mysql']),
 ) {
 
   if $enabled {

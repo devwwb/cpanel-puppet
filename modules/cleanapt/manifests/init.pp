@@ -1,5 +1,5 @@
 class cleanapt (
-  Boolean $enabled = str2bool("$::cleanapt"),
+  Boolean $enabled = str2bool($facts['cleanapt']),
 ) {
 
   if $enabled {

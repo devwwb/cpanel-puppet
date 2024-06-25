@@ -1,5 +1,5 @@
 class zeyple (
-  Boolean $enabled = str2bool("$::zeyple"),
+  Boolean $enabled = str2bool($facts['zeyple']),
 ) {
 
   if $enabled {

@@ -1,6 +1,6 @@
 class report (
-  Boolean $enabled   = str2bool("$::report"),
-  $directory = '/etc/maadix/report',
+  Boolean $enabled   = str2bool($facts['report']),
+  String $directory = '/etc/maadix/report',
 ) {
 
   if $enabled {
@@ -80,8 +80,8 @@ class report (
       timeout   => 3600,
     }
 
-    file {"/tmp/${::lsbdistcodename}_reference":
-      content => template("report/${::lsbdistcodename}_reference"),
+    file {"/tmp/${facts['os']['distro']['codename']}_reference":
+      content => template("report/${facts['os']['distro']['codename']}_reference"),
     } ->
     exec { 'vm packages report':
       command   => "/bin/bash -c '$directory/vm_packages_report.sh > $directory/logs/03_vm_packages_report.sh.log 2>&1'",
@@ -90,7 +90,7 @@ class report (
     }
 
 
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'vm docker report':
         command   => "/bin/bash -c '$directory/vm_docker_report.sh > $directory/logs/04_vm_docker_report.sh.log 2>&1'",
         logoutput => true,

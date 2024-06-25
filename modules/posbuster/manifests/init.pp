@@ -1,5 +1,5 @@
 class posbuster (
-  Boolean $enabled = str2bool("$::posbuster"),
+  Boolean $enabled = str2bool($facts['posbuster']),
   $directory = '/etc/maadix/buster',
 ) {
 
@@ -52,14 +52,14 @@ class posbuster (
     }
 
     #clean unused images and containers
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'clean docker before apply buster catalog':
         command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=10 spotify/docker-gc',
         logoutput => true,
       }
     }
 
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'update docker':
         command   => "/bin/bash -c '$directory/update_docker.sh >> $directory/logs/posbuster 2>&1'",
         logoutput => true,
@@ -68,17 +68,17 @@ class posbuster (
     }
 
     #upgrade openvpn
-    if ($::openvpn_group){
+    if ($facts['openvpn_group']){
       exec { 'update easyrsa pki openvpn':
         command   => "/bin/bash -c '$directory/upgrade_easyrsa_openvpn.sh >> $directory/logs/posbuster 2>&1'",
-        creates   => "/etc/openvpn/$::fqdn/easy-rsa/openssl-easyrsa.cnf",
+        creates   => "/etc/openvpn/${facts['networking']['fqdn']}/easy-rsa/openssl-easyrsa.cnf",
         logoutput => true,
         timeout   => 1800,
       }
     }
 
     exec { 'run puppet to apply buster catalog':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
+      command   => "/usr/local/bin/puppet agent --certname ${facts['networking']['hostname']}.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -97,7 +97,7 @@ class posbuster (
       logoutput => true,
     } ->
     exec { 'run puppet after groups reactivating':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
+      command   => "/usr/local/bin/puppet agent --certname ${facts['networking']['hostname']}.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -108,7 +108,7 @@ class posbuster (
       logoutput => true,
     } ->
     exec { 'run puppet after groups deactivating':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
+      command   => "/usr/local/bin/puppet agent --certname ${facts['networking']['hostname']}.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -145,7 +145,7 @@ class posbuster (
       path    => '/usr/bin:/bin',
     }->
     exec { 'run puppet after removing obsolete packages':
-      command   => "/usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbuster 2>&1",
+      command   => "/usr/local/bin/puppet agent --certname ${facts['networking']['hostname']}.maadix.org --test >> $directory/logs/posbuster 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -158,7 +158,7 @@ class posbuster (
 
 
     #clean unused images and containers
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'clean docker after apply buster catalog':
         command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=10 spotify/docker-gc',
         logoutput => true,

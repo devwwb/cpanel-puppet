@@ -1,5 +1,5 @@
 class samhainreset (
-  Boolean $enabled = str2bool("$::samhainreset"),
+  Boolean $enabled = str2bool($facts['samhainreset']),
 ) {
 
   if $enabled {

@@ -151,7 +151,7 @@ define domains::vhosts(
     #letsencrypt certs
     if $www {
       exec {"SSL for $domain":
-        command	  => "certbot -d $domain -d www.$domain --agree-tos --email $::adminmail --webroot --webroot-path $path --non-interactive --text --rsa-key-size 4096  certonly",
+        command	  => "certbot -d $domain -d www.$domain --agree-tos --email ${facts['adminmail']} --webroot --webroot-path $path --non-interactive --text --rsa-key-size 4096  certonly",
         path      => ['/usr/bin', '/usr/sbin', '/bin'],
         creates	  => "/etc/letsencrypt/live/$domain/cert.pem",
         require   => [
@@ -161,7 +161,7 @@ define domains::vhosts(
       }
     } else {
       exec {"SSL for $domain":
-        command	  => "certbot -d $domain --agree-tos --email $::adminmail --webroot --webroot-path $path --non-interactive --text --rsa-key-size 4096  certonly",
+        command	  => "certbot -d $domain --agree-tos --email ${facts['adminmail']} --webroot --webroot-path $path --non-interactive --text --rsa-key-size 4096  certonly",
         path      => ['/usr/bin', '/usr/sbin', '/bin'],
         creates	  => "/etc/letsencrypt/live/$domain/cert.pem",
         require   => [
@@ -173,7 +173,7 @@ define domains::vhosts(
 
     if $regenerate {
       exec {"SSL expand for $domain":
-        command	=> "certbot -d $domain -d www.$domain --agree-tos --expand --email $::adminmail --webroot --webroot-path $path --non-interactive --text --rsa-key-size 4096  certonly",
+        command	=> "certbot -d $domain -d www.$domain --agree-tos --expand --email ${facts['adminmail']} --webroot --webroot-path $path --non-interactive --text --rsa-key-size 4096  certonly",
         path      => ['/usr/bin', '/usr/sbin', '/bin'],
         require   => [
                      File[$path],
@@ -223,7 +223,7 @@ define domains::vhosts(
   }
 
   #snappymail domains
-  if $mail and $::snappymail_enabled {
+  if $mail and $facts['snappymail_enabled'] {
     file {"/var/www/snappymail/data/_data_/_default_/domains/$domain.json":
       content   => template('domains/snappy_domain.erb'),
       owner     => 'fpmsnappymail',

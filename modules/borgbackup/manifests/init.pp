@@ -1,23 +1,22 @@
 class borgbackup (
-  Boolean $enabled = str2bool("$::borgbackup"),
+  Boolean $enabled = str2bool($facts['borgbackup']),
 ) {
 
   if $enabled {
 
-    #params
-    Boolean $borg_enabled = $::borg_params['borg_enabled']
-    $user         = $::borg_params['user']
-    $server       = $::borg_params['server']
-    $port         = $::borg_params['port']
-    $sudouser     = $::borg_params['sudouser']
+    $borg_enabled  = $facts['borg_params']['borg_enabled']
+    $user          = $facts['borg_params']['user']
+    $server        = $facts['borg_params']['server']
+    $port          = $facts['borg_params']['port']
+    $sudouser      = $facts['borg_params']['sudouser']
 
     #checks
-    if $borg_enabled==undef or $user==undef or $server==undef or $port==undef or $sudouser==undef{
+    if $borg_enabled==false or $user=='' or $server==''{
       fail('Borgbackup module interrupted: some params are missing')
     }
 
     #debug
-    notify{"Params: enable: $borg_enabled, user: $user, server: $server, port: $port, sudouser: $sudouser, hostname: $::hostname": }
+    notify{"Params: enable: $borg_enabled, user: $user, server: $server, port: $port, sudouser: $sudouser, hostname: ${facts['networking']['hostname']}": }
 
     #if service is active
     if $borg_enabled {
@@ -31,22 +30,22 @@ class borgbackup (
       #main directory
       file {'borg root folder for mounts':
         ensure       => directory,
-        path         => "/home/$sudouser/$::hostname-backups",
+        path         => "/home/$sudouser/${facts['networking']['hostname']}-backups",
         owner        => "$sudouser",
         mode         => '700',
       }
 
       #mount
-      $::borg_mount.each |$archive| {
+      $facts['borg_mount'].each |$archive| {
         #mount directory
         file {"borg mount dir for $archive":
           ensure     => directory,
-          path       => "/home/$sudouser/$::hostname-backups/$archive",
+          path       => "/home/$sudouser/${facts['networking']['hostname']}-backups/$archive",
           owner      => "$sudouser",
           mode       => '700',
         }->
         exec { "mount borg archive $archive":
-          command    => "/usr/bin/borg mount --rsh 'ssh -i /root/.ssh/id_rsa_borgbackup' -o allow_other,ignore_permissions,ro --strip-components 0 ssh://$user@$server:$port/./backup::$archive /home/$sudouser/$::hostname-backups/$archive",
+          command    => "/usr/bin/borg mount --rsh 'ssh -i /root/.ssh/id_rsa_borgbackup' -o allow_other,ignore_permissions,ro --strip-components 0 ssh://$user@$server:$port/./backup::$archive /home/$sudouser/${facts['networking']['hostname']}-backups/$archive",
         }->
         exec { "delete borg ldap object of $archive":
           command    => "/usr/bin/ldapdelete -H ldapi:// -Y EXTERNAL 'cn=$archive,ou=borgbackup,ou=cpanel,dc=example,dc=tld'",
@@ -54,9 +53,9 @@ class borgbackup (
       }
 
       #umount
-      $::borg_umount.each |$archive| {
+      $facts['borg_umount'].each |$archive| {
         exec { "umount borg archive $archive":
-          command    => "/usr/bin/borg umount /home/$sudouser/$::hostname-backups/$archive",
+          command    => "/usr/bin/borg umount /home/$sudouser/${facts['networking']['hostname']}-backups/$archive",
         }->
         exec { "delete borg ldap object of $archive":
           command    => "/usr/bin/ldapdelete -H ldapi:// -Y EXTERNAL 'cn=$archive,ou=borgbackup,ou=cpanel,dc=example,dc=tld'",
@@ -64,7 +63,7 @@ class borgbackup (
         #delete mount directory
         file {"delete borg mount dir for $archive":
           ensure     => absent,
-          path       => "/home/$sudouser/$::hostname-backups/$archive",
+          path       => "/home/$sudouser/${facts['networking']['hostname']}-backups/$archive",
           force      => true,        
         }
       }

@@ -1,8 +1,8 @@
 class prebullseye (
-  Boolean $enabled = str2bool("$::prebullseye"),
-  $extlinux = str2bool("$::extlinux"),
+  Boolean $enabled = str2bool($facts['prebullseye']),
+  $extlinux = str2bool($facts['extlinux']),
   $directory = '/etc/maadix/bullseye',
-  $disablereboot = str2bool("$::disablereboot"),
+  $disablereboot = str2bool($facts['disablereboot']),
 ) {
 
   if $enabled {
@@ -124,7 +124,7 @@ class prebullseye (
         path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     }
 
-    if ($::mailman_venv3_group){
+    if ($facts['mailman_venv3_group']){
       exec { 'delete mailman venv 3.7':
         command   => "/bin/bash -c '$directory/delete_mailman_venv_37.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
@@ -134,7 +134,7 @@ class prebullseye (
       }
     }
 
-    if ($::odoo_venv3_group){
+    if ($facts['odoo_venv3_group']){
       exec { 'delete odoo venv 3.7':
         command   => "/bin/bash -c '$directory/delete_odoo_venv_37.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
@@ -146,7 +146,7 @@ class prebullseye (
 
 
     /*
-    if ($::onlyoffice_group){
+    if ($facts['onlyoffice_group']){
       exec { 'delete onlyoffice image':
         command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
@@ -188,7 +188,7 @@ class prebullseye (
                   ],
     }
 
-    if ($::mongodb_group){
+    if ($facts['mongodb_group']){
       exec { 'update source mongodb':
         command   => "/bin/bash -c '$directory/update_source_mongodb.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
@@ -198,7 +198,7 @@ class prebullseye (
       }
     }
 
-    if ($::lool_group){
+    if ($facts['lool_group']){
       exec { 'update source lool':
         command   => "/bin/bash -c '$directory/update_source_lool.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
@@ -208,7 +208,7 @@ class prebullseye (
       }
     }
 
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'update source docker':
         command   => "/bin/bash -c '$directory/update_source_docker.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,
@@ -258,7 +258,7 @@ class prebullseye (
     }
 
     #update one-context
-    if ($::one_context) {
+    if ($facts['one_context']) {
       exec { 'update onecontext':
         command   => "/bin/bash -c '$directory/update_onecontext.sh >> $directory/logs/prebullseye 2>&1'",
         logoutput => true,

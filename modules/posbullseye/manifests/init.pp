@@ -1,5 +1,5 @@
 class posbullseye (
-  Boolean $enabled = str2bool("$::posbullseye"),
+  Boolean $enabled = str2bool($facts['posbullseye']),
   $directory = '/etc/maadix/bullseye',
 ) {
 
@@ -62,7 +62,7 @@ class posbullseye (
 
     #clean unused images and containers
     /*
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'clean docker before apply bullseye catalog':
         command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=1800 spotify/docker-gc',
         logoutput => true,
@@ -70,7 +70,7 @@ class posbullseye (
     }
     */
 
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'update docker':
         command   => "/bin/bash -c '$directory/update_docker.sh >> $directory/logs/posbullseye 2>&1'",
         logoutput => true,
@@ -79,7 +79,7 @@ class posbullseye (
     }
 
     /*
-    if ($::discourse_group){
+    if ($facts['discourse_group']){
       exec { 'rebuild discourse app':
         command   => "/usr/bin/sudo /var/discourse/launcher rebuild app >> $directory/logs/posbullseye 2>&1",
         timeout   => 7200,
@@ -88,9 +88,9 @@ class posbullseye (
     */
 
     #upgrade openvpn
-    if ($::openvpn_group){
+    if ($facts['openvpn_group']){
       exec { 'openvpn restore crl.pem':
-        command   => "rm /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem && cp /etc/openvpn/$::fqdn/crl.pem /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem && chmod 600 /etc/openvpn/$::fqdn/easy-rsa/keys/crl.pem",
+        command   => "rm /etc/openvpn/${facts['networking']['fqdn']}/easy-rsa/keys/crl.pem && cp /etc/openvpn/${facts['networking']['fqdn']}/crl.pem /etc/openvpn/${facts['networking']['fqdn']}/easy-rsa/keys/crl.pem && chmod 600 /etc/openvpn/${facts['networking']['fqdn']}/easy-rsa/keys/crl.pem",
         logoutput => true,
         timeout   => 1800,
         path      => ['/usr/bin','/bin'],
@@ -102,7 +102,7 @@ class posbullseye (
     } ->
     exec { 'run puppet to apply bullseye catalog':
       #run puppet to apply bullseye catalog without purging certs
-      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname $::hostname.maadix.org --test --skip_tags letsencrypt::certonly >> $directory/logs/posbullseye 2>&1",
+      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname ${facts['networking']['hostname']}.maadix.org --test --skip_tags letsencrypt::certonly >> $directory/logs/posbullseye 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -131,7 +131,7 @@ class posbullseye (
       logoutput => true,
     } ->
     exec { 'run puppet after groups reactivating':
-      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
+      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname ${facts['networking']['hostname']}.maadix.org --test >> $directory/logs/posbullseye 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -155,7 +155,7 @@ class posbullseye (
       logoutput => true,
     } ->
     exec { 'run puppet after groups deactivating':
-      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
+      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname ${facts['networking']['hostname']}.maadix.org --test >> $directory/logs/posbullseye 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -179,7 +179,7 @@ class posbullseye (
       timeout   => 7200,
     } ->
     exec { 'run puppet after removing obsolete packages':
-      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname $::hostname.maadix.org --test >> $directory/logs/posbullseye 2>&1",
+      command   => "/usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname ${facts['networking']['hostname']}.maadix.org --test >> $directory/logs/posbullseye 2>&1",
       logoutput => true,
       # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
       returns   => 2,
@@ -212,7 +212,7 @@ class posbullseye (
 
     #clean unused images and containers
     /*
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'clean docker after apply bullseye catalog':
         command   => '/usr/bin/docker run --rm --userns host -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc -e GRACE_PERIOD_SECONDS=1800 spotify/docker-gc',
         logoutput => true,

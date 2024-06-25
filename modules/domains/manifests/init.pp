@@ -1,5 +1,5 @@
 class domains (
-  Boolean $enabled   = str2bool("$::domains"),
+  Boolean $enabled   = str2bool($facts['domains']),
   $vhost_dir = '/etc/apache2/ldap-enabled',
 ) {
 
@@ -37,31 +37,31 @@ class domains (
 
 
     #ensure sftpuser home folders to mount domains
-    create_resources(domains::sftpusershome, $::cpanel_users)
+    create_resources(domains::sftpusershome, $facts['cpanel_users'])
 
     #umount domains (deleted or assigned to a different user)
-    create_resources(domains::umount, $::cpanel_umount)
+    create_resources(domains::umount, $facts['cpanel_umount'])
 
     #create vhosts (vhost, webroot, letsencrypt cert)
-    create_resources(domains::vhosts, $::cpanel_vhosts)
+    create_resources(domains::vhosts, $facts['cpanel_vhosts'])
 
     #setup cms
-    create_resources(domains::cms, $::cpanel_vhosts)
+    create_resources(domains::cms, $facts['cpanel_vhosts'])
 
     #delete vhosts non-ssl for those domains without certs
-    create_resources(domains::cleanfailedvhosts, $::cpanel_vhosts)
+    create_resources(domains::cleanfailedvhosts, $facts['cpanel_vhosts'])
 
     #mount domains
-    create_resources(domains::mounts, $::cpanel_vhosts)
+    create_resources(domains::mounts, $facts['cpanel_vhosts'])
 
     #clean orphan domains (certs and permissions)
-    create_resources(domains::orphandomains, $::cpanel_orphan_vhosts)
+    create_resources(domains::orphandomains, $facts['cpanel_orphan_vhosts'])
 
     #clean orphan mails
-    create_resources(domains::orphanmails, $::cpanel_orphan_mails)
+    create_resources(domains::orphanmails, $facts['cpanel_orphan_mails'])
 
     #move orphan users homes to trash
-    create_resources(domains::orphanhomes, $::cpanel_orphan_homes)
+    create_resources(domains::orphanhomes, $facts['cpanel_orphan_homes'])
 
     ## utilities ##
 

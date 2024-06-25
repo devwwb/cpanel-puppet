@@ -1,5 +1,5 @@
 class borgkey (
-  Boolean $enabled = str2bool("$::borgkey"),
+  Boolean $enabled = str2bool($facts['borgkey']),
 ) {
 
   if $enabled {

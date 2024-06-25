@@ -1,6 +1,6 @@
 class prebuster (
-  Boolean $enabled = str2bool("$::prebuster"),
-  $extlinux = str2bool("$::extlinux"),
+  Boolean $enabled = str2bool($facts['prebuster']),
+  $extlinux = str2bool($facts['extlinux']),
   $directory = '/etc/maadix/buster',
 ) {
 
@@ -73,7 +73,7 @@ class prebuster (
         path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     }
 
-    if ($::mailman_venv3_group){
+    if ($facts['mailman_venv3_group']){
       exec { 'delete mailman venv 3.5':
         command   => "/bin/bash -c '$directory/delete_mailman_venv_35.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
@@ -84,7 +84,7 @@ class prebuster (
     }
 
 
-    if ($::onlyoffice_group){
+    if ($facts['onlyoffice_group']){
       exec { 'delete onlyoffice image':
         command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
@@ -124,7 +124,7 @@ class prebuster (
       logoutput => true,
     }
 
-    if ($::mongodb_group){
+    if ($facts['mongodb_group']){
       exec { 'update source mongodb':
         command   => "/bin/bash -c '$directory/update_source_mongodb.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
@@ -134,7 +134,7 @@ class prebuster (
       }
     }
 
-    if ($::lool_group){
+    if ($facts['lool_group']){
       exec { 'update source lool':
         command   => "/bin/bash -c '$directory/update_source_lool.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
@@ -144,7 +144,7 @@ class prebuster (
       }
     }
 
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'update source docker':
         command   => "/bin/bash -c '$directory/update_source_docker.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
@@ -163,7 +163,7 @@ class prebuster (
                   ],
     }
 
-    if ($::phpmyadmin_group){
+    if ($facts['phpmyadmin_group']){
       exec { 'delete phpmyadmin':
         command   => "/bin/bash -c '$directory/delete_phpmyadmin.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,
@@ -199,7 +199,7 @@ class prebuster (
     }
 
     #update one-context
-    if ($::one_context) {
+    if ($facts['one_context']) {
       exec { 'update onecontext':
         command   => "/bin/bash -c '$directory/update_onecontext.sh >> $directory/logs/prebuster 2>&1'",
         logoutput => true,

@@ -1,5 +1,5 @@
 class trash (
-  Boolean $enabled   = str2bool("$::trash"),
+  Boolean $enabled   = str2bool($facts['trash']),
 ) {
 
   if $enabled {
@@ -7,16 +7,16 @@ class trash (
     ## tasks in order ##
 
     #purge users home from trash
-    create_resources(trash::purgehomes, $::trash_purge_homes)
+    create_resources(trash::purgehomes, $facts['trash_purge_homes'])
 
     #purge domains webroot from trash
-    create_resources(trash::purgewebroots, $::trash_purge_webroots)
+    create_resources(trash::purgewebroots, $facts['trash_purge_webroots'])
 
     #purge mails from trash
-    create_resources(trash::purgemails, $::trash_purge_mails)
+    create_resources(trash::purgemails, $facts['trash_purge_mails'])
 
     #purge backup files from trash
-    create_resources(trash::purgebackups, $::trash_purge_backups)
+    create_resources(trash::purgebackups, $facts['trash_purge_backups'])
 
   }
 

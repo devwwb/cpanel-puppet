@@ -1,5 +1,5 @@
 class opendkim (
-  Boolean $enabled = str2bool("$::opendkim"),
+  Boolean $enabled = str2bool($facts['opendkim']),
 ) {
 
   if $enabled {

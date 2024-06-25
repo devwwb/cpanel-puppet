@@ -1,6 +1,6 @@
 class prestretch (
-  Boolean $enabled = str2bool("$::prestretch"),
-  $extlinux = str2bool("$::extlinux"),
+  Boolean $enabled = str2bool($facts['prestretch']),
+  $extlinux = str2bool($facts['extlinux']),
   $directory = '/etc/maadix/stretch',
 ) {
 
@@ -65,7 +65,7 @@ class prestretch (
                   ],
     }
 
-    if ($::mongodb_group){
+    if ($facts['mongodb_group']){
       exec { 'update mongodb 3.4':
         command   => "/bin/bash -c '$directory/update_mongodb_34.sh > $directory/logs/03_update_mongodb_34 2>&1'",
         logoutput => true,
@@ -85,7 +85,7 @@ class prestretch (
       timeout   => 1800,
     }
 
-    if ($::mailman_venv3_group){
+    if ($facts['mailman_venv3_group']){
       exec { 'delete mailman venv 3.4':
         command   => "/bin/bash -c '$directory/delete_mailman_venv_34.sh > $directory/logs/05_delete_mailman_venv_34 2>&1'",
         logoutput => true,
@@ -95,7 +95,7 @@ class prestretch (
       }
     }
 
-    if ($::nodejs_group){
+    if ($facts['nodejs_group']){
       exec { 'delete global nodejs':
         command   => "/bin/bash -c '$directory/delete_global_nodejs.sh > $directory/logs/06_delete_global_nodejs 2>&1'",
         logoutput => true,
@@ -105,7 +105,7 @@ class prestretch (
       }
     }
 
-    if ($::onlyoffice_group){
+    if ($facts['onlyoffice_group']){
       exec { 'delete onlyoffice image':
         command   => "/bin/bash -c '$directory/delete_onlyoffice_image.sh > $directory/logs/07_delete_onlyoffice_image 2>&1'",
         logoutput => true,
@@ -139,7 +139,7 @@ class prestretch (
                   ],
     }
 
-    if ($::mongodb_group){
+    if ($facts['mongodb_group']){
       exec { 'update source mongodb':
         command   => "/bin/bash -c '$directory/update_source_mongodb.sh > $directory/logs/10_update_source_mongodb 2>&1'",
         logoutput => true,
@@ -149,7 +149,7 @@ class prestretch (
       }
     }
 
-    if ($::lool_group){
+    if ($facts['lool_group']){
       exec { 'update source lool':
         command   => "/bin/bash -c '$directory/update_source_lool.sh > $directory/logs/11_update_source_lool 2>&1'",
         logoutput => true,
@@ -159,7 +159,7 @@ class prestretch (
       }
     }
 
-    if ($::docker_group){
+    if ($facts['docker_group']){
       exec { 'update source docker':
         command   => "/bin/bash -c '$directory/update_source_docker.sh > $directory/logs/12_update_source_docker 2>&1'",
         logoutput => true,
@@ -185,7 +185,7 @@ class prestretch (
                   ],
     }
 
-    if ($::phpmyadmin_group){
+    if ($facts['phpmyadmin_group']){
       exec { 'delete phpmyadmin':
         command   => "/bin/bash -c '$directory/delete_phpmyadmin.sh > $directory/logs/15_delete_phpmyadmin 2>&1'",
         logoutput => true,
@@ -214,7 +214,7 @@ class prestretch (
       logoutput => true,
     }
 
-    if ($::mongodb_group){
+    if ($facts['mongodb_group']){
       exec { 'update mongodb 3.6':
         command   => "/bin/bash -c '$directory/update_mongodb_36.sh > $directory/logs/17_update_mongodb_36 2>&1'",
         logoutput => true,

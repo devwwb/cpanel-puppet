@@ -1,8 +1,8 @@
 #!/bin/bash
 
 hostname=$(hostname)
-<%- if @customadminmail -%>
-adminmail=<%= @customadminmail %>
+<%- if @facts['customadminmail'] -%>
+adminmail=<%= @facts['customadminmail'] %>
 <%- else -%>
 adminmail="admin@maadix.org"
 <%- end -%>

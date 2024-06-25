@@ -1,5 +1,5 @@
 class samhaincheck (
-  Boolean $enabled = str2bool("$::samhaincheck"),
+  Boolean $enabled = str2bool($facts['samhaincheck']),
 ) {
 
   if $enabled {

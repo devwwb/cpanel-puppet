@@ -1,13 +1,13 @@
 class tally (
-  Boolean $enabled = str2bool("$::tally"),
+  Boolean $enabled = str2bool($facts['tally']),
 ) {
 
   if $enabled {
 
-    $tally_users = $::tally_users
+    $tally_users = $facts['tally_users']
     $tally_users.each |$tally_user| {
       #unlock users
-      if $::lsbdistcodename=='buster'{
+      if $facts['os']['distro']['codename']=='buster'{
         exec { "unlock user $tally_user":
           command     => "pam_tally2 --user $tally_user --reset",
           path        => ['/usr/sbin','/sbin'],
@@ -16,7 +16,7 @@ class tally (
           returns     => [0,1],
         }
       }
-      if $::lsbdistcodename=='bullseye'{
+      if $facts['os']['distro']['codename']=='bullseye'{
         exec { "unlock user $tally_user":
           command     => "faillock --user $tally_user --reset",
           path        => ['/usr/sbin','/sbin'],

@@ -1,5 +1,5 @@
 class rkhunter (
-  Boolean $enabled = str2bool("$::rkhunter"),
+  Boolean $enabled = str2bool($facts['rkhunter']),
 ) {
 
   if $enabled {
