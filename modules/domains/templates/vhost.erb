@@ -1,4 +1,8 @@
+<% if @haproxy_enabled == true -%>
 <VirtualHost 127.0.0.2:80>
+<% else %>
+<VirtualHost *:80>
+<% end -%>
         ServerName <%= @domain -%>
 
         ServerAlias www.<%= @domain -%>

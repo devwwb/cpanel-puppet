@@ -1,4 +1,8 @@
+<% if @haproxy_enabled == true -%>
 <VirtualHost 127.0.0.2:443>
+<% else %>
+<VirtualHost *:443>
+<% end -%>
         ServerName <%= @domain -%>
 
         ServerAlias www.<%= @domain -%>
