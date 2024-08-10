@@ -1,6 +1,8 @@
 class domains (
   Boolean $enabled   = str2bool($facts['domains']),
-  $vhost_dir = '/etc/apache2/ldap-enabled',
+  String $vhost_dir  = '/etc/apache2/ldap-enabled',
+  String $nginx_dir  = '/etc/nginx/ldap-enabled',
+  Boolean $nginx     = $facts['nginx_enabled'],
 ) {
 
   if $enabled {
@@ -77,6 +79,36 @@ class domains (
       command     => 'service apache2 reload',
       path	  => ['/usr/bin', '/usr/sbin', '/bin'],
       refreshonly => true,
+    }
+ 
+    if $nginx {
+      #purge ldap-enabled vhost dir
+      file { $nginx_dir:
+        ensure      => directory,
+        recurse     => true,
+        purge       => true,
+        notify      => Exec['reload nginx'],
+      }
+
+      #reload nginx
+      exec {'reload nginx':
+        command     => 'service nginx reload',
+        path        => ['/usr/bin', '/usr/sbin', '/bin'],
+        refreshonly => true,
+        before      => Exec['reload apache end'],
+
+      }
+
+      #haproxy maps
+      exec { 'generate haproxy hosts.maps':
+        command     => '/etc/maadix/scripts/haproxy_hosts.maps.sh',
+      } ->
+      #reload haproxy
+      exec {'reload haproxy':
+        command     => 'service haproxy reload',
+        path        => ['/usr/bin', '/usr/sbin', '/bin'],
+      }
+
     }
 
     #clean php sessions

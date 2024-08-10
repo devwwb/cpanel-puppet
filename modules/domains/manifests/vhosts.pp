@@ -189,6 +189,15 @@ define domains::vhosts(
       notify	=> Exec['reload apache end'],
     }
 
+    if $facts['nginx_enabled'] {
+      #nginx vhost
+      file {"/etc/nginx/ldap-enabled/$domain.conf":
+        content	=> template('domains/vhost-nginx.erb'),
+        require	=> Exec["SSL for $domain"],
+        notify	=> Exec['reload nginx'],
+      }
+    }
+
   } else {
 
     #create webroot if enabled
