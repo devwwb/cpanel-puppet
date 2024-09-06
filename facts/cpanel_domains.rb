@@ -12,7 +12,7 @@ Facter.add(:cpanel_domains) do
       #if domain have certs, add to domains, else check if dns is ok before adding to domains
       if Facter.value(:cpanel_domains_certs).key? (domain.strip)
         #if cert doesn't include domain with www, check if it's available to add it and regenerate the cert
-        if Facter.value(:cpanel_domains_certs)[domain.strip][:www] == false
+        if Facter.value(:cpanel_domains_certs)[domain.strip]['www'] == false
           begin
             IPSocket::getaddress('www.' + domain.strip)
             if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:public_ip)
@@ -24,7 +24,7 @@ Facter.add(:cpanel_domains) do
             domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
           end
         else
-          domains[domain.strip] = {:domain => domain.strip, :www => Facter.value(:cpanel_domains_certs)[domain.strip][:www], :regenerate => false, :dns => true}
+          domains[domain.strip] = {:domain => domain.strip, :www => Facter.value(:cpanel_domains_certs)[domain.strip]['www'], :regenerate => false, :dns => true}
         end
       else
         begin
