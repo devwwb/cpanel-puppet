@@ -18,134 +18,137 @@ define domains::vhosts(
   $mail                 = undef,
 ) {
 
-  #vars
+  ## vars
   $path = $tree[-1]
   $path_acl = $tree[0]
 
-  #create vhost and cert only if domain has DNS resolution and if domain is active
+  ## webroot. owner, group, and perms
+  #webroot folder group
+  case $pool {
+    'www':  {
+       $group = 'www-data'
+    }
+    default:  {
+       $group = $pool
+    }
+  }
+  case $oldpool {
+    'www':  {
+       $oldgroup = 'www-data'
+    }
+    default:  {
+       $oldgroup = $oldpool
+    }
+  }
+
+  #change perms/owner of domain webroot only if webmaster or pool changes for existent domains
+  if (($webmaster != $oldwebmaster) and ($oldwebmaster != '')) or (($pool != $oldpool) and ($oldpool != '')){
+    #webroot folder + owner/group and permissions
+    if (($webmaster != $oldwebmaster) and ($oldwebmaster != '')) and (($pool != $oldpool) and ($oldpool != '')){
+      file { $tree:
+        ensure  => directory,
+        owner   => $webmaster,
+        group   => $group,
+        mode    => '2770',
+        notify  => Exec["owner recursive of $domain",
+                        "group recursive of $domain",
+                        'reload apache'
+                       ],
+      }
+    } elsif ($webmaster != $oldwebmaster) and ($oldwebmaster != '') {
+      file { $tree:
+        ensure  => directory,
+        owner   => $webmaster,
+        group   => $group,
+        mode    => '2770',
+        notify  => Exec["owner recursive of $domain",
+                        'reload apache'
+                       ],
+      }
+    } elsif ($pool != $oldpool) and ($oldpool != '') {
+      file { $tree:
+        ensure  => directory,
+        owner   => $webmaster,
+        group   => $group,
+        mode    => '2770',
+        notify  => Exec["group recursive of $domain",
+                        'reload apache'
+                       ],
+      }
+    }
+
+    #when domain is assigned to another webmaster or pool, change owner or group recursive
+    #change only files and folders owned by oldwebmaster. If user has change the owner of a file or dir manually, leave it as is
+    exec {"owner recursive of $domain":
+      command      => "find /var/www/html/$domain -user $oldwebmaster -exec chown $webmaster {} +",
+      refreshonly  => true,
+      path         => ['/usr/bin', '/usr/sbin', '/bin'],
+    }
+    #change only files and folders owned by group oldpool. If user has change the group of a file or dir manually, leave it as is
+    exec {"group recursive of $domain":
+      command      => "find /var/www/html/$domain -group $oldgroup -exec chgrp $group {} +",
+      refreshonly  => true,
+      path         => ['/usr/bin', '/usr/sbin', '/bin'],
+      notify       => Exec['clean php sessions'],
+    }
+
+  #perms/owner of domain webroot for new domains
+  } elsif $oldwebmaster == '' {
+    #webroot folder + owner/group and permissions
+    file { $tree:
+      ensure    => directory,
+      owner     => $webmaster,
+      group     => $group,
+      mode      => '2770',
+      notify    => Exec['reload apache'],
+    }
+  } else {
+    file { $tree:
+      ensure    => directory,
+    }
+  }
+
+  #acl
+  if $acl_apply {
+    if $acl_enabled {
+      $acl_action = 'exact'
+    } else {
+      $acl_action = 'purge'
+    }
+    posix_acl { "$path_acl":
+      action     => $acl_action,
+      permission => [
+        "user::rwx",
+        "group::rwx",
+        "mask::rwx",
+        "other::---",
+        "user:$webmaster:rwx",
+        "group:$group:rwx",
+        "default:user::rwx",
+        "default:group::rwx",
+        "default:mask::rwx",
+        "default:other::---",
+        "default:user:$webmaster:rwx",
+        "default:group:$group:rwx",
+      ],
+      provider   => posixacl,
+      recursive  => true,
+    }
+    ldapdn{"set ou=acl,vd=$domain,o=hosting,dc=example,dc=tld status=ready":
+      dn                  => "ou=acl,vd=$domain,o=hosting,dc=example,dc=tld",
+      attributes          => ["status: ready"],
+      unique_attributes   => ["status"],
+      ensure              => present
+    }
+  }
+
+  ### create vhosts and certs only if domain has DNS resolution and if domain is active
   if $dns and $active {
 
     #vhost non-ssl
     file {"/etc/apache2/ldap-enabled/$domain.conf":
       content	=> template('domains/vhost.erb'),
       notify	=> Exec['reload apache'],
-    }
-
-    #webroot folder group
-    case $pool {
-      'www':  {
-         $group = 'www-data'
-      }
-      default:  {
-         $group = $pool
-      }
-    }
-    case $oldpool {
-      'www':  {
-         $oldgroup = 'www-data'
-      }
-      default:  {
-         $oldgroup = $oldpool
-      }
-    }
-
-    #change perms/owner of domain webroot only if webmaster or pool changes for existent domains
-    if (($webmaster != $oldwebmaster) and ($oldwebmaster != '')) or (($pool != $oldpool) and ($oldpool != '')){
-      #webroot folder + owner/group and permissions
-      if (($webmaster != $oldwebmaster) and ($oldwebmaster != '')) and (($pool != $oldpool) and ($oldpool != '')){
-        file { $tree:
-          ensure	=> directory,
-          owner		=> $webmaster,
-          group		=> $group,
-          mode		=> '2770',
-          notify	=> Exec["owner recursive of $domain",
-                                "group recursive of $domain",
-                                'reload apache'
-                               ],
-        }
-      } elsif ($webmaster != $oldwebmaster) and ($oldwebmaster != '') {
-        file { $tree:
-          ensure	=> directory,
-          owner		=> $webmaster,
-          group		=> $group,
-          mode		=> '2770',
-          notify	=> Exec["owner recursive of $domain",
-                                'reload apache'
-                               ],
-        }
-      } elsif ($pool != $oldpool) and ($oldpool != '') {
-        file { $tree:
-          ensure	=> directory,
-          owner		=> $webmaster,
-          group		=> $group,
-          mode		=> '2770',
-          notify	=> Exec["group recursive of $domain",
-                                'reload apache'
-                               ],
-        }
-      }
-      #when domain is assigned to another webmaster or pool, change owner or group recursive
-      #change only files and folders owned by oldwebmaster. If user has change the owner of a file or dir manually, leave it as is
-      exec {"owner recursive of $domain":
-        command	   => "find /var/www/html/$domain -user $oldwebmaster -exec chown $webmaster {} +",
-        refreshonly  => true,
-        path	   => ['/usr/bin', '/usr/sbin', '/bin'],
-      }
-      #change only files and folders owned by group oldpool. If user has change the group of a file or dir manually, leave it as is
-      exec {"group recursive of $domain":
-        command	   => "find /var/www/html/$domain -group $oldgroup -exec chgrp $group {} +",
-        refreshonly  => true,
-        path	   => ['/usr/bin', '/usr/sbin', '/bin'],
-        notify     => Exec['clean php sessions'],
-      } 
-    #perms/owner of domain webroot for new domains
-    } elsif $oldwebmaster == '' {
-      #webroot folder + owner/group and permissions
-      file { $tree:
-        ensure	=> directory,
-        owner	=> $webmaster,
-        group	=> $group,
-        mode	=> '2770',
-        notify	=> Exec['reload apache'],
-      }
-    } else {
-      file { $tree:
-        ensure	=> directory,
-      }
-    }
-
-    #acl
-    if $acl_apply {
-      if $acl_enabled {
-        $acl_action = 'exact'
-      } else {
-        $acl_action = 'purge'
-      }
-      posix_acl { "$path_acl":
-        action     => $acl_action,
-        permission => [
-          "user::rwx",
-          "group::rwx",
-          "mask::rwx",
-          "other::---",
-          "user:$webmaster:rwx",
-          "group:$group:rwx",
-          "default:user::rwx",
-          "default:group::rwx",
-          "default:mask::rwx",
-          "default:other::---",
-          "default:user:$webmaster:rwx",
-          "default:group:$group:rwx",
-        ],
-        provider   => posixacl,
-        recursive  => true,
-      }
-      ldapdn{"set ou=acl,vd=$domain,o=hosting,dc=example,dc=tld status=ready":
-        dn                  => "ou=acl,vd=$domain,o=hosting,dc=example,dc=tld",
-        attributes          => ["status: ready"],
-        unique_attributes   => ["status"],
-        ensure              => present
-      }
     }
 
     #letsencrypt certs
@@ -198,22 +201,9 @@ define domains::vhosts(
       }
     }
 
-  } else {
-
-    #create webroot if enabled
-    if $webroot {
-      #webroot folder + owner/group and permissions
-      file { $tree:
-        ensure	=> directory,
-        owner	=> $webmaster,
-        group	=> 'www-data',
-        mode	=> '2770',
-      }
-    }
-  
   }
 
-  #delete certs for inactive domains
+  ## delete certs for inactive domains
   unless $active {
     #remove certs
     file {"/etc/letsencrypt/live/$domain":
@@ -231,7 +221,7 @@ define domains::vhosts(
     }
   }
 
-  #snappymail domains
+  ## snappymail domains
   if $mail and $facts['snappymail_enabled'] {
     file {"/var/www/snappymail/data/_data_/_default_/domains/$domain.json":
       content   => template('domains/snappy_domain.erb'),
