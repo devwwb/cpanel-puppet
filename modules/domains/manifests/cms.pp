@@ -16,6 +16,7 @@ define domains::cms(
   $acl_enabled          = undef,
   $acl_apply            = undef,
   $mail                 = undef,
+  $onion                = undef,
 ) {
 
 

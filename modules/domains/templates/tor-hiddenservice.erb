@@ -1,0 +1,4 @@
+#
+HiddenServiceDir /var/lib/tor/hiddenservices/<%= @domain -%>/
+HiddenServicePort 80 unix:/var/run/tor/<%= @domain -%>.sock
+

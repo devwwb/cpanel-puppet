@@ -1,0 +1,32 @@
+server {
+
+    server_name  <%= @domain -%>;
+    listen unix:/var/run/tor/<%= @domain -%>.sock;
+    root <%= @path -%>;
+
+    #log
+    access_log            /var/log/nginx/<%= @domain -%>-onion.access.log;
+    error_log             /var/log/nginx/<%= @domain -%>-onion.error.log;
+
+    index index.html index.htm index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    #php
+    location ~ \.php$ {
+        try_files $uri =404;
+        <% if @pool == 'www' %>
+        fastcgi_pass 127.0.0.1:9000;
+        <% else %>
+        fastcgi_pass unix:/run/php/<%= @pool %>-fpm.sock;
+        <% end %>
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+}
+

@@ -16,6 +16,7 @@ define domains::vhosts(
   $acl_enabled          = undef,
   $acl_apply            = undef,
   $mail                 = undef,
+  $onion                = undef,
 ) {
 
   ## vars
@@ -219,6 +220,21 @@ define domains::vhosts(
     file {"/etc/letsencrypt/renewal/$domain.conf":
       ensure    => absent,
     }
+  }
+
+  ## onion
+  if $facts['tor_enabled'] and $onion {
+    concat::fragment { "${domain}":
+      content   => template('domains/tor-hiddenservice.erb'),
+      target    => '/etc/tor/torhiddenservices',
+      notify    => Exec['reload tor'],
+    }
+    #nginx onion vhost
+    file {"/etc/nginx/onion-enabled/$domain.conf":
+      content   => template('domains/tor-nginx.erb'),
+      notify    => Exec['reload nginx'],
+    }
+
   }
 
   ## snappymail domains

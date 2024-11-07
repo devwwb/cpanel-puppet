@@ -240,6 +240,24 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     vhosts
   end
 
+  #onion enabled
+  chunk(:onion) do
+    vhosts = {}
+    Facter.value(:cpanel_domains).each do |domain, value|
+      onion=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "ou=onion,vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" | grep status: | sed "s|.*: \(.*\)|\1|"')
+      if not onion.empty?
+        if onion == 'true'
+          vhosts[domain.strip] = {:onion => true}
+        else
+          vhosts[domain.strip] = {:onion => false}
+        end
+      else
+        vhosts[domain.strip] = {:onion => false}
+      end
+    end
+    vhosts
+  end
+
   #todo, add extra vhosts options to parse in the template file
 
 end

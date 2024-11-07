@@ -16,6 +16,7 @@ define domains::cleanfailedvhosts(
   $acl_enabled          = undef,
   $acl_apply            = undef,
   $mail                 = undef,
+  $onion                = undef,
 ) {
 
   if $dns and $active {

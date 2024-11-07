@@ -16,6 +16,7 @@ define domains::mounts(
   $acl_enabled          = undef,
   $acl_apply            = undef,
   $mail                 = undef,
+  $onion                = undef,
 ) {
 
   #only mount domains with webroot enabled, assigned to webmaster of type sftp

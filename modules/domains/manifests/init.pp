@@ -2,7 +2,9 @@ class domains (
   Boolean $enabled   = str2bool($facts['domains']),
   String $vhost_dir  = '/etc/apache2/ldap-enabled',
   String $nginx_dir  = '/etc/nginx/ldap-enabled',
+  String $nginx_tor  = '/etc/nginx/onion-enabled',
   Boolean $nginx     = $facts['nginx_enabled'],
+  Boolean $tor       = $facts['tor_enabled'],
 ) {
 
   if $enabled {
@@ -36,7 +38,6 @@ class domains (
       content   => template('domains/wp_setup.sh'),
       mode      => '700',
     }
-
 
     #ensure sftpuser home folders to mount domains
     create_resources(domains::sftpusershome, $facts['cpanel_users'])
@@ -106,6 +107,45 @@ class domains (
       #reload haproxy
       exec {'reload haproxy':
         command     => 'service haproxy reload',
+        path        => ['/usr/bin', '/usr/sbin', '/bin'],
+      }
+
+    }
+
+    if $tor {
+      #purge onion-enabled vhost dir
+      file { $nginx_tor:
+        ensure      => directory,
+        recurse     => true,
+        purge       => true,
+        notify      => Exec['reload nginx'],
+      }
+
+      # tor hidden services conf
+      concat { '/etc/tor/torhiddenservices':
+        mode        => '0444',
+        owner       => 'root',
+        group       => 'root',
+        notify      => [
+                       Exec['reload tor'],
+                       Exec['mxcp onions'],
+                       ],
+      }
+
+      #reload tor
+      exec {'reload tor':
+        command     => 'service tor reload',
+        path        => ['/usr/bin', '/usr/sbin', '/bin'],
+        refreshonly => true,
+        before      => Exec['reload apache end'],
+
+      }
+
+      #expose onions to mxcp
+      exec {'mxcp onions':
+        command     => '/usr/local/bin/facter -p maadix_tor_hidden_services > /usr/share/mxcp/onions',
+        refreshonly => true,
+        require     => Exec['reload tor'],
         path        => ['/usr/bin', '/usr/sbin', '/bin'],
       }
 
