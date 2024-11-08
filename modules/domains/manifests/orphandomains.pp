@@ -13,9 +13,22 @@ define domains::orphandomains(
     require     => File['/home/.trash/domains/'],
     onlyif      => "/usr/bin/test -e $webroot",
   } ->
+  #move deleted onion domain to trash
+  exec {"mv $cn onion to trash":
+    command     => "/bin/mv /var/lib/tor/hiddenservices/$domain /home/.trash/onions/$trashname",
+    require     => File['/home/.trash/onions/'],
+    onlyif      => "/usr/bin/test -e /var/lib/tor/hiddenservices/$domain",
+  } ->
 
   #assign nobody permissions to deleted domain webroot
   file {"/home/.trash/domains/$trashname":
+    ensure      => directory,
+    owner       => 'nobody',
+    group       => 'nogroup',
+    recurse     => true,
+  } ->
+  #assign nobody permissions to deleted onion
+  file {"/home/.trash/onions/$trashname":
     ensure      => directory,
     owner       => 'nobody',
     group       => 'nogroup',

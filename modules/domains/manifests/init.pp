@@ -23,6 +23,9 @@ class domains (
     }->
     file {'/home/.trash/mails':
       ensure  => directory,
+    }->
+    file {'/home/.trash/onions':
+      ensure  => directory,
     }
 
     #purge ldap-enabled vhost dir
