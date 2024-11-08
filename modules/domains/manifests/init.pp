@@ -93,7 +93,7 @@ class domains (
 
       #reload nginx
       exec {'reload nginx':
-        command     => 'service nginx reload',
+        command     => 'service nginx restart',
         path        => ['/usr/bin', '/usr/sbin', '/bin'],
         refreshonly => true,
         before      => Exec['reload apache end'],
