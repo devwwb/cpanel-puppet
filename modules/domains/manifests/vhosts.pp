@@ -232,7 +232,10 @@ define domains::vhosts(
     #nginx onion vhost
     file {"/etc/nginx/onion-enabled/$domain.conf":
       content   => template('domains/tor-nginx.erb'),
-      notify    => Exec['reload nginx'],
+      notify    => [
+                   Exec['reload nginx'],
+                   Exec['mxcp onions'],
+                   ],
     }
 
   }
