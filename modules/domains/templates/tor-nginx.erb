@@ -4,6 +4,9 @@ server {
     listen unix:/var/run/tor/<%= @domain -%>.sock;
     root <%= @path -%>;
 
+    #disable nginx version in server header
+    server_tokens off;
+
     #log
     access_log            /var/log/nginx/<%= @domain -%>-onion.access.log;
     error_log             /var/log/nginx/<%= @domain -%>-onion.error.log;
