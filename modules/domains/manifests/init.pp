@@ -146,7 +146,7 @@ class domains (
 
       #expose onions to mxcp
       exec {'mxcp onions':
-        command     => '/usr/local/bin/facter -p maadix_tor_hidden_services > /usr/share/mxcp/onions',
+        command     => '/usr/local/bin/facter --json -p maadix_tor_hidden_services > /usr/share/mxcp/onions',
         refreshonly => true,
         require     => Exec['reload tor'],
         path        => ['/usr/bin', '/usr/sbin', '/bin'],
