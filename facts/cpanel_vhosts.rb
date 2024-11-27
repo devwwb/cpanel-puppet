@@ -192,7 +192,7 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     Facter.value(:cpanel_domains).each do |domain, value|
       acl_enabled=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "ou=acl,vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" | grep type: | sed "s|.*: \(.*\)|\1|"')
       if not acl_enabled.empty?
-        if acl_enabled == 'true'
+        if acl_enabled.downcase  == 'true'
           vhosts[domain.strip] = {:acl_enabled => true}
         else
           vhosts[domain.strip] = {:acl_enabled => false}
@@ -246,7 +246,7 @@ Facter.add(:cpanel_vhosts, :type => :aggregate ) do
     Facter.value(:cpanel_domains).each do |domain, value|
       onion=Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s base -b "ou=onion,vd=' + domain.strip + ',o=hosting,dc=example,dc=tld" | grep status: | sed "s|.*: \(.*\)|\1|"')
       if not onion.empty?
-        if onion == 'true'
+        if onion.downcase == 'true'
           vhosts[domain.strip] = {:onion => true}
         else
           vhosts[domain.strip] = {:onion => false}
