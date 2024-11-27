@@ -18,6 +18,10 @@ class trash (
     #purge backup files from trash
     create_resources(trash::purgebackups, $facts['trash_purge_backups'])
 
+    #purge onion keys from trash
+    create_resources(trash::purgeonions, $facts['trash_purge_onions'])
+
+
   }
 
 }
