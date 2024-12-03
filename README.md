@@ -1,5 +1,5 @@
 # cpanel-puppet
-Local puppet manifests for https://github.com/MaadixNet/cpanel-ldap
+Local puppet manifests for https://gitlab.com/MaadiX/maadix-cpanel
 
 # Latest Version
     release_202407
