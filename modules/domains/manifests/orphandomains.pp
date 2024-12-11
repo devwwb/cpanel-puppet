@@ -28,11 +28,11 @@ define domains::orphandomains(
     recurse     => true,
   } ->
   #assign nobody permissions to deleted onion
-  file {"/home/.trash/onions/$trashname":
-    ensure      => directory,
-    owner       => 'nobody',
-    group       => 'nogroup',
-    recurse     => true,
+  #assign nobody permissions to deleted onion
+  exec {"owner recursive of onions $trashname":
+    command      => "chown -R nobody:nogroup /home/.trash/onions/$trashname",
+    path         => ['/usr/bin', '/usr/sbin', '/bin'],
+    onlyif       => "/usr/bin/test -e /home/.trash/onions/$trashname",
   } ->
 
   #purge acls
