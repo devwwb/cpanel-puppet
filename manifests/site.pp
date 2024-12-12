@@ -13,6 +13,8 @@ node default {
   opendkim::domain{$facts['maildomains']:}
   #certs and conf for fqdn
   opendkim::domain{$facts['networking']['fqdn']:}
+  #certs and conf for apps domains
+  opendkim::domain{$facts['appsdomains']:}
 
   ## report
   include report
