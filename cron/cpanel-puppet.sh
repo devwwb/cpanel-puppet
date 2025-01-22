@@ -175,7 +175,7 @@ if [ "$locked" -gt 0 ]; then
   fi
 
   #restart unbound
-  service unbound restart
+  /usr/sbin/service unbound restart
 
   # Build FACTER params string and run puppet for each module
   # FACTER_module1=enabled
