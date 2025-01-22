@@ -174,6 +174,9 @@ if [ "$locked" -gt 0 ]; then
     fi
   fi
 
+  #restart unbound
+  service unbound restart
+
   # Build FACTER params string and run puppet for each module
   # FACTER_module1=enabled
   for i in "${modules[@]}"
