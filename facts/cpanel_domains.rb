@@ -1,5 +1,6 @@
 require 'yaml'
 require 'socket'
+require 'ipaddress'
 
 ##list of domains in cpanel with and without dns resolution
 
@@ -9,13 +10,20 @@ Facter.add(:cpanel_domains) do
   setcode do
     domains = {}
     Facter::Util::Resolution.exec('ldapsearch -H ldapi:// -Y EXTERNAL -LLL -s one -b "o=hosting,dc=example,dc=tld" "(objectClass=VirtualDomain)" | grep vd: | sed "s|.*: \(.*\)|\1|"').each_line do |domain|
+      ip = ''
+      ipwww = ''
       #if domain have certs, add to domains, else check if dns is ok before adding to domains
       if Facter.value(:cpanel_domains_certs).key? (domain.strip)
         #if cert doesn't include domain with www, check if it's available to add it and regenerate the cert
         if Facter.value(:cpanel_domains_certs)[domain.strip]['www'] == false
           begin
-            IPSocket::getaddress('www.' + domain.strip)
-            if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:public_ip)
+            ipwww = IPSocket::getaddress('www.' + domain.strip)
+            #expand if ipv6
+            if IPAddress::valid_ipv6? ipwww
+              ipwww = IPAddress::IPv6.expand ipwww
+            end
+            #if domain point to this ip
+            if ipwww == Facter.value(:public_ipv4) || ipwww == Facter.value(:public_ipv6)
               domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => true, :dns => true}
             else
               domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
@@ -29,13 +37,22 @@ Facter.add(:cpanel_domains) do
       else
         begin
           #check if domain has DNS
-          IPSocket::getaddress(domain.strip)
+          ip = IPSocket::getaddress(domain.strip)
+          #expand if ipv6
+          if IPAddress::valid_ipv6? ip
+            ip = IPAddress::IPv6.expand ip
+          end
           #if domain point to this ip
-          if IPSocket::getaddress(domain.strip) == Facter.value(:public_ip)
+          if ip == Facter.value(:public_ipv4) || ip == Facter.value(:public_ipv6)
             begin
               #check if domain as www. DNS resolution
-              IPSocket::getaddress('www.' + domain.strip)
-              if IPSocket::getaddress('www.' + domain.strip) == Facter.value(:public_ip)
+              ipwww = IPSocket::getaddress('www.' + domain.strip)
+              #expand if ipv6
+              if IPAddress::valid_ipv6? ipwww
+                ipwww = IPAddress::IPv6.expand ipwww
+              end
+              #if domain point to this ip
+              if ipwww == Facter.value(:public_ipv4) || ipwww == Facter.value(:public_ipv6)
                 domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => false, :dns => true}
               else
                 domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
@@ -56,4 +73,3 @@ Facter.add(:cpanel_domains) do
     domains
   end
 end
-
