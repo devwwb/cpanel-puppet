@@ -40,6 +40,7 @@ Local puppet manifests for https://gitlab.com/MaadiX/maadix-cpanel
     luks
     prebullseye
     posbullseye
+    ipv6
 
 # Modules TODO
 
