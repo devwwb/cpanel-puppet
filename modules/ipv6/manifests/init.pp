@@ -32,6 +32,22 @@ class ipv6 (
         match  => '^net.ipv6.conf.all.forwarding.*$',
       }
 
+      #mongo
+      if $facts['mongodb_enabled']{
+        ini_setting { 'mongo ipv6 true':
+          ensure            => present,
+          section           => 'net',
+          setting           => 'ipv6',
+          value             => 'true',
+          path              => '/etc/mongod.conf',
+          section_prefix    => '',
+          section_suffix    => ':',
+          indent_char       => " ",
+          indent_width      => 2,
+          key_val_separator => ':',
+        }
+      }
+
     } else {
 
       exec { 'sysctl net.ipv6.conf.all.disable_ipv6 1':
@@ -58,6 +74,22 @@ class ipv6 (
         path   => '/etc/sysctl.conf',
         line   => 'net.ipv6.conf.all.forwarding = 0',
         match  => '^net.ipv6.conf.all.forwarding.*$',
+      }
+
+      #mongo
+      if $facts['mongodb_enabled']{
+        ini_setting { 'mongo ipv6 false':
+          ensure            => present,
+          section           => 'net',
+          setting           => 'ipv6',
+          value             => 'false',
+          path              => '/etc/mongod.conf',
+          section_prefix    => '',
+          section_suffix    => ':',
+          indent_char       => " ",
+          indent_width      => 2,
+          key_val_separator => ':',
+        }
       }
 
     }
