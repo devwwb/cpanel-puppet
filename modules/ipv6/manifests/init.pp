@@ -1,5 +1,6 @@
 class ipv6 (
   Boolean $enabled = str2bool($facts['ipv6']),
+  String $fqdn     = $facts['networking']['fqdn'],
 ) {
 
   if $enabled {
@@ -48,6 +49,16 @@ class ipv6 (
         }
       }
 
+      #openvpn
+      if $facts['openvpn_enabled']{
+        file_line{'openvpn server-ipv6':
+          ensure  => present,
+          path    => "/etc/openvpn/${fqdn}.conf",
+          line    => 'server-ipv6 fd42:42:42:42::/112',
+          match   => '^server-ipv6.*$',
+        }
+      }
+
     } else {
 
       exec { 'sysctl net.ipv6.conf.all.disable_ipv6 1':
@@ -89,6 +100,16 @@ class ipv6 (
           indent_char       => " ",
           indent_width      => 2,
           key_val_separator => ':',
+        }
+      }
+
+      #openvpn
+      if $facts['openvpn_enabled']{
+        file_line{'openvpn server-ipv6':
+          ensure  => absent,
+          path    => "/etc/openvpn/${fqdn}.conf",
+          match   => '^server-ipv6.*$',
+          match_for_absence => true,
         }
       }
 
