@@ -4,7 +4,7 @@ class fail2ban (
 
   if $enabled {
 
-    $jails = ['dovecot', 'mxcp', 'apache-auth', 'sshd', 'postfix-sasl']
+    $jails = ['dovecot', 'mxcp', 'apache-auth', 'sshd', 'postfix-sasl', 'snappymail']
     $fail2ban_ips = $facts['fail2ban_ips']
     $fail2ban_ips.each |$fail2ban_ip| {
       $jails.each |$jail| {
