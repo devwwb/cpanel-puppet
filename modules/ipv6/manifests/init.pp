@@ -61,6 +61,15 @@ class ipv6 (
 
     } else {
 
+      #ipv6 /etc/hosts fqdn
+      if $facts['maadix_networking']['ipv6']['enabled'] {
+        file_line { 'fqdn ipv6 host':
+          ensure    => absent,
+          path      => '/etc/hosts',
+          line      => "${facts['maadix_networking']['ipv6']['ip']} ${facts['networking']['fqdn']} ${facts['networking']['hostname']}",
+        }
+      }
+
       exec { 'sysctl net.ipv6.conf.all.disable_ipv6 1':
         command     => 'sysctl net.ipv6.conf.all.disable_ipv6=1',
         path        => ['/usr/sbin','/sbin'],
