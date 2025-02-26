@@ -134,7 +134,7 @@ class ipv6 (
 
       #notify
       exec { 'ipv6 disabled admin notificaction':
-        command     => "echo -e ' ' | mail -s 'IPV6 disabled in ${hostname}' ${email}",
+        command     => "echo '' | mail -s 'IPV6 disabled in ${hostname}' ${email}",
         path        => ['/usr/bin','/bin'],
         logoutput   => true,
       }
