@@ -71,12 +71,12 @@ class ipv6 (
 
     } else {
 
-      #ipv6 /etc/hosts fqdn
+      #ipv6 /etc/hosts fqdn in sync with customfqdn module and host in helpers/init
       if $facts['maadix_networking']['ipv6']['enabled'] {
         file_line { 'fqdn ipv6 host':
           ensure    => absent,
           path      => '/etc/hosts',
-          line      => "${facts['maadix_networking']['ipv6']['ip']} ${facts['networking']['fqdn']} ${facts['networking']['hostname']}",
+          line      => "${facts['public_ipv6']} ${facts['networking']['fqdn']} ${facts['networking']['hostname']}",
         }
       }
 
