@@ -1,6 +1,8 @@
 class ipv6 (
   Boolean $enabled = str2bool($facts['ipv6']),
   String $fqdn     = $facts['networking']['fqdn'],
+  String $hostname = $facts['networking']['hostname'],
+  String $email    = 'admin@maadix.org',
 ) {
 
   if $enabled {
@@ -58,6 +60,14 @@ class ipv6 (
           match   => '^server-ipv6.*$',
         }
       }
+
+      #notify
+      exec { 'ipv6 enabled admin notificaction':
+        command     => "echo -e ' ' | mail -s 'IPV6 enabled in ${hostname}' ${email}",
+        path        => ['/usr/bin','/bin'],
+        logoutput   => true,
+      }
+
 
     } else {
 
@@ -120,6 +130,13 @@ class ipv6 (
           match   => '^server-ipv6.*$',
           match_for_absence => true,
         }
+      }
+
+      #notify
+      exec { 'ipv6 disabled admin notificaction':
+        command     => "echo -e ' ' | mail -s 'IPV6 disabled in ${hostname}' ${email}",
+        path        => ['/usr/bin','/bin'],
+        logoutput   => true,
       }
 
     }
