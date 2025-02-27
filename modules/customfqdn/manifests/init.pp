@@ -9,7 +9,7 @@ class customfqdn (
       file_line{'change fqdn':
         ensure => present,
         path   => '/etc/hosts',
-        line   => "${facts['public_ipv4']} ${facts['networking']['hostname']}.${facts['fqdn_domain']} ${facts['networking']['hostname']}",
+        line   => "${facts['public_ipv4']}\t${facts['networking']['hostname']}.${facts['fqdn_domain']}\t${facts['networking']['hostname']}",
         match  => "^${facts['public_ipv4']}.*${facts['networking']['hostname']}.${facts['fqdn_domain_old']}.*${facts['networking']['hostname']}.*$",
       }
 
@@ -18,7 +18,7 @@ class customfqdn (
         file_line { 'change fqdn ipv6':
           ensure => present,
           path   => '/etc/hosts',
-          line   => "${facts['public_ipv6']} ${facts['networking']['hostname']}.${facts['fqdn_domain']} ${facts['networking']['hostname']}",
+          line   => "${facts['public_ipv6']}\t${facts['networking']['hostname']}.${facts['fqdn_domain']}\t${facts['networking']['hostname']}",
           match  => "^${facts['public_ipv6']}.*${facts['networking']['hostname']}.${facts['fqdn_domain_old']}.*${facts['networking']['hostname']}.*$",
         }
       }
