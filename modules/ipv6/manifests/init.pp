@@ -76,7 +76,7 @@ class ipv6 (
         file_line { 'fqdn ipv6 host':
           ensure    => absent,
           path      => '/etc/hosts',
-          match     => "^${facts['public_ipv6']}.*${facts['networking']['fqdn']}.*${facts['networking']['hostname']}.*$",
+          match     => "^${facts['maadix_networking']['ipv6']['ip']}.*${facts['networking']['fqdn']}.*${facts['networking']['hostname']}.*$",
           multiple  => true,
           match_for_absence => true,
         }

@@ -5,7 +5,7 @@ class customfqdn (
   if $enabled {
 
     if $facts['fqdn_domain_old'] and $facts['fqdn_domain'] {
-      #ipv4 in sync with customfqdn module
+      #ipv4
       file_line{'change fqdn':
         ensure => present,
         path   => '/etc/hosts',
@@ -18,8 +18,8 @@ class customfqdn (
         file_line { 'change fqdn ipv6':
           ensure => present,
           path   => '/etc/hosts',
-          line   => "${facts['public_ipv6']}\t${facts['networking']['hostname']}.${facts['fqdn_domain']}\t${facts['networking']['hostname']}",
-          match  => "^${facts['public_ipv6']}.*${facts['networking']['hostname']}.${facts['fqdn_domain_old']}.*${facts['networking']['hostname']}.*$",
+          line   => "${facts['maadix_networking']['ipv6']['ip']}\t${facts['networking']['hostname']}.${facts['fqdn_domain']}\t${facts['networking']['hostname']}",
+          match  => "^${facts['maadix_networking']['ipv6']['ip']}.*${facts['networking']['hostname']}.${facts['fqdn_domain_old']}.*${facts['networking']['hostname']}.*$",
         }
       }
 
