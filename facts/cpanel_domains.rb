@@ -23,7 +23,7 @@ Facter.add(:cpanel_domains) do
               ipwww = IPAddress::IPv6.expand ipwww
             end
             #if domain point to this ip
-            if ipwww == Facter.value(:public_ipv4) || ipwww == Facter.value(:public_ipv6)
+            if ipwww == Facter.value(:public_ipv4) || ipwww == Facter.value('maadix_networking.ipv6.ip')
               domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => true, :dns => true}
             else
               domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
@@ -43,7 +43,7 @@ Facter.add(:cpanel_domains) do
             ip = IPAddress::IPv6.expand ip
           end
           #if domain point to this ip
-          if ip == Facter.value(:public_ipv4) || ip == Facter.value(:public_ipv6)
+          if ip == Facter.value(:public_ipv4) || ip == Facter.value('maadix_networking.ipv6.ip')
             begin
               #check if domain as www. DNS resolution
               ipwww = IPSocket::getaddress('www.' + domain.strip)
@@ -52,7 +52,7 @@ Facter.add(:cpanel_domains) do
                 ipwww = IPAddress::IPv6.expand ipwww
               end
               #if domain point to this ip
-              if ipwww == Facter.value(:public_ipv4) || ipwww == Facter.value(:public_ipv6)
+              if ipwww == Facter.value(:public_ipv4) || ipwww == Facter.value('maadix_networking.ipv6.ip')
                 domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => false, :dns => true}
               else
                 domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
