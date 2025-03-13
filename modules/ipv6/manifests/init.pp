@@ -134,6 +134,17 @@ class ipv6 (
         }
       }
 
+      #spamassassin
+      if $facts['spamassassin_enabled']{
+        #this conf must by synced with spamassassin.pp
+        $spamd_options = 'OPTIONS="-u debian-spamd -i 127.0.0.1 --create-prefs --max-children 5 --helper-home-dir -s /var/log/spamassassin/spamd.log"'
+        file_line { 'enable spamassassin logs':
+          path    => '/etc/default/spamassassin',
+          line    => $spamd_options,
+          match   => 'OPTIONS.*$',
+        }
+      }
+
       #notify
       exec { 'ipv6 disabled admin notificaction':
         command     => "echo '' | mail -s 'IPV6 disabled in ${hostname}' ${email}",
