@@ -1,10 +1,17 @@
 require 'yaml'
 require 'socket'
-require 'ipaddress'
+require 'ipaddr'
 
 ##list of domains in cpanel with and without dns resolution
 
 #to debug, use STDERR and run 'puppet facts --debug | grep -A 20 cpanel_domains' in the agent
+
+ipv4obj = IPAddr.new Facter.value(:public_ipv4)
+begin
+  ipv6obj = IPAddr.new Facter.value('maadix_networking.ipv6.ip')
+rescue
+  ipv6obj = IPAddr.new Facter.value(:public_ipv4)
+end
 
 Facter.add(:cpanel_domains) do
   setcode do
@@ -17,13 +24,11 @@ Facter.add(:cpanel_domains) do
         #if cert doesn't include domain with www, check if it's available to add it and regenerate the cert
         if Facter.value(:cpanel_domains_certs)[domain.strip]['www'] == false
           begin
+            #check if domain has www. DNS and create IPAddr object
             ipwww = IPSocket::getaddress('www.' + domain.strip)
-            #expand if ipv6
-            if IPAddress::valid_ipv6? ipwww
-              ipwww = IPAddress::IPv6.expand ipwww
-            end
+            ipwwwobj = IPAddr.new ipwww
             #if domain point to this ip
-            if ipwww == Facter.value(:public_ipv4) || ipwww == Facter.value('maadix_networking.ipv6.ip')
+            if ipwwwobj == ipv4obj || ipwwwobj == ipv6obj
               domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => true, :dns => true}
             else
               domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
@@ -36,23 +41,19 @@ Facter.add(:cpanel_domains) do
         end
       else
         begin
-          #check if domain has DNS
+          #check if domain has DNS and create IPAddr object
           ip = IPSocket::getaddress(domain.strip)
-          #expand if ipv6
-          if IPAddress::valid_ipv6? ip
-            ip = IPAddress::IPv6.expand ip
-          end
+          #p domain + ' ' + ip
+          ipobj = IPAddr.new ip
           #if domain point to this ip
-          if ip == Facter.value(:public_ipv4) || ip == Facter.value('maadix_networking.ipv6.ip')
+          if ipobj == ipv4obj || ipobj == ipv6obj
             begin
-              #check if domain as www. DNS resolution
+              #check if domain has www. DNS and create IPAddr object
               ipwww = IPSocket::getaddress('www.' + domain.strip)
-              #expand if ipv6
-              if IPAddress::valid_ipv6? ipwww
-                ipwww = IPAddress::IPv6.expand ipwww
-              end
+              #p 'www' + domain + ' ' + ip
+              ipwwwobj = IPAddr.new ipwww
               #if domain point to this ip
-              if ipwww == Facter.value(:public_ipv4) || ipwww == Facter.value('maadix_networking.ipv6.ip')
+              if ipwwwobj == ipv4obj || ipwwwobj == ipv6obj
                 domains[domain.strip] = {:domain => domain.strip, :www => true, :regenerate => false, :dns => true}
               else
                 domains[domain.strip] = {:domain => domain.strip, :www => false, :regenerate => false, :dns => true}
