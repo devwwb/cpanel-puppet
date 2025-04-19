@@ -80,8 +80,8 @@ if mongod --version | grep v4.0; then
   sed -i -E 's/4[.]0/4.2/g' /etc/apt/sources.list.d/mongodb.list
 
   #update mongodb to 4.2
-  apt update
-  apt install mongodb-org-{server,shell,tools} -y
+  apt update --allow-unauthenticated
+  apt install mongodb-org-{server,shell,tools} -y --allow-unauthenticated
   sleep 10
   service mongod restart
 
