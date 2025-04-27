@@ -3,6 +3,16 @@
 echo "## Update source sury #####################################################"
 
 #update sury repo for bullseye
-sed -i 's/buster/bullseye/g' /etc/apt/sources.list.d/sury.list
+if [ -f /etc/apt/sources.list.d/sury.list ]; then
+  sed -i 's/buster/bullseye/g' /etc/apt/sources.list.d/sury.list
+fi
 
-cat /etc/apt/sources.list.d/sury.list
+#remove fake sury repo if present
+if [ -f  /etc/apt/sources.list.d/suryfake.list ]; then
+  rm /etc/apt/sources.list.d/suryfake.list
+fi
+
+if [ -f /etc/apt/sources.list.d/sury.list ]; then
+  cat /etc/apt/sources.list.d/sury.list
+fi
+
