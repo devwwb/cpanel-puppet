@@ -73,7 +73,7 @@ node default {
   include prebullseye
   include posbullseye
 
-  ## luks
+  ## ipv6
   include ipv6
 
 }
