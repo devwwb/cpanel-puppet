@@ -41,6 +41,8 @@ Local puppet manifests for https://gitlab.com/MaadiX/maadix-cpanel
     prebullseye
     posbullseye
     ipv6
+    prebookworm
+    posbookworm
 
 # Modules TODO
 

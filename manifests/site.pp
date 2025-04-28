@@ -76,4 +76,8 @@ node default {
   ## ipv6
   include ipv6
 
+  ## bookworm
+  include prebookworm
+  include posbookworm
+
 }

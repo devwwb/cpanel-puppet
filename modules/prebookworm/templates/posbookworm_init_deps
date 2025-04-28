@@ -1,0 +1,4 @@
+[Unit]
+Requires=slapd.service
+After=slapd.service
+
