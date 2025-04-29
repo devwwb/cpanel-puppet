@@ -8,7 +8,9 @@ if [ ! -d "/etc/maadix/backups" ]; then
   mkdir /etc/maadix/backups
 fi
 chmod 700 /etc/maadix/backups
-mkdir /tmp/bookworm
+if [ ! -d "/tmp/bookworm" ]; then
+  mkdir /tmp/bookworm
+fi
 chmod 700 /tmp/bookworm
 cd /tmp/bookworm
 tar -czf etc_`date +%Y_%m_%d-%H_%M_%S`.tar.gz /etc
@@ -18,11 +20,18 @@ mv etc* /etc/maadix/backups/
 apt -y update
 apt -y upgrade
 apt -y full-upgrade
-find /etc/ -name '*.dpkg-new' | xargs rm
-find /etc/ -name '*.dpkg-old' | xargs rm
+if [[ -n $(find /etc/ -name '*.dpkg-new') ]]; then
+  find /etc/ -name '*.dpkg-new' | xargs rm
+fi
+if [[ -n $(find /etc/ -name '*.dpkg-old') ]]; then
+  find /etc/ -name '*.dpkg-old' | xargs rm
+fi
+
 
 #clean configurations
-find /etc -name '*.dpkg-*' -o -name '*.ucf-*' -o -name '*.merge-error' | xargs rm
+if [[ -n $(find /etc -name '*.dpkg-*' -o -name '*.ucf-*' -o -name '*.merge-error') ]]; then
+  find /etc -name '*.dpkg-*' -o -name '*.ucf-*' -o -name '*.merge-error' | xargs rm
+fi
 
 #delete apt pinning
 if [ -f /etc/apt/preferences.d/90prosody ]; then
