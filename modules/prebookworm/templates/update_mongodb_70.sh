@@ -8,7 +8,7 @@ DATE=`date +%Y-%m-%d`
 if [ ! -d /home/.trash/backups ]; then
   mkdir /home/.trash/backups
 fi
-if [ ! -d /home/.trash/backups/mongodb-$DATE ]; then
+if [ ! -f /home/.trash/backups/mongodb-$DATE.tar.gz ]; then
   echo "All databases"
   mkdir /home/.trash/backups/mongodb-$DATE
   cd /home/.trash/backups/mongodb-$DATE
@@ -25,6 +25,11 @@ if [ ! -d /home/.trash/backups/mongodb-$DATE ]; then
   rm backup.sh
   echo "Backup mongodb databases:"
   ls -l dump/
+  cd /home/.trash/backups
+  tar -czf mongodb-$DATE.tar.gz mongodb-$DATE
+  chmod 600 mongodb-$DATE.tar.gz
+  rm -r mongodb-$DATE
+  
 fi
 
 echo "## Update mongo to 6.0 #####################################################"

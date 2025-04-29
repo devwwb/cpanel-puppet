@@ -14,6 +14,7 @@ if apt-show-versions | grep postgresql-13; then
   fi
   cd /tmp
   sudo -u postgres pg_dumpall > /home/.trash/backups/postgresql-$DATE.sql
+  chmod 600 /home/.trash/backups/postgresql-$DATE.sql
   #to restore backup
   #sudo -u postgres psql -f BACKUP_FILE postgres
 

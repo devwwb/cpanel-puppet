@@ -15,3 +15,4 @@ if [ -e "$file" ]; then
 else
   mysqldump --all-databases > /home/.trash/backups/mysql-$DATE.sql
 fi
+chmod 600 /home/.trash/backups/mysql-$DATE.sql

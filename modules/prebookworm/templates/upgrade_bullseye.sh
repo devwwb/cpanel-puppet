@@ -4,17 +4,12 @@ set -e
 echo "## Upgrade bullseye ##########################################################"
 
 #backup etc
-if [ ! -d "/etc/maadix/backups" ]; then
-  mkdir /etc/maadix/backups
+if [ ! -d /home/.trash/backups ]; then
+  mkdir /home/.trash/backups
 fi
-chmod 700 /etc/maadix/backups
-if [ ! -d "/tmp/bookworm" ]; then
-  mkdir /tmp/bookworm
-fi
-chmod 700 /tmp/bookworm
-cd /tmp/bookworm
+cd /home/.trash/backups
 tar -czf etc_`date +%Y_%m_%d-%H_%M_%S`.tar.gz /etc
-mv etc* /etc/maadix/backups/
+chmod 600 etc*
 
 #upgrade bullseye
 apt -y update
