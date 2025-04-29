@@ -11,7 +11,7 @@ deb http://deb.debian.org/debian bookworm-updates main
 deb-src http://deb.debian.org/debian bookworm-updates main" > /etc/apt/sources.list
 
 #delete backports
-if [ -f rm /etc/apt/sources.list.d/backports.list ]; then
+if [ -f /etc/apt/sources.list.d/backports.list ]; then
   rm /etc/apt/sources.list.d/backports.list
 fi
 
