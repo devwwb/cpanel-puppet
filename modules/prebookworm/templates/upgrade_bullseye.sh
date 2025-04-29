@@ -7,7 +7,12 @@ echo "## Upgrade bullseye ######################################################
 if [ ! -d "/etc/maadix/backups" ]; then
   mkdir /etc/maadix/backups
 fi
-cp -Rp /etc /etc/maadix/backups/
+chmod 700 /etc/maadix/backups
+mkdir /tmp/bookworm
+chmod 700 /tmp/bookworm
+cd /tmp/bookworm
+tar -czf etc_`date +%Y_%m_%d-%H_%M_%S`.tar.gz /etc
+mv etc* /etc/maadix/backups/
 
 #upgrade bullseye
 apt -y update
