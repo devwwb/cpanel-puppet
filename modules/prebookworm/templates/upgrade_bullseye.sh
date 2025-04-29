@@ -42,6 +42,7 @@ apt list '~o'
 
 #list non-debain packages
 echo "## Non-debain packages ##########################################################"
+apt install apt-forktracer -y
 apt-forktracer | sort
 
 #dpkg audit
