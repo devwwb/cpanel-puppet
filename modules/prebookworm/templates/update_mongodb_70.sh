@@ -99,7 +99,8 @@ if mongod --version | grep version | grep 6.0; then
   do
     sleep 5
     echo "Trying to setFeatureCompatibilityVersion: '7.0'"
-    mongosh admin --tls --tlsCAFile /opt/mongod/certs/rootCA.crt --host localhost --port 27017 --eval "load('/root/.mongoshrc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '7.0' } )"
+    #add confirm: true. https://www.mongodb.com/docs/v7.0/reference/command/setFeatureCompatibilityVersion/
+    mongosh admin --tls --tlsCAFile /opt/mongod/certs/rootCA.crt --host localhost --port 27017 --eval "load('/root/.mongoshrc.js'); db.adminCommand( { setFeatureCompatibilityVersion: '7.0', confirm: true } )"
   done
 
   #log
