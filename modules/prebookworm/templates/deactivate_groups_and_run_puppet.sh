@@ -25,6 +25,7 @@ done
 
 #run puppet allways
 echo "## Run puppet to update vm to latest conf without purging certs #########################################"
+service monit stop
 /usr/bin/choom -n -1000 -- /usr/local/bin/puppet agent --certname ${hostname}.maadix.org --test --skip_tags letsencrypt::certonly,rkhunter
 # --test option implies --detailed-exitcodes. and Exitcode of 2 means that The run succeeded, and some resources were changed
 #get puppet exit code
