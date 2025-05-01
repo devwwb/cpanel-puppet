@@ -6,15 +6,21 @@ echo "## Upgrade bookworm ######################################################
 #stop monit
 service monit stop
 
-#upgrade bookworm
 export LC_ALL=C
 apt -y update
 apt-get clean
-apt -y upgrade --without-new-pkgs
+echo "## List slapd.d #########################################################"
+ls -l /etc/ldap/slapd.d/
+echo "## Upgrade #########################################################"
+apt -y upgrade
 apt-get clean
+echo "## List slapd.d #########################################################"
+ls -l /etc/ldap/slapd.d/
+echo "## Full-upgrade #########################################################"
 apt -y full-upgrade
 apt-get clean
-
+echo "## List slapd.d #########################################################"
+ls -l /etc/ldap/slapd.d/
 echo "## List deleted packages to purge #########################################################"
 apt list '~c'
 
