@@ -200,16 +200,6 @@ class prebookworm (
       }
     }
 
-    if ($facts['lool_group']){
-      exec { 'update source lool':
-        command   => "/bin/bash -c '$directory/update_source_lool.sh >> $directory/logs/prebookworm 2>&1'",
-        logoutput => true,
-        require   =>[
-                    Exec['upgrade bullseye'],
-                    ],
-      }
-    }
-
     if ($facts['docker_group']){
       exec { 'update source docker':
         command   => "/bin/bash -c '$directory/update_source_docker.sh >> $directory/logs/prebookworm 2>&1'",
@@ -223,6 +213,16 @@ class prebookworm (
     if ($facts['nginx_group']){
       exec { 'update source nginx':
         command   => "/bin/bash -c '$directory/update_source_nginx.sh >> $directory/logs/prebookworm 2>&1'",
+        logoutput => true,
+        require   =>[
+                    Exec['upgrade bullseye'],
+                    ],
+      }
+    }
+
+    if ($facts['tor_group']){
+      exec { 'update source tor':
+        command   => "/bin/bash -c '$directory/update_source_tor.sh >> $directory/logs/prebookworm 2>&1'",
         logoutput => true,
         require   =>[
                     Exec['upgrade bullseye'],
