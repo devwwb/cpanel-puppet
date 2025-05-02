@@ -33,6 +33,7 @@ class prebookworm (
                 'update_source_sury.sh',
                 'update_source_nginx.sh',
                 'update_source_redis.sh',
+                'update_source_tor.sh',
                 'delete_bullseye_packages.sh',
                 'delete_mxcp.sh',
                 'upgrade_bookworm.sh',
