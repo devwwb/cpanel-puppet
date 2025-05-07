@@ -26,6 +26,7 @@ class prebookworm (
                 'delete_odoo_venv_39.sh',
                 'delete_onlyoffice_image.sh',
                 'upgrade_bullseye.sh',
+                'reload_ldap.sh',
                 'update_source_debian.sh',
                 'update_source_mongodb.sh',
                 'update_source_docker.sh',
@@ -165,6 +166,11 @@ class prebookworm (
       require   =>[
                   Exec['update mongodb 7.0'],
                   ],
+    } ->
+    exec { 'reload ldap database':
+      command   => "/bin/bash -c '$directory/reload_ldap.sh >> $directory/logs/prebookworm 2>&1'",
+      logoutput => true,
+      timeout   => 7200,
     } ->
     exec { 'upgrade bullseye':
       command   => "/bin/bash -c '$directory/upgrade_bullseye.sh >> $directory/logs/prebookworm 2>&1'",
