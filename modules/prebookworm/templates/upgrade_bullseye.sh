@@ -17,8 +17,6 @@ slapcat -b "dc=example,dc=tld" -l /home/.trash/backups/ldap_backup_${date}.ldif
 chmod 600 /home/.trash/backups/ldap_backup_${date}.ldif
 echo PURGE | debconf-communicate slapd
 echo "slapd slapd/no_configuration boolean true" | debconf-set-selections
-echo "slapd slapd/domain string example.tld" | debconf-set-selections
-echo "slapd slapd/organization string example.tld" | debconf-set-selections
 
 #upgrade bullseye
 apt -y update
