@@ -5,3 +5,6 @@ echo "## Delete bullseye packages ##############################################
 
 #purge rkhunter and ntp
 apt remove --purge rkhunter ntp -y
+
+#purge aufs packages
+apt remove --purge aufs-dkms aufs-tools -y
