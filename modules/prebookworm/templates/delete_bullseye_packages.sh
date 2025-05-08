@@ -8,3 +8,6 @@ apt remove --purge rkhunter ntp -y
 
 #purge aufs packages
 apt remove --purge aufs-dkms aufs-tools -y
+
+#delete old libwacom2
+apt remove libinput10 libwacom2 -y
