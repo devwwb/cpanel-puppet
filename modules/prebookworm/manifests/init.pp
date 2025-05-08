@@ -1,8 +1,9 @@
 class prebookworm (
   Boolean $enabled = str2bool($facts['prebookworm']),
-  $extlinux = str2bool($facts['extlinux']),
-  $directory = '/etc/maadix/bookworm',
-  $disablereboot = str2bool($facts['disablereboot']),
+  $directory       = '/etc/maadix/bookworm',
+  $disablereboot   = str2bool($facts['disablereboot']),
+  String $hostname = $facts['networking']['hostname'],
+  String $email    = 'admin@maadix.org',
 ) {
 
   if $enabled {
@@ -299,6 +300,64 @@ class prebookworm (
       require   =>[
                   Exec['update postgresql 15'],
                   ],
+    }
+
+
+    #enable ipv6
+    exec { 'sysctl net.ipv6.conf.all.disable_ipv6 0':
+      command     => 'sysctl net.ipv6.conf.all.disable_ipv6=0',
+      path        => ['/usr/sbin','/sbin'],
+      logoutput   => true,
+      require     =>[
+                    Exec['update postgresql 15'],
+                    ],
+    } ->
+    exec { 'sysctl net.ipv6.conf.all.forwarding 1':
+      command     => 'sysctl net.ipv6.conf.all.forwarding=1',
+      path        => ['/usr/sbin','/sbin'],
+      logoutput   => true,
+    } ->
+    file_line{'sysctl.conf net.ipv6.conf.all.disable_ipv6 0':
+      ensure => present,
+      path   => '/etc/sysctl.conf',
+      line   => 'net.ipv6.conf.all.disable_ipv6 = 0',
+      match  => '^net.ipv6.conf.all.disable_ipv6.*$',
+    } ->
+    file_line{'sysctl.conf net.ipv6.conf.all.forwarding 1':
+      ensure => present,
+      path   => '/etc/sysctl.conf',
+      line   => 'net.ipv6.conf.all.forwarding = 1',
+      match  => '^net.ipv6.conf.all.forwarding.*$',
+    }
+    if $facts['mongodb_enabled']{
+      ini_setting { 'mongo ipv6 true':
+        ensure            => present,
+        section           => 'net',
+        setting           => 'ipv6',
+        value             => 'true',
+        path              => '/etc/mongod.conf',
+        section_prefix    => '',
+        section_suffix    => ':',
+        indent_char       => " ",
+        indent_width      => 2,
+        key_val_separator => ':',
+        require           =>[
+                            Exec['update postgresql 15'],
+                            ],
+      }
+    }
+    exec { 'ipv6 enabled admin notificaction':
+      command     => "echo -e ' ' | mail -s 'IPV6 enabled in ${hostname}' ${email}",
+      path        => ['/usr/bin','/bin'],
+      logoutput   => true,
+      require     =>[
+                    Exec['update postgresql 15'],
+                    ],
+    } ->
+    exec { 'set ipv6 enabled in ldap':
+      command     => '/etc/maadix/scripts/setldapdnattribute.sh ou=ipv6,ou=conf,ou=cpanel,dc=example,dc=tld status enabled',
+      path        => ['/usr/bin','/bin'],
+      logoutput   => true,
     }
 
 
