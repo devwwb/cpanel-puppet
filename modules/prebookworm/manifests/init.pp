@@ -135,6 +135,8 @@ class prebookworm (
       }
     }
 
+    /*
+    #odoo 14 does not work in bookworm.
     if ($facts['odoo_venv3_group']){
       exec { 'delete odoo venv 3.9':
         command   => "/bin/bash -c '$directory/delete_odoo_venv_39.sh >> $directory/logs/prebookworm 2>&1'",
@@ -144,7 +146,7 @@ class prebookworm (
                     ],
       }
     }
-
+    */
 
     /*
     if ($facts['onlyoffice_group']){
