@@ -16,3 +16,11 @@ apt remove libinput10 libwacom2 -y
 if [ -f /usr/local/bin/docker-compose ]; then
   rm /usr/local/bin/docker-compose*
 fi
+
+#backup old /opt/mailman/var/data/postfix_lmtp.db
+if [ ! -d /home/.trash/backups ]; then
+  mkdir /home/.trash/backups
+fi
+if [ -f /opt/mailman/var/data/postfix_lmtp.db ]; then
+  mv /opt/mailman/var/data/postfix_lmtp.db /home/.trash/backups/
+fi
