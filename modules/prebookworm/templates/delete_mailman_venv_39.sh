@@ -9,3 +9,8 @@ fi
 if [ -f /opt/mailman/requirements_venv3.txt ]; then
   rm /opt/mailman/requirements_venv3.txt
 fi
+
+#delete fulltext_index
+if [ -d /opt/mailman/hyperkitty/example_project/fulltext_index ]; then
+  rm -r /opt/mailman/hyperkitty/example_project/fulltext_index
+fi
