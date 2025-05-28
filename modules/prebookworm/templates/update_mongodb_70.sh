@@ -88,7 +88,7 @@ if mongod --version | grep version | grep 6.0; then
   service monit stop
   service mongod stop
   apt remove mongodb-org-database-tools-extra mongodb-org-tools -y
-  apt install mongodb-org-{server,shell,tools,database-tools-extra}=7.0.19 -y --allow-downgrades
+  apt install mongodb-org-{server,shell,tools,database-tools-extra}=7.0.20 -y --allow-downgrades
   sleep 10
   service mongod restart
 
