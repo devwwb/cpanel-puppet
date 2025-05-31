@@ -54,7 +54,7 @@ class report (
     }
 
     exec { "www info":
-      command   => "/bin/bash -c 'echo \"## WWW info ######\" > $directory/logs/00_www.log && du -sch /var/www/* >> $directory/logs/00_www.log && du -sch /var/www/html/* >> $directory/logs/00_www.log'",
+      command   => "/bin/bash -c 'echo \"## WWW info ######\" >> $directory/logs/00_www.log && du -sch /var/www/* >> $directory/logs/00_www.log && du -sch /var/www/html/* >> $directory/logs/00_www.log'",
       logoutput => true,
     }
 
