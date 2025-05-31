@@ -66,12 +66,14 @@ class report (
     exec { "ddbb postgresql info":
       command   => "/bin/bash -c 'echo \"## DDBB postgresql info ######\" >> $directory/logs/00_www.log && du -sh /var/lib/postgresql/13/main >> $directory/logs/00_www.log'",
       onlyif    => 'test -f /usr/bin/pg_ctlcluster',
+      path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
       logoutput => true,
     }
 
     exec { "ddbb mongodb info":
       command   => "/bin/bash -c 'echo \"## DDBB mongodb info ######\" >> $directory/logs/00_www.log && du -sh /var/lib/mongodb >> $directory/logs/00_www.log'",
       onlyif    => 'test -f /usr/bin/mongod',
+      path      => ['/usr/bin','/usr/sbin','/bin','/sbin'],
       logoutput => true,
     }
 
