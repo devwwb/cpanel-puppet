@@ -48,13 +48,28 @@ class report (
       logoutput => true,
     }
 
+    exec { "etc info":
+      command   => "/bin/bash -c 'echo \"## ETC info ######\" > $directory/logs/00_www.log && du -sh /etc >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
     exec { "www info":
       command   => "/bin/bash -c 'echo \"## WWW info ######\" > $directory/logs/00_www.log && du -sch /var/www/* >> $directory/logs/00_www.log && du -sch /var/www/html/* >> $directory/logs/00_www.log'",
       logoutput => true,
     }
 
-    exec { "ddbb info":
-      command   => "/bin/bash -c 'echo \"## DDBB info ######\" >> $directory/logs/00_www.log && du -sch /var/lib/mysql/* >> $directory/logs/00_www.log'",
+    exec { "ddbb mysql info":
+      command   => "/bin/bash -c 'echo \"## DDBB mysql info ######\" >> $directory/logs/00_www.log && du -sch /var/lib/mysql/* >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
+    exec { "ddbb postgresql info":
+      command   => "/bin/bash -c 'echo \"## DDBB postgresql info ######\" >> $directory/logs/00_www.log && du -sh /var/lib/postgresql/13/main >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
+    exec { "ddbb mongodb info":
+      command   => "/bin/bash -c 'echo \"## DDBB mongodb info ######\" >> $directory/logs/00_www.log && du -sh /var/lib/mongodb >> $directory/logs/00_www.log'",
       logoutput => true,
     }
 
