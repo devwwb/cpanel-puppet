@@ -9,6 +9,12 @@ class ipv6 (
 
     if $facts['ipv6_enabled']{
 
+      #remove obsolete sysctl entries coming from stretch
+      tidy { '/tmp/sysctl.d':
+        recurse => 1,
+        matches => [ '[a-z]*.conf' ],
+      }
+
       exec { 'sysctl net.ipv6.conf.all.disable_ipv6 0':
         command     => 'sysctl net.ipv6.conf.all.disable_ipv6=0',
         path        => ['/usr/sbin','/sbin'],
