@@ -53,6 +53,21 @@ class report (
       logoutput => true,
     }
 
+    exec { "sysctl info":
+      command   => "/bin/bash -c 'echo \"## Sysctl info ######\" >> $directory/logs/00_www.log && ls -l /etc/sysctl.d/ >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
+    exec { "grub info":
+      command   => "/bin/bash -c 'echo \"## Grub info ######\" >> $directory/logs/00_www.log && cat /etc/default/grub >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
+    exec { "network info":
+      command   => "/bin/bash -c 'echo \"## Network info ######\" >> $directory/logs/00_www.log && ifconfig >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
     exec { "www info":
       command   => "/bin/bash -c 'echo \"## WWW info ######\" >> $directory/logs/00_www.log && du -sch /var/www/* >> $directory/logs/00_www.log && du -sch /var/www/html/* >> $directory/logs/00_www.log'",
       logoutput => true,
