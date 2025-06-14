@@ -16,6 +16,8 @@ if [ ! -f /home/.trash/backups/mongodb-$DATE.tar.gz ]; then
   cat /etc/maadix/mongodbadmin | tr -d '\n' | sed "s@\\\\@@g" | tr -d \'\" >> backup.sh
   chmod +x backup.sh
   #wait until mongod is up
+  service mongod restart
+  sleep 5
   while ! nc -z localhost 27017; do
     echo "waiting mongod 5.0"
     sleep 5
