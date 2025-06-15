@@ -11,8 +11,8 @@ sleep 2
 
 file=/root/.my.cnf
 if [ -e "$file" ]; then
-  mysqldump --defaults-extra-file=/root/.my.cnf --all-databases > /home/.trash/backups/mysql-$DATE.sql
+  mysqldump --defaults-extra-file=/root/.my.cnf --all-databases | gzip -c > /home/.trash/backups/mysql-$DATE.sql.gz
 else
-  mysqldump --all-databases > /home/.trash/backups/mysql-$DATE.sql
+  mysqldump --all-databases | gzip -c > /home/.trash/backups/mysql-$DATE.sql.gz
 fi
-chmod 600 /home/.trash/backups/mysql-$DATE.sql
+chmod 600 /home/.trash/backups/mysql-$DATE.sql.gz
