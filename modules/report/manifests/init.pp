@@ -18,7 +18,7 @@ class report (
     }
 
     #define scripts
-    $scripts = ['luks_info.sh, list_groups.sh','list_fqdn_apps.sh','vm_packages_report.sh','vm_docker_report.sh','iptables_report.sh','disk_report.sh','send_report.sh']
+    $scripts = ['luks_info.sh', 'list_groups.sh','list_fqdn_apps.sh','vm_packages_report.sh','vm_docker_report.sh','iptables_report.sh','disk_report.sh','send_report.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
