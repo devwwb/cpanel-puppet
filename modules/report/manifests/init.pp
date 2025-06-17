@@ -18,7 +18,7 @@ class report (
     }
 
     #define scripts
-    $scripts = ['list_groups.sh','list_fqdn_apps.sh','vm_packages_report.sh','vm_docker_report.sh','iptables_report.sh','disk_report.sh','send_report.sh']
+    $scripts = ['luks_info.sh, list_groups.sh','list_fqdn_apps.sh','vm_packages_report.sh','vm_docker_report.sh','iptables_report.sh','disk_report.sh','send_report.sh']
     $scripts.each |String $script| {
       file {"$directory/${script}":
         owner   => 'root',
@@ -28,8 +28,15 @@ class report (
       }
     }
 
+    if ($facts['is_luks']){
+      exec { 'luks report':
+        command   => "/bin/bash -c '$directory/luks_info.sh > $directory/logs/00_disk.log'",
+        logoutput => true,
+      }
+    }
+
     exec { "disk info":
-      command   => "/bin/bash -c 'echo \"## DISK info ######\" > $directory/logs/00_disk.log && lsblk -l >> $directory/logs/00_disk.log'",
+      command   => "/bin/bash -c 'echo \"## DISK info ######\" >> $directory/logs/00_disk.log && lsblk -l >> $directory/logs/00_disk.log'",
       logoutput => true,
     }
 
