@@ -104,6 +104,13 @@ class report (
       logoutput => true,
     }
 
+    if ($facts['nextcloud_enabled']){
+      exec { 'nextcloud cron':
+        command   => "/bin/bash -c 'echo \"## NEXTCLOUD cron log ######\" >> $directory/logs/00_zcron.log && sudo -u fpmnextcloud php -f /var/www/nextcloud/nextcloud/cron.php >> $directory/logs/00_zcron.log'",
+        logoutput => true,
+      }
+    }
+
     exec { "list services":
       command   => "/bin/bash -c 'echo \"## Services ######\" > $directory/logs/00_list_services.log && service --status-all >> $directory/logs/00_list_services.log'",
       logoutput => true,
