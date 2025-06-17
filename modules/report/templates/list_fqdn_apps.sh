@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #get apps fqdns
-fqdns=($(ldapsearch -H ldapi:// -Y EXTERNAL -b "ou=groups,dc=example,dc=tld" "(ou=domain)" | grep status | sed 's/status: //g'))
+fqdns=($(ldapsearch -Q -H ldapi:// -Y EXTERNAL -b "ou=groups,dc=example,dc=tld" "(ou=domain)" | grep status | sed 's/status: //g'))
 echo "## FQDN APPS #############################################################"
 echo ""
 for i in "${fqdns[@]}"
