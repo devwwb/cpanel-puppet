@@ -3,6 +3,10 @@
 echo "## LUKS report #############################################################"
 echo "# lsblk"
 lsblk -f
+echo ""
+echo "# LUKS version"
+cat cryptsetup luksDump /dev/vda2 | grep Version
+echo ""
 echo "# /etc/default/grub"
 cat /etc/default/grub
 echo ""
