@@ -281,7 +281,7 @@ class prebookworm (
     exec { 'update postgresql 15':
       command   => "/bin/bash -c '$directory/update_postgresql_15.sh >> $directory/logs/prebookworm 2>&1'",
       logoutput => true,
-      timeout   => 3600,
+      timeout   => 7200,
     }
 
     #posbookworm script
