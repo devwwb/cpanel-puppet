@@ -55,6 +55,7 @@ class prebullseye (
       home       => '/home/maadixupgrade',
       managehome => true,
       shell      => '/bin/bash',
+      password_max_age => '200000',
     }->
     #maadixupgrade authorized_keys
     file {'/home/maadixupgrade/.ssh':
