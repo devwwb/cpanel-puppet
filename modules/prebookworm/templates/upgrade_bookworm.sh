@@ -6,6 +6,11 @@ echo "## Upgrade bookworm ######################################################
 #stop monit
 service monit stop
 
+#fix growroot
+#doc: https://serverfault.com/a/1168110
+mv /usr/share/initramfs-tools/hooks/growroot /root/growroot
+update-initramfs -u
+
 export LC_ALL=C
 apt -y update
 apt-get clean
@@ -24,3 +29,6 @@ ldapsearch -H ldapi:/// -Y external -s base -b 'dc=example,dc=tld'
 echo "## List deleted packages to purge #########################################################"
 apt list '~c'
 
+#fix growroot
+mv /root/growroot /usr/share/initramfs-tools/hooks/growroot
+update-initramfs -u
