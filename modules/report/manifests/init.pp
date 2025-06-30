@@ -60,6 +60,11 @@ class report (
       logoutput => true,
     }
 
+    exec { "ldap databases info":
+      command   => "/bin/bash -c 'echo \"## Ldap Main DATABASE ######\" >> $directory/logs/00_www.log && cat /etc/ldap/slapd.d/cn\\=config/*olcDatabase*1* | grep olcSuffix >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
     exec { "sysctl info":
       command   => "/bin/bash -c 'echo \"## Sysctl info ######\" >> $directory/logs/00_www.log && ls -l /etc/sysctl.d/ >> $directory/logs/00_www.log'",
       logoutput => true,
