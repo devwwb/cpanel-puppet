@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+#backup etc
+echo "## Backup etc ##########################################################"
+if [ ! -d /home/.trash/backups ]; then
+  mkdir /home/.trash/backups
+fi
+cd /home/.trash/backups
+tar -czf etc_`date +%Y_%m_%d-%H_%M_%S`.tar.gz /etc
+chmod 600 etc*
+
 echo "## Reload ldap database ##########################################################"
 #doc: https://openldap.org/doc/admin25/maintenance.html
 
