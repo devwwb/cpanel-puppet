@@ -8,8 +8,10 @@ service monit stop
 
 #fix growroot
 #doc: https://serverfault.com/a/1168110
-mv /usr/share/initramfs-tools/hooks/growroot /root/growroot
-update-initramfs -u
+if [ -f /usr/share/initramfs-tools/hooks/growroot ]; then
+  mv /usr/share/initramfs-tools/hooks/growroot /root/growroot
+  update-initramfs -u
+fi
 
 export LC_ALL=C
 apt -y update
@@ -30,5 +32,7 @@ echo "## List deleted packages to purge ########################################
 apt list '~c'
 
 #fix growroot
-mv /root/growroot /usr/share/initramfs-tools/hooks/growroot
-update-initramfs -u
+if [ -f /root/growroot ]; then
+  mv /root/growroot /usr/share/initramfs-tools/hooks/growroot
+  update-initramfs -u
+fi
