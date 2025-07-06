@@ -19,7 +19,7 @@ apt-get clean
 echo "## List slapd.d #########################################################"
 ldapsearch -H ldapi:/// -Y external -s base -b 'dc=example,dc=tld'
 echo "## Upgrade #########################################################"
-apt -y upgrade
+apt -y upgrade || mv /usr/share/initramfs-tools/hooks/growroot /root/growroot && update-initramfs -u && apt -y upgrade
 apt-get clean
 echo "## List slapd.d #########################################################"
 ldapsearch -H ldapi:/// -Y external -s base -b 'dc=example,dc=tld'
