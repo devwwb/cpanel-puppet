@@ -37,7 +37,7 @@ rm /var/lib/ldap/*
 
 #load data
 service slapd start
-slapadd -F /etc/ldap/slapd.d -l ldap_backup_${date}.ldif
+slapadd -F /etc/ldap/slapd.d -l ldap_backup_${date}.ldif -b 'dc=example,dc=tld'
 
 #reset slapd package debconf
 echo PURGE | debconf-communicate slapd
