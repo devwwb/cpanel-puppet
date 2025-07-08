@@ -72,6 +72,11 @@ class report (
       path      => ['/usr/bin','/bin'],
     }
 
+    exec { "php fpm info":
+      command   => "/bin/bash -c 'echo \"## PHP fpm ######\" >> $directory/logs/00_www.log && ps aux | grep php-fpm | grep master >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
     exec { "sysctl info":
       command   => "/bin/bash -c 'echo \"## Sysctl info ######\" >> $directory/logs/00_www.log && ls -l /etc/sysctl.d/ >> $directory/logs/00_www.log'",
       logoutput => true,
