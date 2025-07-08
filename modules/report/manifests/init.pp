@@ -60,9 +60,16 @@ class report (
       logoutput => true,
     }
 
-    exec { "ldap databases info":
-      command   => "/bin/bash -c 'echo \"## Ldap Main DATABASE ######\" >> $directory/logs/00_www.log && cat /etc/ldap/slapd.d/cn\\=config/*olcDatabase*1* | grep olcSuffix >> $directory/logs/00_www.log'",
+    exec { "ldap database 1 info":
+      command   => "/bin/bash -c 'echo \"## Ldap DATABASE Number 1 ######\" >> $directory/logs/00_www.log && cat /etc/ldap/slapd.d/cn\\=config/*olcDatabase*1* | grep olcSuffix >> $directory/logs/00_www.log'",
       logoutput => true,
+    }
+
+    exec { "ldap database 2 info":
+      command   => "/bin/bash -c 'echo \"## Ldap Database Number 2 ######\" >> $directory/logs/00_www.log && cat /etc/ldap/slapd.d/cn\\=config/*olcDatabase*2* | grep olcSuffix >> $directory/logs/00_www.log'",
+      logoutput => true,
+      onlyif    => 'test -f /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}mdb.ldif',
+      path      => ['/usr/bin','/bin'],
     }
 
     exec { "sysctl info":
