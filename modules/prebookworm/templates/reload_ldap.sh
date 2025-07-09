@@ -44,6 +44,8 @@ if [ -f /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}mdb.ldif ]; then
     sed -i -e 's/{2}mdb/{1}mdb/g' ldap_config_${date}.ldif
     #load slapd.d conf
     slapadd -F /etc/ldap/slapd.d -n 0 -l ldap_config_${date}.ldif
+    #set perms
+    chown -R openldap:openldap /etc/ldap/slapd.d
   fi
 fi
 
