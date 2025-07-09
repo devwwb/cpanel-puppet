@@ -10,17 +10,12 @@ cd /home/.trash/backups
 tar -czf etc_`date +%Y_%m_%d-%H_%M_%S`.tar.gz /etc
 chmod 600 etc*
 
-echo "## Reload ldap database ##########################################################"
+echo "## Backup ldap database ##########################################################"
 #doc: https://openldap.org/doc/admin25/maintenance.html
-
-#dirs
-if [ ! -d /home/.trash/backups ]; then
-  mkdir /home/.trash/backups
-fi
-cd /home/.trash/backups
 
 #stop service before backup
 service monit stop
+service cron stop
 service slapd stop
 
 #backup mdb database
@@ -35,7 +30,25 @@ chmod 600 ldap_backup_${date}.ldif
 #purge ldap database
 rm /var/lib/ldap/*
 
+#rename database if required
+if [ -f /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}mdb.ldif ]; then
+  if grep -q 'dc=example,dc=tld' /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}mdb.ldif; then
+    echo "## Rename ldap database ############################################"
+    #delete unused database with number 1
+    rm /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{1\}mdb.ldif
+    #save slapd.d conf
+    slapcat -F /etc/ldap/slapd.d -n 0 -l ldap_config_${date}.ldif
+    #clean slapd.d conf
+    rm -r /etc/ldap/slapd.d/*
+    #rename database in exported slapd.d conf
+    sed -i -e 's/{2}mdb/{1}mdb/g' ldap_config_${date}.ldif
+    #load slapd.d conf
+    slapadd -F /etc/ldap/slapd.d -n 0 -l ldap_config_${date}.ldif
+  fi
+fi
+
 #load data
+echo "## Load ldap database ##########################################################"
 service slapd start
 slapadd -F /etc/ldap/slapd.d -l ldap_backup_${date}.ldif -b 'dc=example,dc=tld'
 
