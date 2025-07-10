@@ -92,6 +92,20 @@ class report (
       logoutput => true,
     }
 
+    exec { "redmine info":
+      command   => "/bin/bash -c 'echo \"## REDMINE info ######\" >> $directory/logs/00_www.log && apt-show-versions | grep redmine >> $directory/logs/00_www.log'",
+      logoutput => true,
+      onlyif    => 'apt-show-versions | grep redmine',
+      path      => ['/usr/bin','/bin'],
+    }
+
+    exec { "moodle data info":
+      command   => "/bin/bash -c 'echo \"## MOODLE data info ######\" >> $directory/logs/00_www.log && du -sch /var/www/moodle/* >> $directory/logs/00_www.log'",
+      logoutput => true,
+      onlyif    => 'test -d /var/www/moodle',
+      path      => ['/usr/bin','/bin'],
+    }
+
     exec { "www info":
       command   => "/bin/bash -c 'echo \"## WWW info ######\" >> $directory/logs/00_www.log && du -sch /var/www/* >> $directory/logs/00_www.log && du -sch /var/www/html/* >> $directory/logs/00_www.log'",
       logoutput => true,
