@@ -88,6 +88,10 @@ class posbookworm (
         timeout         => 7200,
         path            => '/usr/bin:/bin:/var/www/mastodon/.rbenv/shims/',
         logoutput       => true,
+      } ->
+      exec {'mastodon bundle force reinstall append log':
+        command         => "cat /tmp/mastodon_boowkworm_log >> $directory/logs/posbookworm",
+        path            => ['/usr/bin','/bin'],
       }
     }
 
