@@ -78,6 +78,18 @@ class posbookworm (
       }
     }
 
+    #reinstall gems for this OS
+    exec { 'mastodon bundle force reinstall':
+      command         => "bundle install --force -j${facts['processors']['count']}",
+      cwd             => '/var/www/mastodon/mastodon',
+      environment     => [ 'HOME=/var/www/mastodon' ],
+      user            => 'mastodon',
+      timeout         => 7200,
+      path            => '/usr/bin:/bin:/var/www/mastodon/.rbenv/shims/',
+      logoutput       => true,
+      onlyif          => 'test -d /var/www/mastodon/mastodon',
+    }
+
     /*
     if ($facts['discourse_group']){
       exec { 'rebuild discourse app':
