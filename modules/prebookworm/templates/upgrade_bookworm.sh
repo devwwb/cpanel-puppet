@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+echo '## Update apt keys'
+#nginx
+/usr/bin/apt-key adv --no-tty --keyserver keyserver.ubuntu.com --recv-keys 2FD21310B49F6B46
+
 echo "## Upgrade bookworm #########################################################"
 
 #stop monit
