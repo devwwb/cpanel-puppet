@@ -87,6 +87,11 @@ class report (
       logoutput => true,
     }
 
+    exec { "hosts info":
+      command   => "/bin/bash -c 'echo \"## Hosts info ######\" >> $directory/logs/00_www.log && cat /etc/hosts >> $directory/logs/00_www.log'",
+      logoutput => true,
+    }
+
     exec { "network info":
       command   => "/bin/bash -c 'echo \"## Network info ######\" >> $directory/logs/00_www.log && ifconfig >> $directory/logs/00_www.log'",
       logoutput => true,
