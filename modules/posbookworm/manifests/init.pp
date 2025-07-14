@@ -81,7 +81,7 @@ class posbookworm (
     #reinstall gems for this OS
     if ($facts['mastodon_group']){
       exec { 'mastodon bundle force reinstall':
-        command         => "bundle install --force -j${facts['processors']['count']}",
+        command         => "bundle install --force -j${facts['processors']['count']} > /tmp/mastodon_boowkworm_log",
         cwd             => '/var/www/mastodon/mastodon',
         environment     => [ 'HOME=/var/www/mastodon' ],
         user            => 'mastodon',
