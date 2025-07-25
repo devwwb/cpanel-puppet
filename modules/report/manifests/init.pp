@@ -99,13 +99,13 @@ class report (
 
     exec { "network manager info":
       command   => "/bin/bash -c 'echo \"## Network manager info ######\" >> $directory/logs/00_www.log && systemctl status NetworkManager.service >> $directory/logs/00_www.log'",
-      returns   => [0,3]
+      returns   => [0,3],
       logoutput => true,
     }
 
     exec { "network systemd info":
       command   => "/bin/bash -c 'echo \"## Network systemd info ######\" >> $directory/logs/00_www.log && systemctl status systemd-networkd.service >> $directory/logs/00_www.log'",
-      returns   => [0,3]
+      returns   => [0,3],
       logoutput => true,
     }
 
