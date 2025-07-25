@@ -109,6 +109,12 @@ class report (
       logoutput => true,
     }
 
+    exec { "avahi systemd info":
+      command   => "/bin/bash -c 'echo \"## Avahi systemd info ######\" >> $directory/logs/00_www.log && systemctl status avahi-daemon.service >> $directory/logs/00_www.log'",
+      returns   => [0,3],
+      logoutput => true,
+    }
+
     exec { "redmine info":
       command   => "/bin/bash -c 'echo \"## REDMINE info ######\" >> $directory/logs/00_www.log && apt-show-versions | grep redmine >> $directory/logs/00_www.log'",
       logoutput => true,
