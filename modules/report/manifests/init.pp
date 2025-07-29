@@ -111,7 +111,7 @@ class report (
 
     exec { "avahi systemd info":
       command   => "/bin/bash -c 'echo \"## Avahi systemd info ######\" >> $directory/logs/00_www.log && systemctl status avahi-daemon.service >> $directory/logs/00_www.log'",
-      returns   => [0,3],
+      returns   => [0,3,4],
       logoutput => true,
     }
 
