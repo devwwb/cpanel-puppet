@@ -307,6 +307,7 @@ class prebookworm (
 
 
     #enable ipv6
+    /*
     exec { 'sysctl net.ipv6.conf.all.disable_ipv6 0':
       command     => 'sysctl net.ipv6.conf.all.disable_ipv6=0',
       path        => ['/usr/sbin','/sbin'],
@@ -362,7 +363,7 @@ class prebookworm (
       path        => ['/usr/bin','/bin'],
       logoutput   => true,
     }
-
+    */
 
     exec { 'delete persistent iptables rules':
       command   => '/bin/rm /etc/iptables/*',
