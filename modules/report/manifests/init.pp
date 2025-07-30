@@ -99,7 +99,7 @@ class report (
 
     exec { "network manager info":
       command   => "/bin/bash -c 'echo \"## Network manager info ######\" >> $directory/logs/00_www.log && systemctl status NetworkManager.service >> $directory/logs/00_www.log'",
-      returns   => [0,3],
+      returns   => [0,3,4],
       logoutput => true,
     }
 
