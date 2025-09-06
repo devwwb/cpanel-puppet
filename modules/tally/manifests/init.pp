@@ -16,7 +16,7 @@ class tally (
           returns     => [0,1],
         }
       }
-      if $facts['os']['distro']['codename']=='bullseye'{
+      if $facts['os']['distro']['codename']=='bullseye' or $facts['os']['distro']['codename']=='bookworm'{
         exec { "unlock user $tally_user":
           command     => "faillock --user $tally_user --reset",
           path        => ['/usr/sbin','/sbin'],
