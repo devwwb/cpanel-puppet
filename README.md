@@ -2,7 +2,7 @@
 Local puppet manifests for https://gitlab.com/MaadiX/maadix-cpanel
 
 # Latest Version
-    release_202503
+    release_202504
 
 # How to run
 
