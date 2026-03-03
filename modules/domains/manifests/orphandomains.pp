@@ -21,13 +21,11 @@ define domains::orphandomains(
   } ->
 
   #assign nobody permissions to deleted domain webroot
-  file {"/home/.trash/domains/$trashname":
-    ensure      => directory,
-    owner       => 'nobody',
-    group       => 'nogroup',
-    recurse     => true,
+  exec {"owner recursive of domain /home/.trash/domains/$trashname":
+    command      => "chown -R nobody:nogroup /home/.trash/domains/$trashname",
+    path         => ['/usr/bin', '/usr/sbin', '/bin'],
+    onlyif       => "/usr/bin/test -e /home/.trash/domains/$trashname",
   } ->
-  #assign nobody permissions to deleted onion
   #assign nobody permissions to deleted onion
   exec {"owner recursive of onions $trashname":
     command      => "chown -R nobody:nogroup /home/.trash/onions/$trashname",
