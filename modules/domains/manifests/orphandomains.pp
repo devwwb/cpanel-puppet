@@ -67,21 +67,21 @@ define domains::orphandomains(
 
   if $purgecerts{
     #remove certs
-    unless File["/etc/letsencrypt/live/$domain"]{
+    unless defined(File["/etc/letsencrypt/live/$domain"]){
       file {"/etc/letsencrypt/live/$domain":
         ensure  => absent,
         recurse => true,
         force   => true,
       }
     }
-    unless File["/etc/letsencrypt/archive/$domain"]{
+    unless defined(File["/etc/letsencrypt/archive/$domain"]){
       file {"/etc/letsencrypt/archive/$domain":
         ensure  => absent,
         recurse => true,
         force   => true,
       }
     }
-    unless File["/etc/letsencrypt/renewal/$domain"]{
+    unless defined(File["/etc/letsencrypt/renewal/$domain"]){
       file {"/etc/letsencrypt/renewal/$domain.conf":
         ensure  => absent,
       }
