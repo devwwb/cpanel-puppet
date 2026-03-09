@@ -154,7 +154,7 @@ class report (
     }
 
     exec { "crontabs info":
-      command   => "/bin/bash -c 'echo \"## CRONTABS info ######\" > $directory/logs/00_zcron.log && for f in /var/spool/cron/crontabs/*; do echo \"USER \$f file\"; cat \$f | grep -v \"#\"; done >> $directory/logs/00_zcron.log'",
+      command   => "/bin/bash -c 'echo \"## CRONTABS info ######\" > $directory/logs/00_zcron.log && for f in /var/spool/cron/crontabs/*; do echo \"USER \$f file\"; cat \$f | grep -v \"#\" | cat; done >> $directory/logs/00_zcron.log'",
       logoutput => true,
     }
 
