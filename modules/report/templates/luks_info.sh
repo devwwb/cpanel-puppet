@@ -19,6 +19,9 @@ echo ""
 echo "# /etc/initramfs-tools/conf.d/ip"
 cat /etc/initramfs-tools/conf.d/ip
 echo ""
+echo "# /etc/initramfs-tools/scripts/init-premount/dropbear"
+cat /etc/initramfs-tools/scripts/init-premount/dropbear
+echo ""
 echo "# /usr/share/initramfs-tools/scripts/init-premount/dropbear"
 cat /usr/share/initramfs-tools/scripts/init-premount/dropbear
 echo ""

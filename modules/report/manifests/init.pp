@@ -36,7 +36,7 @@ class report (
     }
 
     exec { "disk info":
-      command   => "/bin/bash -c 'echo \"## DISK info ######\" > $directory/logs/00_disk.log && lsblk -l >> $directory/logs/00_disk.log'",
+      command   => "/bin/bash -c 'echo \"## DISK info ######\" >> $directory/logs/00_disk.log && lsblk -l >> $directory/logs/00_disk.log'",
       logoutput => true,
     }
 
