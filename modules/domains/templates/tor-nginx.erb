@@ -19,7 +19,7 @@ server {
         # Return 429 Too Many Requests instead of default 503
         limit_req_status 429;
         # Maximum 5 simultaneous connections per IP
-        limit_conn conn_limit 10;
+        limit_conn conn_generic 10;
         limit_conn_status 429;
 
         try_files $uri $uri/ /index.php?$query_string;
@@ -32,7 +32,7 @@ server {
         # Return 429 Too Many Requests instead of default 503
         limit_req_status 429;
         # Maximum 5 simultaneous connections per IP
-        limit_conn conn_limit 10;
+        limit_conn conn_generic 10;
         limit_conn_status 429;
 
         try_files $uri =404;
