@@ -14,11 +14,23 @@ server {
     index index.html index.htm index.php;
 
     location / {
+        # Allow burst of 20 extra requests; nodelay processes them immediately
+        limit_req zone=generic burst=20 nodelay;
+        # Return 429 Too Many Requests instead of default 503
+        limit_req_status 429;
+        try_files $uri $uri/ /index.php?$query_string;
+
         try_files $uri $uri/ /index.php?$query_string;
     }
 
     #php
     location ~ \.php$ {
+        # Allow burst of 20 extra requests; nodelay processes them immediately
+        limit_req zone=generic burst=20 nodelay;
+        # Return 429 Too Many Requests instead of default 503
+        limit_req_status 429;
+
+        try_files $uri $uri/ /index.php?$query_string;
         try_files $uri =404;
         <% if @pool == 'www' %>
         fastcgi_pass 127.0.0.1:9000;
