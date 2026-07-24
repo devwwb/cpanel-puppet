@@ -18,7 +18,6 @@ server {
         limit_req zone=generic burst=20 nodelay;
         # Return 429 Too Many Requests instead of default 503
         limit_req_status 429;
-        try_files $uri $uri/ /index.php?$query_string;
 
         try_files $uri $uri/ /index.php?$query_string;
     }
@@ -30,7 +29,6 @@ server {
         # Return 429 Too Many Requests instead of default 503
         limit_req_status 429;
 
-        try_files $uri $uri/ /index.php?$query_string;
         try_files $uri =404;
         <% if @pool == 'www' %>
         fastcgi_pass 127.0.0.1:9000;
