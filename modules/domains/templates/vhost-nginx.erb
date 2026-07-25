@@ -64,5 +64,8 @@ server {
         include fastcgi_params;
     }
 
+    #deny rules
+    include /etc/nginx/includes/deny-rules;
+
 }
 
