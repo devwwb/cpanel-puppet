@@ -116,6 +116,30 @@ cat > wp-content/uploads/.htaccess << ENDOFFILE
 deny from all
 </Files>
 ENDOFFILE
+cat > .htaccess << ENDOFFILE
+# Directory options
+Options -Indexes +FollowSymLinks -MultiViews
+
+# Server signature
+ServerSignature Off
+
+# Block sensitive files and xmlrpc.php
+<FilesMatch "wp-config\.php|error_log|readme\.html|license\.txt|wp-config-sample\.php|\.htaccess|\.env|xmlrpc\.php">
+  Require all denied
+</FilesMatch>
+
+# Block version control
+RedirectMatch 404 /\.git
+RedirectMatch 404 /\.svn
+
+# Headers
+Header always set Content-Security-Policy "frame-ancestors 'self';"
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Frame-Options: "SAMEORIGIN"
+Header always set X-Content-Type-Options "nosniff"
+ENDOFFILE
 
 #permissions
 cd $WEBROOT
