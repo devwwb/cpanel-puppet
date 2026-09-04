@@ -101,7 +101,9 @@ cd $WEBROOT
 pwd
 sudo -u $VHOSTUSER wp core download
 sudo -u $VHOSTUSER wp config create --dbname=$DBNAME --dbuser=$DBNAME --dbpass=$DBPASS --extra-php <<PHP
-define('FS_METHOD','direct');
+define( 'FS_METHOD', 'direct' );
+define( 'FORCE_SSL_ADMIN', true );
+define( 'WP_AUTO_UPDATE_CORE', 'minor' );
 PHP
 sudo -u $VHOSTUSER wp core install --url=$DOMAIN --title=$DOMAIN --admin_user=$ADMINUSER --admin_password=$ADMINPASS --admin_email=$ADMINMAIL
 
