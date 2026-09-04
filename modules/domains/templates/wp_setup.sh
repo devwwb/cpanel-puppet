@@ -146,7 +146,8 @@ ENDOFFILE
 #permissions
 cd $WEBROOT
 chmod -R 770 *
-chown -R $VHOSTUSER:$VHOSTGROUP * -R
+chown $VHOSTUSER:$VHOSTGROUP * -R
+chown $VHOSTUSER:$VHOSTGROUP .htaccess
 
 #set installed in ldap
 ldapmodify -Q -Y EXTERNAL -H ldapi:/// << EOF
