@@ -2,6 +2,9 @@
 
 echo "## Update source debian ####################################################"
 
+#allow expired repos
+echo "Acquire::Check-Valid-Until 'false';" > /etc/apt/apt.conf.d/90ignore-release-date
+
 #update debian sources
 echo "deb http://deb.debian.org/debian bullseye main
 deb-src http://deb.debian.org/debian bullseye main
