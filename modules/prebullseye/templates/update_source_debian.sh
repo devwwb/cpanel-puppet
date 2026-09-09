@@ -9,6 +9,8 @@ echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/90ignore-releas
 #doc: https://debiansupport.com/mirrors/
 echo "deb http://archive.debian.org/debian bullseye main
 deb-src http://archive.debian.org/debian bullseye main
+deb http://security.debian.org/debian-security bullseye-security main
+deb-src http://security.debian.org/debian-security bullseye-security main
 deb http://archive.debian.org/debian bullseye-updates main
 deb-src http://archive.debian.org/debian bullseye-updates main" > /etc/apt/sources.list
 
