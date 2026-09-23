@@ -61,6 +61,18 @@ class ipv6 (
         }
       }
 
+      #opendkim
+      file_line { "opendkim public ipv6":
+        path    => '/etc/opendkim/TrustedHosts',
+        line    => "${facts['maadix_networking']['ipv6']['ip']}",
+        ensure  => present,
+        notify  => Service['opendkim'],
+      }
+      service { 'opendkim':
+        ensure  => running,
+        enable  => true,
+      }
+
       #notify
       exec { 'ipv6 enabled admin notificaction':
         command     => "echo -e ' ' | mail -s 'IPV6 enabled in ${hostname}' ${email}",
@@ -143,6 +155,18 @@ class ipv6 (
           line    => $spamd_options,
           match   => 'OPTIONS.*$',
         }
+      }
+
+      #opendkim
+      file_line { "opendkim public ipv6":
+        path    => '/etc/opendkim/TrustedHosts',
+        line    => "${facts['maadix_networking']['ipv6']['ip']}",
+        ensure  => absent,
+        notify  => Service['opendkim'],
+      }
+      service { 'opendkim':
+        ensure  => running,
+        enable  => true,
       }
 
       #notify
