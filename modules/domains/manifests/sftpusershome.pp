@@ -5,10 +5,14 @@ define domains::sftpusershome(
 
   #create sftpuser home
   if $type == 'sftp'{
-    file {"/home/sftpusers/$uid":
+    file {"/home/jailedUsers/$uid":
       ensure      => directory,
+    } ->
+    file {"/home/jailedUsers/$uid/$uid":
+      ensure      => directory,
+      owner       => "$uid",
+      mode        => "700",
     }
   }
 
 }
-

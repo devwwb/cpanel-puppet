@@ -22,13 +22,13 @@ define domains::mounts(
   #only mount domains with webroot enabled, assigned to webmaster of type sftp
   if $webmaster_type == 'sftp' and $webroot {
     #ensure sftpuser home domain folder to mount domain
-    file {"/home/sftpusers/$webmaster/$domain":
+    file {"/home/jailedUsers/$webmaster/$webmaster/$domain":
       owner	=> $webmaster,
       ensure	=> directory,
     }
     
     #mount domain in sftpuser home
-    mount {"/home/sftpusers/$webmaster/$domain":
+    mount {"/home/jailedUsers/$webmaster/$webmaster/$domain":
       ensure  => mounted, 
       device  => "/var/www/html/$domain",
       fstype  => 'none', 

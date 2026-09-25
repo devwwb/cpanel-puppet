@@ -11,9 +11,9 @@ Facter.add(:cpanel_umount) do
     system_mounts = {}
     Facter.value(:mountpoints).each do |mount, value|
       #if is an sftuser mountpoint, get domain and user
-      if mount.include? 'sftpusers'
+      if mount.include? 'jailedUsers'
         split = mount.split('/')
-        system_mounts[split[4]] = split[3]
+        system_mounts[split[5]] = split[4]
       end
     end
     #build hash with domain/user pairs that are not in ldap (cpanel_vhosts facter)

@@ -4,16 +4,15 @@ define domains::umount(
 ) {
 
   #umount domain in sftpuser home
-  mount {"/home/sftpusers/$webmaster/$domain":
+  mount {"/home/jailedUsers/$webmaster/$webmaster/$domain":
     ensure  => absent,
     device  => "/var/www/html/$domain",
     fstype  => 'none', 
     options => 'rw,bind', 
   }->
-  file {"/home/sftpusers/$webmaster/$domain":
+  file {"/home/jailedUsers/$webmaster/$webmaster/$domain":
     ensure  => absent,
     force   => true,
   }
 
 }
-
