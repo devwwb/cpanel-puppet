@@ -48,6 +48,9 @@ class domains (
     #umount domains (deleted or assigned to a different user)
     create_resources(domains::umount, $facts['cpanel_umount'])
 
+    #create fpm pools
+    create_resources(domains::pools, $facts['cpanel_vhosts'])
+
     #create vhosts (vhost, webroot, letsencrypt cert)
     create_resources(domains::vhosts, $facts['cpanel_vhosts'])
 
