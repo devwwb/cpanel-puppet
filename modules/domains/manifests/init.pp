@@ -49,7 +49,7 @@ class domains (
     create_resources(domains::umount, $facts['cpanel_umount'])
 
     #create fpm pools
-    create_resources(domains::pools, $facts['cpanel_vhosts'])
+    create_resources(domains::pools, $facts['cpanel_pools'])
 
     #create vhosts (vhost, webroot, letsencrypt cert)
     create_resources(domains::vhosts, $facts['cpanel_vhosts'])
