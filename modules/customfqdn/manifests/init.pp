@@ -23,6 +23,10 @@ class customfqdn (
         }
       }
 
+      exec { 'restart postfix after changes in /etc/hosts to rebuild chroot':
+        command => '/usr/sbin/service postfix restart',
+      }
+
       exec{'change fqdn notify by mail':
         command => "/bin/echo 'El host ${facts['networking']['hostname']}.${facts['fqdn_domain_old']} solicita cambio a nuevo fqdn ${facts['networking']['hostname']}.${facts['fqdn_domain']}' | /usr/bin/mail -s 'Maadix: Cambio FQDN en ${facts['networking']['hostname']}' admin@maadix.org",
       }

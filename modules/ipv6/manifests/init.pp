@@ -177,6 +177,11 @@ class ipv6 (
       }
 
     }
+
+    exec { 'restart postfix after changes in /etc/hosts to rebuild chroot':
+      command => '/usr/sbin/service postfix restart',
+    }
+
   }
 
 }
